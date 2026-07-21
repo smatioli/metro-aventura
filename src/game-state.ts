@@ -34,3 +34,10 @@ export function speedAtProgress(progress: number, maximum = 70): number {
   if (safe < 0.68) return maximum;
   return Math.round(maximum * (1 - (safe - 0.68) / 0.32));
 }
+
+export function distinctKeys(pool: string[], firstIndex: number, secondIndex: number): [string, string] {
+  const first = pool[firstIndex % pool.length];
+  let second = pool[secondIndex % pool.length];
+  if (second === first) second = pool[(secondIndex + 1) % pool.length];
+  return [first, second];
+}

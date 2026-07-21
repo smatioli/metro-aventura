@@ -1,6 +1,6 @@
 import "./style.css";
 import { fleetImages, fleetThemes, lines, prototypeViewMedia, type FleetId } from "./data";
-import { SAVE_KEY, nextView, routeFor, speedAtProgress, type JourneyPhase, type SaveGame, type Screen, type View } from "./game-state";
+import { SAVE_KEY, distinctKeys, nextView, routeFor, type JourneyPhase, type SaveGame, type Screen, type View } from "./game-state";
 
 const app = document.querySelector<HTMLDivElement>("#app")!;
 
@@ -19,8 +19,14 @@ let speechEnabled = true;
 let travelSeconds = Number(localStorage.getItem("metro-aventura-travel-seconds")) || 8;
 let settingsOpen = false;
 let speedKmh = 0;
-let speedTrend: "accelerating" | "cruising" | "braking" = "accelerating";
+let speedTrend: "idle" | "accelerating" | "cruising" | "braking" = "idle";
 let speedInterval = 0;
+type DriveStage = "await-accelerate" | "accelerating" | "cruising" | "await-brake" | "braking";
+let driveStage: DriveStage = "await-accelerate";
+let randomDriveKeys = localStorage.getItem("metro-aventura-random-keys") === "true";
+let accelerateKey = "A";
+let brakeKey = "P";
+const driveKeyPool = ["A", "S", "D", "F", "J", "K", "L", "P"];
 
 function loadSave(): SaveGame | null {
   try { return JSON.parse(localStorage.getItem(SAVE_KEY) || "null") as SaveGame | null; }
@@ -45,6 +51,20 @@ function currentRoute(): string[] { return routeFor(line.stations, direction); }
 
 function keyHint(keys: string[], label: string): string {
   return `<div class="key-hint" aria-label="${label}">${keys.map(key => `<kbd>${key}</kbd>`).join("")}<span>${label}</span></div>`;
+}
+
+function speedTrendText(): string {
+  if (speedTrend === "idle") return "PRONTO";
+  if (speedTrend === "accelerating") return "ACELERANDO";
+  if (speedTrend === "braking") return "PARANDO";
+  return "EM MOVIMENTO";
+}
+
+function speedTrendIcon(): string {
+  if (speedTrend === "idle") return "◆";
+  if (speedTrend === "accelerating") return "▲";
+  if (speedTrend === "braking") return "▼";
+  return "●";
 }
 
 function shell(content: string, className = ""): void {
@@ -85,7 +105,7 @@ function renderFleet(): void {
 
 function trainArt(): string {
   const next = currentRoute()[stationIndex + 1] ?? "Terminal";
-  if (view === "cab") return `<div class="photo-scene cab-photo" style="--photo:url('${prototypeViewMedia.cab}')"><div class="motion-lines" style="--speed:${speedKmh}"></div><div class="photo-vignette"></div><div class="cab-status"><span>PRÓXIMA ESTAÇÃO</span><strong>${currentRoute()[stationIndex]}</strong></div><div class="speed-panel ${speedTrend}" style="--speed-angle:${-120 + speedKmh * 3.42}deg"><div class="speed-dial"><i></i><div><strong data-speed>${speedKmh}</strong><span>km/h</span></div></div><div class="speed-trend"><b class="trend-arrow">${speedTrend === "accelerating" ? "▲" : speedTrend === "braking" ? "▼" : "●"}</b><span data-trend>${speedTrend === "accelerating" ? "ACELERANDO" : speedTrend === "braking" ? "PARANDO" : "EM MOVIMENTO"}</span></div><div class="power-bars">${Array.from({length: 7}, (_, i) => `<i class="${i < Math.ceil(speedKmh / 10) ? "active" : ""}"></i>`).join("")}</div></div><div class="fleet-chip">FROTA ${fleet}</div></div>`;
+  if (view === "cab") return `<div class="photo-scene cab-photo" style="--photo:url('${prototypeViewMedia.cab}')"><div class="motion-lines" style="--speed:${speedKmh}"></div><div class="photo-vignette"></div><div class="cab-status"><span>PRÓXIMA ESTAÇÃO</span><strong>${currentRoute()[stationIndex]}</strong></div><div class="speed-panel ${speedTrend}" style="--speed-angle:${-120 + speedKmh * 3.42}deg"><div class="speed-dial"><i></i><div><strong data-speed>${speedKmh}</strong><span>km/h</span></div></div><div class="speed-trend"><b class="trend-arrow">${speedTrendIcon()}</b><span data-trend>${speedTrendText()}</span></div><div class="power-bars">${Array.from({length: 7}, (_, i) => `<i class="${i < Math.ceil(speedKmh / 10) ? "active" : ""}"></i>`).join("")}</div></div><div class="fleet-chip">FROTA ${fleet}</div></div>`;
   if (view === "interior") return `<div class="photo-scene interior-photo" style="--photo:url('${prototypeViewMedia.interior}')"><div class="photo-vignette"></div><div class="interior-route"><span>AGORA</span><strong>${currentRoute()[stationIndex]}</strong><b>→</b><span>DEPOIS</span><strong>${next}</strong></div><div class="fleet-chip">FROTA ${fleet}</div></div>`;
   const theme = fleetThemes[fleet];
   return `<div class="platform illustrated-platform"><div class="station-sign">${currentRoute()[stationIndex]}</div><div class="train-side fleet-${fleet.toLowerCase()} front-${theme.front} ${phase === "travelling" || phase === "arriving" ? "moving" : ""}" style="--fleet-body:${theme.body};--fleet-stripe:${theme.stripe};--fleet-accent:${theme.accent}"><div class="train-nose"><div class="driver-window"></div><div class="headlight"></div></div><div class="window"></div><div class="train-doors ${doorsOpen ? "open" : ""}"><span></span><span></span></div><div class="window"></div><div class="train-doors second ${doorsOpen ? "open" : ""}"><span></span><span></span></div><div class="fleet-mark"><img src="${fleetImages[fleet]}" alt="Referência da frota ${fleet}"/><b>${fleet}</b></div></div>${doorsOpen && phase === "doors-open" ? `<div class="passenger-flow" aria-hidden="true"><div class="person exit person-one"><i></i><b></b></div><div class="person exit person-two"><i></i><b></b></div><div class="person enter person-three"><i></i><b></b></div><div class="person enter person-four"><i></i><b></b></div></div><div class="passenger-message"><span>↙</span> SAINDO <i></i> ENTRANDO <span>↗</span></div>` : ""}<div class="platform-edge"></div><div class="door-caption ${doorsOpen ? "open" : ""}">${doorsOpen ? "PORTAS ABERTAS" : "PORTAS FECHADAS"}</div></div>`;
@@ -97,12 +117,30 @@ function renderMap(): string {
 
 function renderSettings(): string {
   if (!settingsOpen) return "";
-  return `<div class="settings-backdrop"><section class="settings-panel" role="dialog" aria-modal="true" aria-label="Configurações"><button class="close-settings" aria-label="Fechar configurações">×</button><span class="eyebrow">PAINEL ADULTO</span><h2>Tempo entre estações</h2><div class="time-options">${[6,8,12,16].map(seconds => `<button class="time-option ${travelSeconds === seconds ? "selected" : ""}" data-seconds="${seconds}"><b>${seconds}</b><span>segundos</span></button>`).join("")}</div><p>A alteração vale a partir do próximo trecho.</p></section></div>`;
+  return `<div class="settings-backdrop"><section class="settings-panel" role="dialog" aria-modal="true" aria-label="Configurações"><button class="close-settings" aria-label="Fechar configurações">×</button><span class="eyebrow">PAINEL ADULTO</span><h2>Tempo em velocidade</h2><div class="time-options">${[6,8,12,16].map(seconds => `<button class="time-option ${travelSeconds === seconds ? "selected" : ""}" data-seconds="${seconds}"><b>${seconds}</b><span>segundos</span></button>`).join("")}</div><h2 class="control-title">Teclas de condução</h2><div class="control-options"><button class="control-option ${!randomDriveKeys ? "selected" : ""}" data-random="false"><kbd>A</kbd><kbd>P</kbd><span>Sempre iguais</span></button><button class="control-option ${randomDriveKeys ? "selected" : ""}" data-random="true"><div class="random-letters">A Z M</div><span>Letras sorteadas</span></button></div><p>A alteração das teclas vale a partir do próximo trecho.</p></section></div>`;
+}
+
+function renderActionPrompt(): string {
+  if (phase === "travelling" && driveStage === "await-accelerate") {
+    return `<div class="action-prompt accelerate" role="status"><span class="action-symbol">▲</span><div><small>ACELERAR</small><kbd>${accelerateKey}</kbd></div></div>`;
+  }
+  if (phase === "travelling" && driveStage === "await-brake") {
+    return `<div class="action-prompt brake" role="status"><span class="action-symbol">▼</span><div><small>PARAR</small><kbd>${brakeKey}</kbd></div></div>`;
+  }
+  if (phase === "waiting-open" && actionReady) {
+    return `<div class="action-prompt doors" role="status"><span class="action-symbol">↔</span><div><small>ABRIR PORTAS</small><kbd>ESPAÇO</kbd></div></div>`;
+  }
+  if (phase === "waiting-close" && actionReady) {
+    return `<div class="action-prompt doors close" role="status"><span class="action-symbol">→←</span><div><small>FECHAR PORTAS</small><kbd>ESPAÇO</kbd></div></div>`;
+  }
+  return "";
 }
 
 function phaseMessage(): { title: string; subtitle: string } {
   const route = currentRoute();
-  if (phase === "travelling") return { title: `Próxima: ${route[stationIndex]}`, subtitle: "O trem está a caminho" };
+  if (phase === "travelling" && driveStage === "await-accelerate") return { title: `Próxima: ${route[stationIndex]}`, subtitle: `Aperte ${accelerateKey} para acelerar` };
+  if (phase === "travelling" && driveStage === "await-brake") return { title: `Próxima: ${route[stationIndex]}`, subtitle: `Aperte ${brakeKey} para parar` };
+  if (phase === "travelling") return { title: `Próxima: ${route[stationIndex]}`, subtitle: speedTrendText() };
   if (phase === "arriving") return { title: route[stationIndex], subtitle: "Chegando à estação" };
   if (phase === "waiting-open") return { title: route[stationIndex], subtitle: "Abra as portas" };
   if (phase === "doors-open") return { title: "Portas abertas", subtitle: "Passageiros entrando e saindo" };
@@ -112,7 +150,8 @@ function phaseMessage(): { title: string; subtitle: string } {
 function renderJourney(): void {
   const message = phaseMessage();
   const cameraLocked = phase !== "travelling";
-  shell(`<header class="journey-header"><div class="line-pill"><b>${line.id}</b>${line.name}</div><div class="station-copy"><span>${message.subtitle}</span><h1>${message.title}</h1></div><div class="header-actions"><button class="settings-button" aria-label="Abrir configurações">⚙️</button><button class="sound-button" aria-label="Ligar ou desligar voz">${speechEnabled ? "🔊" : "🔇"}</button></div></header><section class="game-stage view-${view}">${trainArt()}<div class="view-pill">${view === "side" ? "LATERAL" : view === "interior" ? "INTERIOR" : "CABINE"}</div></section>${renderMap()}<footer>${!cameraLocked ? keyHint(["↑","↓"], "mudar vista") : `<div class="camera-locked">👁️ Vista lateral na estação</div>`}${(phase === "waiting-open" || phase === "waiting-close") && actionReady ? keyHint(["ESPAÇO"], phase === "waiting-open" ? "abrir portas" : "fechar portas") : `<div class="calm-wait">●　●　●</div>`}</footer>${renderSettings()}`, "journey-shell");
+  const drivePrompt = phase === "travelling" && driveStage === "await-accelerate" ? keyHint([accelerateKey], "acelerar") : phase === "travelling" && driveStage === "await-brake" ? keyHint([brakeKey], "parar") : `<div class="calm-wait">●　●　●</div>`;
+  shell(`<header class="journey-header"><div class="line-pill"><b>${line.id}</b>${line.name}</div><div class="station-copy"><span>${message.subtitle}</span><h1>${message.title}</h1></div><div class="header-actions"><button class="settings-button" aria-label="Abrir configurações">⚙️</button><button class="sound-button" aria-label="Ligar ou desligar voz">${speechEnabled ? "🔊" : "🔇"}</button></div></header><section class="game-stage view-${view}">${trainArt()}<div class="view-pill">${view === "side" ? "LATERAL" : view === "interior" ? "INTERIOR" : "CABINE"}</div>${renderActionPrompt()}</section>${renderMap()}<footer>${!cameraLocked ? keyHint(["↑","↓"], "mudar vista") : `<div class="camera-locked">👁️ Vista lateral na estação</div>`}${phase === "travelling" ? drivePrompt : (phase === "waiting-open" || phase === "waiting-close") && actionReady ? keyHint(["ESPAÇO"], phase === "waiting-open" ? "abrir portas" : "fechar portas") : `<div class="calm-wait">●　●　●</div>`}</footer>${renderSettings()}`, "journey-shell");
 }
 
 function renderFinished(): void {
@@ -126,7 +165,7 @@ function announceSelection(): void {
 }
 
 function startJourney(): void {
-  stationIndex = 0; view = "cab"; doorsOpen = false; phase = "travelling"; screen = "journey"; render();
+  stationIndex = 0; view = "cab"; doorsOpen = false; phase = "travelling"; screen = "journey";
   beginTravel();
 }
 
@@ -139,8 +178,8 @@ function updateSpeedPanel(): void {
   number.textContent = String(speedKmh);
   panel.className = `speed-panel ${speedTrend}`;
   panel.style.setProperty("--speed-angle", `${-120 + speedKmh * 3.42}deg`);
-  trend.textContent = speedTrend === "accelerating" ? "ACELERANDO" : speedTrend === "braking" ? "PARANDO" : "EM MOVIMENTO";
-  arrow.textContent = speedTrend === "accelerating" ? "▲" : speedTrend === "braking" ? "▼" : "●";
+  trend.textContent = speedTrendText();
+  arrow.textContent = speedTrendIcon();
   panel.querySelectorAll<HTMLElement>(".power-bars i").forEach((bar, index) => bar.classList.toggle("active", index < Math.ceil(speedKmh / 10)));
   document.querySelector<HTMLElement>(".motion-lines")?.style.setProperty("--speed", String(speedKmh));
 }
@@ -148,18 +187,42 @@ function updateSpeedPanel(): void {
 function beginTravel(): void {
   window.clearTimeout(journeyTimer);
   window.clearInterval(speedInterval);
-  const duration = travelSeconds * 1000;
-  const startedAt = performance.now();
+  if (randomDriveKeys) {
+    [accelerateKey, brakeKey] = distinctKeys(driveKeyPool, Math.floor(Math.random() * driveKeyPool.length), Math.floor(Math.random() * driveKeyPool.length));
+  } else { accelerateKey = "A"; brakeKey = "P"; }
   speedKmh = 0;
-  speedTrend = "accelerating";
-  updateSpeedPanel();
+  speedTrend = "idle";
+  driveStage = "await-accelerate";
+  render();
+  speak(`Aperte a tecla ${accelerateKey} para acelerar`);
+}
+
+function animateSpeed(from: number, to: number, duration: number, onDone: () => void): void {
+  window.clearInterval(speedInterval);
+  const startedAt = performance.now();
   speedInterval = window.setInterval(() => {
     const progress = Math.min(1, (performance.now() - startedAt) / duration);
-    speedKmh = speedAtProgress(progress);
-    speedTrend = progress < 0.25 ? "accelerating" : progress < 0.68 ? "cruising" : "braking";
+    speedKmh = Math.round(from + (to - from) * progress);
     updateSpeedPanel();
+    if (progress === 1) { window.clearInterval(speedInterval); onDone(); }
   }, 100);
-  journeyTimer = window.setTimeout(arrive, duration);
+}
+
+function accelerateTrain(): void {
+  driveStage = "accelerating"; speedTrend = "accelerating"; render();
+  speak("Acelerando");
+  animateSpeed(0, 70, 2600, () => {
+    driveStage = "cruising"; speedTrend = "cruising"; speedKmh = 70; render();
+    journeyTimer = window.setTimeout(() => {
+      driveStage = "await-brake"; render(); speak(`Aperte a tecla ${brakeKey} para parar`);
+    }, travelSeconds * 1000);
+  });
+}
+
+function brakeTrain(): void {
+  driveStage = "braking"; speedTrend = "braking"; render();
+  speak("Parando o trem");
+  animateSpeed(70, 0, 3000, arrive);
 }
 
 function arrive(): void {
@@ -188,10 +251,13 @@ function resumeJourney(saved: SaveGame): void {
 }
 
 document.addEventListener("keydown", event => {
-  if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Space"].includes(event.code)) event.preventDefault();
+  if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Space"].includes(event.code) || event.key.toUpperCase() === accelerateKey || event.key.toUpperCase() === brakeKey) event.preventDefault();
   if (screen === "journey") {
     if (settingsOpen) { if (event.code === "Escape") { settingsOpen = false; render(); } return; }
     if (phase === "travelling" && (event.code === "ArrowUp" || event.code === "ArrowDown")) { view = nextView(view, event.code === "ArrowDown" ? 1 : -1); render(); }
+    const pressed = event.key.toUpperCase();
+    if (phase === "travelling" && driveStage === "await-accelerate" && pressed === accelerateKey) accelerateTrain();
+    else if (phase === "travelling" && driveStage === "await-brake" && pressed === brakeKey) brakeTrain();
     if (event.code === "Space" && actionReady && phase === "waiting-open") openDoors();
     else if (event.code === "Space" && actionReady && phase === "waiting-close") closeDoors();
     return;
@@ -214,6 +280,8 @@ app.addEventListener("click", event => {
   if (target.closest(".close-settings") || target.classList.contains("settings-backdrop")) { settingsOpen = false; render(); return; }
   const timeOption = target.closest<HTMLButtonElement>(".time-option");
   if (timeOption) { travelSeconds = Number(timeOption.dataset.seconds); localStorage.setItem("metro-aventura-travel-seconds", String(travelSeconds)); render(); }
+  const controlOption = target.closest<HTMLButtonElement>(".control-option");
+  if (controlOption) { randomDriveKeys = controlOption.dataset.random === "true"; localStorage.setItem("metro-aventura-random-keys", String(randomDriveKeys)); render(); }
 });
 
 render();

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { nextStation, nextView, routeFor, speedAtProgress } from "./game-state";
+import { distinctKeys, nextStation, nextView, routeFor, speedAtProgress } from "./game-state";
 import { lines } from "./data";
 
 describe("journey rules", () => {
@@ -34,5 +34,10 @@ describe("journey rules", () => {
     expect(speedAtProgress(0.125)).toBe(35);
     expect(speedAtProgress(0.5)).toBe(70);
     expect(speedAtProgress(1)).toBe(0);
+  });
+
+  it("always selects two different driving keys", () => {
+    expect(distinctKeys(["A", "S", "P"], 0, 0)).toEqual(["A", "S"]);
+    expect(distinctKeys(["A", "S", "P"], 1, 2)).toEqual(["S", "P"]);
   });
 });
