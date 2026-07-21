@@ -83,24 +83,24 @@ function render(): void {
 function renderHome(): void {
   const saved = loadSave();
   const cards = [
-    `<article class="choice-card continue ${selection === 0 ? "selected" : ""}"><div class="choice-icon">🚇</div><h2>Continuar</h2><p>Voltar para a viagem</p></article>`,
-    `<article class="choice-card ${selection === 1 ? "selected" : ""}"><div class="choice-icon">🔵 🟢 🔴</div><h2>Nova viagem</h2><p>Escolher outra linha</p></article>`
+    `<button class="choice-card continue ${selection === 0 ? "selected" : ""}" data-home-action="continue"><div class="choice-icon">🚇</div><h2>Continuar</h2><p>Voltar para a viagem</p></button>`,
+    `<button class="choice-card ${selection === 1 ? "selected" : ""}" data-home-action="new"><div class="choice-icon">🔵 🟢 🔴</div><h2>Nova viagem</h2><p>Escolher outra linha</p></button>`
   ];
   shell(`<header><span class="eyebrow">METRÔ AVENTURA</span><h1>Vamos viajar?</h1></header><section class="choice-grid two">${cards.join("")}</section><footer>${keyHint(["←","→"], "escolher")}${keyHint(["ESPAÇO"], "confirmar")}</footer>`);
   if (!saved) { screen = "line"; render(); }
 }
 
 function renderLineSelect(): void {
-  shell(`<header><span class="eyebrow">ESCOLHA A LINHA</span><h1>Qual trem vamos pegar?</h1></header><section class="choice-grid three">${lines.map((item, i) => `<article class="choice-card line-card ${selection === i ? "selected" : ""}" style="--card-color:${item.color};--card-soft:${item.colorSoft}"><div class="line-number">${item.id}</div><h2>${item.name.replace(`Linha ${item.id} `, "")}</h2><div class="track-line"></div></article>`).join("")}</section><footer>${keyHint(["←","→"], "escolher")}${keyHint(["ESPAÇO"], "confirmar")}</footer>`);
+  shell(`<header><span class="eyebrow">ESCOLHA A LINHA</span><h1>Qual trem vamos pegar?</h1></header><section class="choice-grid three">${lines.map((item, i) => `<button class="choice-card line-card ${selection === i ? "selected" : ""}" data-line-index="${i}" style="--card-color:${item.color};--card-soft:${item.colorSoft}" aria-label="Escolher ${item.name}"><div class="line-number">${item.id}</div><h2>${item.name.replace(`Linha ${item.id} `, "")}</h2><div class="track-line"></div></button>`).join("")}</section><footer>${keyHint(["←","→"], "escolher")}${keyHint(["ESPAÇO"], "confirmar")}</footer>`);
 }
 
 function renderDirection(): void {
   const options = [1, -1] as const;
-  shell(`<header><span class="eyebrow">ESCOLHA O SENTIDO</span><h1>Para onde vamos?</h1></header><section class="choice-grid two">${options.map((dir, i) => { const route = routeFor(line.stations, dir); return `<article class="choice-card direction-card ${selection === i ? "selected" : ""}"><div class="train-arrow">${dir === 1 ? "🚇 →" : "← 🚇"}</div><h2>${route.at(-1)}</h2><p>Destino</p></article>`; }).join("")}</section><footer>${keyHint(["←","→"], "escolher")}${keyHint(["ESPAÇO"], "confirmar")}</footer>`);
+  shell(`<header><span class="eyebrow">ESCOLHA O SENTIDO</span><h1>Para onde vamos?</h1></header><section class="choice-grid two">${options.map((dir, i) => { const route = routeFor(line.stations, dir); return `<button class="choice-card direction-card ${selection === i ? "selected" : ""}" data-direction="${dir}"><div class="train-arrow">${dir === 1 ? "🚇 →" : "← 🚇"}</div><h2>${route.at(-1)}</h2><p>Destino</p></button>`; }).join("")}</section><footer>${keyHint(["←","→"], "escolher")}${keyHint(["ESPAÇO"], "confirmar")}</footer>`);
 }
 
 function renderFleet(): void {
-  shell(`<header><span class="eyebrow">ESCOLHA O TREM</span><h1>Qual frota você quer?</h1></header><section class="fleet-grid">${line.fleets.map((id, i) => `<article class="fleet-card ${selection === i ? "selected" : ""}"><img src="${fleetImages[id]}" alt="Frente do trem da frota ${id}"/><div><span>FROTA</span><strong>${id}</strong></div></article>`).join("")}</section><footer>${keyHint(["←","→"], "escolher")}${keyHint(["ESPAÇO"], "confirmar")}</footer>`);
+  shell(`<header><span class="eyebrow">ESCOLHA O TREM</span><h1>Qual frota você quer?</h1></header><section class="fleet-grid">${line.fleets.map((id, i) => `<button class="fleet-card ${selection === i ? "selected" : ""}" data-fleet-index="${i}" aria-label="Escolher frota ${id}"><img src="${fleetImages[id]}" alt="Frente do trem da frota ${id}"/><div><span>FROTA</span><strong>${id}</strong></div></button>`).join("")}</section><footer>${keyHint(["←","→"], "escolher")}${keyHint(["ESPAÇO"], "confirmar")}</footer>`);
 }
 
 function trainArt(): string {
@@ -155,7 +155,7 @@ function renderJourney(): void {
 }
 
 function renderFinished(): void {
-  shell(`<div class="finish"><div class="finish-train">🚇</div><span class="eyebrow">CHEGAMOS!</span><h1>${currentRoute().at(-1)}</h1><p>Viagem completa na ${line.name}</p><div class="gentle-stars">★　★　★</div></div><footer>${keyHint(["ESPAÇO"], "nova viagem")}</footer>`);
+  shell(`<div class="finish"><div class="finish-train">🚇</div><span class="eyebrow">CHEGAMOS!</span><h1>${currentRoute().at(-1)}</h1><p>Viagem completa na ${line.name}</p><div class="finish-actions"><button class="finish-option ${selection === 0 ? "selected" : ""}" data-finish-action="repeat"><span>↻</span><b>Repetir viagem</b></button><button class="finish-option ${selection === 1 ? "selected" : ""}" data-finish-action="new"><span>🔵 🟢 🔴</span><b>Escolher linha</b></button></div></div><footer>${keyHint(["←","→"], "escolher")}${keyHint(["ESPAÇO"], "confirmar")}</footer>`);
 }
 
 function announceSelection(): void {
@@ -239,7 +239,7 @@ function openDoors(): void {
 function closeDoors(): void {
   actionReady = false; doorsOpen = false; render(); save();
   journeyTimer = window.setTimeout(() => {
-    if (stationIndex >= currentRoute().length - 1) { localStorage.removeItem(SAVE_KEY); screen = "finished"; render(); speak("Chegamos ao terminal"); return; }
+    if (stationIndex >= currentRoute().length - 1) { localStorage.removeItem(SAVE_KEY); screen = "finished"; selection = 0; render(); speak("Chegamos ao terminal"); return; }
     stationIndex += 1; phase = "travelling"; view = "cab"; render(); speak(`Próxima estação, ${currentRoute()[stationIndex]}`);
     beginTravel();
   }, 1400);
@@ -262,7 +262,11 @@ document.addEventListener("keydown", event => {
     else if (event.code === "Space" && actionReady && phase === "waiting-close") closeDoors();
     return;
   }
-  if (screen === "finished" && event.code === "Space") { screen = "line"; selection = 0; render(); speak(lines[0].name); return; }
+  if (screen === "finished") {
+    if (event.code === "ArrowLeft" || event.code === "ArrowRight") { selection = selection === 0 ? 1 : 0; render(); }
+    if (event.code === "Space") { if (selection === 0) startJourney(); else { screen = "line"; selection = 0; render(); speak(lines[0].name); } }
+    return;
+  }
   const max = screen === "home" || screen === "direction" ? 2 : screen === "line" ? lines.length : line.fleets.length;
   if (event.code === "ArrowLeft") { selection = (selection - 1 + max) % max; render(); announceSelection(); }
   if (event.code === "ArrowRight") { selection = (selection + 1) % max; render(); announceSelection(); }
@@ -275,6 +279,16 @@ document.addEventListener("keydown", event => {
 
 app.addEventListener("click", event => {
   const target = event.target as HTMLElement;
+  const homeAction = target.closest<HTMLButtonElement>("[data-home-action]");
+  if (homeAction) { const saved = loadSave(); if (homeAction.dataset.homeAction === "continue" && saved) resumeJourney(saved); else { screen = "line"; selection = 0; render(); speak(lines[0].name); } return; }
+  const lineCard = target.closest<HTMLButtonElement>("[data-line-index]");
+  if (lineCard) { selection = Number(lineCard.dataset.lineIndex); line = lines[selection]; screen = "direction"; selection = 0; render(); announceSelection(); return; }
+  const directionCard = target.closest<HTMLButtonElement>("[data-direction]");
+  if (directionCard) { direction = Number(directionCard.dataset.direction) as 1 | -1; screen = "fleet"; selection = 0; render(); announceSelection(); return; }
+  const fleetCard = target.closest<HTMLButtonElement>("[data-fleet-index]");
+  if (fleetCard) { selection = Number(fleetCard.dataset.fleetIndex); fleet = line.fleets[selection]; startJourney(); return; }
+  const finishAction = target.closest<HTMLButtonElement>("[data-finish-action]");
+  if (finishAction) { if (finishAction.dataset.finishAction === "repeat") startJourney(); else { screen = "line"; selection = 0; render(); speak(lines[0].name); } return; }
   if (target.closest(".sound-button")) { speechEnabled = !speechEnabled; speechSynthesis.cancel(); render(); return; }
   if (target.closest(".settings-button")) { settingsOpen = true; render(); return; }
   if (target.closest(".close-settings") || target.classList.contains("settings-backdrop")) { settingsOpen = false; render(); return; }
