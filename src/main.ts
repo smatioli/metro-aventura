@@ -1,5 +1,5 @@
 import "./style.css";
-import { fleetImages, fleetThemes, lines, prototypeViewMedia, type FleetId } from "./data";
+import { fleetImages, fleetThemes, lines, platformSideFor, prototypeViewMedia, type FleetId } from "./data";
 import { SAVE_KEY, distinctKeys, nextView, routeFor, type JourneyPhase, type SaveGame, type Screen, type View } from "./game-state";
 
 const app = document.querySelector<HTMLDivElement>("#app")!;
@@ -47,7 +47,33 @@ function speak(text: string): void {
   speechSynthesis.speak(utterance);
 }
 
+function speakPlatformArrival(): void {
+  if (!speechEnabled || !("speechSynthesis" in window)) return;
+  speechSynthesis.cancel();
+  const portuguese = new SpeechSynthesisUtterance(`Estação ${currentRoute()[stationIndex]}. Desembarque pelo ${platformSideLabel()}.`);
+  portuguese.lang = "pt-BR";
+  portuguese.rate = 0.78;
+  const englishSide = currentPlatformSide() === "right" ? "right" : "left";
+  const english = new SpeechSynthesisUtterance(`Exit on the ${englishSide} side.`);
+  english.lang = "en-US";
+  english.rate = 0.76;
+  const instruction = new SpeechSynthesisUtterance("Abra as portas.");
+  instruction.lang = "pt-BR";
+  instruction.rate = 0.78;
+  speechSynthesis.speak(portuguese);
+  speechSynthesis.speak(english);
+  speechSynthesis.speak(instruction);
+}
+
 function currentRoute(): string[] { return routeFor(line.stations, direction); }
+
+function currentPlatformSide(): "right" | "left" {
+  return platformSideFor(line.id, currentRoute()[stationIndex]);
+}
+
+function platformSideLabel(): string {
+  return currentPlatformSide() === "right" ? "lado direito" : "lado esquerdo";
+}
 
 function keyHint(keys: string[], label: string): string {
   return `<div class="key-hint" aria-label="${label}">${keys.map(key => `<kbd>${key}</kbd>`).join("")}<span>${label}</span></div>`;
@@ -108,7 +134,7 @@ function trainArt(): string {
   if (view === "cab") return `<div class="photo-scene cab-photo" style="--photo:url('${prototypeViewMedia.cab}')"><div class="motion-lines" style="--speed:${speedKmh}"></div><div class="photo-vignette"></div><div class="cab-status"><span>PRÓXIMA ESTAÇÃO</span><strong>${currentRoute()[stationIndex]}</strong></div><div class="speed-panel ${speedTrend}" style="--speed-angle:${-120 + speedKmh * 3.42}deg"><div class="speed-dial"><i></i><div><strong data-speed>${speedKmh}</strong><span>km/h</span></div></div><div class="speed-trend"><b class="trend-arrow">${speedTrendIcon()}</b><span data-trend>${speedTrendText()}</span></div><div class="power-bars">${Array.from({length: 7}, (_, i) => `<i class="${i < Math.ceil(speedKmh / 10) ? "active" : ""}"></i>`).join("")}</div></div><div class="fleet-chip">FROTA ${fleet}</div></div>`;
   if (view === "interior") return `<div class="photo-scene interior-photo" style="--photo:url('${prototypeViewMedia.interior}')"><div class="photo-vignette"></div><div class="interior-route"><span>AGORA</span><strong>${currentRoute()[stationIndex]}</strong><b>→</b><span>DEPOIS</span><strong>${next}</strong></div><div class="fleet-chip">FROTA ${fleet}</div></div>`;
   const theme = fleetThemes[fleet];
-  return `<div class="platform illustrated-platform"><div class="station-sign">${currentRoute()[stationIndex]}</div><div class="train-side fleet-${fleet.toLowerCase()} front-${theme.front} ${phase === "travelling" || phase === "arriving" ? "moving" : ""}" style="--fleet-body:${theme.body};--fleet-stripe:${theme.stripe};--fleet-accent:${theme.accent}"><div class="train-nose"><div class="driver-window"></div><div class="headlight"></div></div><div class="window"></div><div class="train-doors ${doorsOpen ? "open" : ""}"><span></span><span></span></div><div class="window"></div><div class="train-doors second ${doorsOpen ? "open" : ""}"><span></span><span></span></div><div class="fleet-mark"><img src="${fleetImages[fleet]}" alt="Referência da frota ${fleet}"/><b>${fleet}</b></div></div>${doorsOpen && phase === "doors-open" ? `<div class="passenger-flow" aria-hidden="true"><div class="person exit person-one"><i></i><b></b></div><div class="person exit person-two"><i></i><b></b></div><div class="person enter person-three"><i></i><b></b></div><div class="person enter person-four"><i></i><b></b></div></div><div class="passenger-message"><span>↙</span> SAINDO <i></i> ENTRANDO <span>↗</span></div>` : ""}<div class="platform-edge"></div><div class="door-caption ${doorsOpen ? "open" : ""}">${doorsOpen ? "PORTAS ABERTAS" : "PORTAS FECHADAS"}</div></div>`;
+  return `<div class="platform illustrated-platform"><div class="station-sign">${currentRoute()[stationIndex]}</div><div class="platform-side ${currentPlatformSide()}"><span>${currentPlatformSide() === "right" ? "→" : "←"}</span><b>DESEMBARQUE</b><small>${platformSideLabel()}</small></div><div class="train-side fleet-${fleet.toLowerCase()} front-${theme.front} ${phase === "travelling" || phase === "arriving" ? "moving" : ""}" style="--fleet-body:${theme.body};--fleet-stripe:${theme.stripe};--fleet-accent:${theme.accent}"><div class="train-nose"><div class="driver-window"></div><div class="headlight"></div></div><div class="window"></div><div class="train-doors ${doorsOpen ? "open" : ""}"><span></span><span></span></div><div class="window"></div><div class="train-doors second ${doorsOpen ? "open" : ""}"><span></span><span></span></div><div class="fleet-mark"><img src="${fleetImages[fleet]}" alt="Referência da frota ${fleet}"/><b>${fleet}</b></div></div>${doorsOpen && phase === "doors-open" ? `<div class="passenger-flow" aria-hidden="true"><div class="person exit person-one"><i></i><b></b></div><div class="person exit person-two"><i></i><b></b></div><div class="person enter person-three"><i></i><b></b></div><div class="person enter person-four"><i></i><b></b></div></div><div class="passenger-message"><span>↙</span> SAINDO <i></i> ENTRANDO <span>↗</span></div>` : ""}<div class="platform-edge"></div><div class="door-caption ${doorsOpen ? "open" : ""}">${doorsOpen ? "PORTAS ABERTAS" : "PORTAS FECHADAS"}</div></div>`;
 }
 
 function renderMap(): string {
@@ -228,7 +254,7 @@ function brakeTrain(): void {
 function arrive(): void {
   window.clearInterval(speedInterval); speedKmh = 0; speedTrend = "braking";
   phase = "arriving"; view = "side"; render();
-  journeyTimer = window.setTimeout(() => { phase = "waiting-open"; actionReady = true; render(); speak(`Estação ${currentRoute()[stationIndex]}. Abra as portas.`); }, 1800);
+  journeyTimer = window.setTimeout(() => { phase = "waiting-open"; actionReady = true; render(); speakPlatformArrival(); }, 1800);
 }
 
 function openDoors(): void {

@@ -1,5 +1,6 @@
 export type LineId = "1" | "2" | "3";
 export type FleetId = "E" | "G" | "H" | "I" | "J" | "K" | "L";
+export type PlatformSide = "right" | "left";
 
 export interface MetroLine {
   id: LineId;
@@ -62,3 +63,32 @@ export const prototypeViewMedia: ViewMedia = {
   interior: "/img/interno.jpeg",
   cab: "/img/cabin.jpg"
 };
+
+// Altere somente "right" para "left" nas estações com desembarque à esquerda.
+export const platformSides: Record<LineId, Record<string, PlatformSide>> = {
+  "1": {
+    "Jabaquara": "right", "Conceição": "right", "São Judas": "right", "Saúde": "right",
+    "Praça da Árvore": "right", "Santa Cruz": "right", "Vila Mariana": "right", "Ana Rosa": "right",
+    "Paraíso": "right", "Vergueiro": "right", "São Joaquim": "right", "Japão-Liberdade": "right",
+    "Sé": "right", "São Bento": "right", "Luz": "right", "Tiradentes": "right", "Armênia": "right",
+    "Portuguesa-Tietê": "right", "Carandiru": "right", "Santana": "right", "Jardim São Paulo": "right",
+    "Parada Inglesa": "right", "Tucuruvi": "right"
+  },
+  "2": {
+    "Vila Prudente": "right", "Tamanduateí": "right", "Sacomã": "right", "Alto do Ipiranga": "right",
+    "Santos-Imigrantes": "left", "Chácara Klabin": "left", "Ana Rosa": "left", "Paraíso": "right",
+    "Brigadeiro": "left", "Trianon-Masp": "left", "Consolação": "left", "Clínicas": "right",
+    "Sumaré": "right", "Vila Madalena": "right"
+  },
+  "3": {
+    "Corinthians-Itaquera": "right", "Artur Alvim": "right", "Patriarca-Vila Ré": "right",
+    "Guilhermina-Esperança": "right", "Vila Matilde": "right", "Penha": "right", "Carrão": "right",
+    "Tatuapé": "right", "Belém": "right", "Bresser-Mooca": "right", "Brás": "right",
+    "Pedro II": "right", "Sé": "right", "Anhangabaú": "right", "República": "right",
+    "Santa Cecília": "right", "Marechal Deodoro": "right", "Palmeiras-Barra Funda": "right"
+  }
+};
+
+export function platformSideFor(lineId: LineId, station: string): PlatformSide {
+  return platformSides[lineId][station] ?? "right";
+}

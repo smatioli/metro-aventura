@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { distinctKeys, nextStation, nextView, routeFor, speedAtProgress } from "./game-state";
-import { lines } from "./data";
+import { lines, platformSideFor, platformSides } from "./data";
 
 describe("journey rules", () => {
   it("cycles through views in both directions", () => {
@@ -39,5 +39,12 @@ describe("journey rules", () => {
   it("always selects two different driving keys", () => {
     expect(distinctKeys(["A", "S", "P"], 0, 0)).toEqual(["A", "S"]);
     expect(distinctKeys(["A", "S", "P"], 1, 2)).toEqual(["S", "P"]);
+  });
+
+  it("configures a valid platform side for every station", () => {
+    for (const line of lines) {
+      expect(Object.keys(platformSides[line.id])).toHaveLength(line.stations.length);
+      for (const station of line.stations) expect(["right", "left"]).toContain(platformSideFor(line.id, station));
+    }
   });
 });
