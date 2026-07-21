@@ -68,7 +68,7 @@ export const prototypeViewMedia: ViewMedia = {
 export const platformSides: Record<LineId, Record<string, PlatformSide>> = {
   "1": {
     "Jabaquara": "right", "Conceição": "right", "São Judas": "right", "Saúde": "right",
-    "Praça da Árvore": "right", "Santa Cruz": "right", "Vila Mariana": "right", "Ana Rosa": "right",
+    "Praça da Árvore": "right", "Santa Cruz": "right", "Vila Mariana": "right", "Ana Rosa": "left",
     "Paraíso": "right", "Vergueiro": "right", "São Joaquim": "right", "Japão-Liberdade": "right",
     "Sé": "right", "São Bento": "right", "Luz": "right", "Tiradentes": "right", "Armênia": "right",
     "Portuguesa-Tietê": "right", "Carandiru": "right", "Santana": "right", "Jardim São Paulo": "right",
@@ -84,7 +84,7 @@ export const platformSides: Record<LineId, Record<string, PlatformSide>> = {
     "Corinthians-Itaquera": "right", "Artur Alvim": "right", "Patriarca-Vila Ré": "right",
     "Guilhermina-Esperança": "right", "Vila Matilde": "right", "Penha": "right", "Carrão": "right",
     "Tatuapé": "right", "Belém": "right", "Bresser-Mooca": "right", "Brás": "right",
-    "Pedro II": "right", "Sé": "right", "Anhangabaú": "right", "República": "right",
+    "Pedro II": "right", "Sé": "left", "Anhangabaú": "right", "República": "right",
     "Santa Cecília": "right", "Marechal Deodoro": "right", "Palmeiras-Barra Funda": "right"
   }
 };

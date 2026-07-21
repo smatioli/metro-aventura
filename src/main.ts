@@ -1,6 +1,7 @@
 import "./style.css";
 import { fleetImages, fleetThemes, lines, platformSideFor, prototypeViewMedia, type FleetId } from "./data";
 import { SAVE_KEY, distinctKeys, nextView, routeFor, type JourneyPhase, type SaveGame, type Screen, type View } from "./game-state";
+import { trainAudio } from "./train-audio";
 
 const app = document.querySelector<HTMLDivElement>("#app")!;
 
@@ -196,6 +197,7 @@ function startJourney(): void {
 }
 
 function updateSpeedPanel(): void {
+  trainAudio.setMotion(speedKmh, speedTrend);
   const number = document.querySelector<HTMLElement>("[data-speed]");
   const panel = document.querySelector<HTMLElement>(".speed-panel");
   const trend = document.querySelector<HTMLElement>("[data-trend]");
@@ -218,6 +220,7 @@ function beginTravel(): void {
   } else { accelerateKey = "A"; brakeKey = "P"; }
   speedKmh = 0;
   speedTrend = "idle";
+  trainAudio.stop();
   driveStage = "await-accelerate";
   render();
   speak(`Aperte a tecla ${accelerateKey} para acelerar`);
@@ -235,8 +238,8 @@ function animateSpeed(from: number, to: number, duration: number, onDone: () => 
 }
 
 function accelerateTrain(): void {
-  driveStage = "accelerating"; speedTrend = "accelerating"; render();
-  speak("Acelerando");
+  driveStage = "accelerating"; speedTrend = "accelerating"; trainAudio.setMotion(0, "accelerating"); render();
+  speak(`Acelerando. Próxima estação: ${currentRoute()[stationIndex]}`);
   animateSpeed(0, 70, 2600, () => {
     driveStage = "cruising"; speedTrend = "cruising"; speedKmh = 70; render();
     journeyTimer = window.setTimeout(() => {
@@ -253,6 +256,7 @@ function brakeTrain(): void {
 
 function arrive(): void {
   window.clearInterval(speedInterval); speedKmh = 0; speedTrend = "braking";
+  trainAudio.stop();
   phase = "arriving"; view = "side"; render();
   journeyTimer = window.setTimeout(() => { phase = "waiting-open"; actionReady = true; render(); speakPlatformArrival(); }, 1800);
 }
@@ -315,7 +319,7 @@ app.addEventListener("click", event => {
   if (fleetCard) { selection = Number(fleetCard.dataset.fleetIndex); fleet = line.fleets[selection]; startJourney(); return; }
   const finishAction = target.closest<HTMLButtonElement>("[data-finish-action]");
   if (finishAction) { if (finishAction.dataset.finishAction === "repeat") startJourney(); else { screen = "line"; selection = 0; render(); speak(lines[0].name); } return; }
-  if (target.closest(".sound-button")) { speechEnabled = !speechEnabled; speechSynthesis.cancel(); render(); return; }
+  if (target.closest(".sound-button")) { speechEnabled = !speechEnabled; trainAudio.setEnabled(speechEnabled); speechSynthesis.cancel(); render(); return; }
   if (target.closest(".settings-button")) { settingsOpen = true; render(); return; }
   if (target.closest(".close-settings") || target.classList.contains("settings-backdrop")) { settingsOpen = false; render(); return; }
   const timeOption = target.closest<HTMLButtonElement>(".time-option");
