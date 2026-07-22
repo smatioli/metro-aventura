@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { distinctKeys, nextStation, nextView, routeFor, speedAtProgress } from "./game-state";
-import { lines, platformSideFor, platformSides } from "./data";
+import { cptmFleetMatrix, lines, platformSideFor, platformSides } from "./data";
 
 describe("journey rules", () => {
   it("cycles through views in both directions", () => {
@@ -17,16 +17,31 @@ describe("journey rules", () => {
     expect(routeFor(["A", "B", "C"], -1)).toEqual(["C", "B", "A"]);
   });
 
-  it("contains every station in the three prototype routes", () => {
-    expect(lines.map(line => line.stations.length)).toEqual([23, 14, 18]);
+  it("contains every station in the prototype routes", () => {
+    expect(lines.map(line => line.stations.length)).toEqual([23, 14, 18, 17, 22, 21, 15, 17, 13, 3]);
   });
 
   it("uses the approved fleet matrix", () => {
     expect(lines.map(line => line.fleets)).toEqual([
       ["E", "I", "J", "K", "L"],
       ["I", "J"],
-      ["G", "H", "K"]
+      ["G", "H", "K"],
+      ["9500"],
+      ["8900", "7000"],
+      ["8900", "7000"],
+      ["8500", "7500", "2070"],
+      ["8000", "8500"],
+      ["7000", "8500", "9000"],
+      ["2500"]
     ]);
+  });
+
+  it("stores the approved CPTM fleet matrix", () => {
+    expect(cptmFleetMatrix).toEqual({
+      "7": ["9500"], "8": ["8900", "7000"], "9": ["8900", "7000"],
+      "10": ["8500", "7500", "2070"], "11": ["8000", "8500"],
+      "12": ["7000", "8500", "9000"], "13": ["2500"]
+    });
   });
 
   it("accelerates, cruises and stops during a segment", () => {

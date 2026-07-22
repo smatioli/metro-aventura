@@ -1,12 +1,13 @@
 import "./style.css";
-import { fleetImages, fleetThemes, lines, platformSideFor, prototypeViewMedia, type FleetId } from "./data";
+import { companies, fleetImages, fleetThemes, lines, platformSideFor, prototypeViewMedia, type CompanyId, type FleetId } from "./data";
 import { SAVE_KEY, distinctKeys, nextView, routeFor, type JourneyPhase, type SaveGame, type Screen, type View } from "./game-state";
 import { trainAudio } from "./train-audio";
 
 const app = document.querySelector<HTMLDivElement>("#app")!;
 
-let screen: Screen = loadSave() ? "home" : "line";
+let screen: Screen = loadSave() ? "home" : "company";
 let selection = 0;
+let company: CompanyId = "metro";
 let line = lines[0];
 let direction: 1 | -1 = 1;
 let fleet: FleetId = "E";
@@ -67,6 +68,9 @@ function speakPlatformArrival(): void {
 }
 
 function currentRoute(): string[] { return routeFor(line.stations, direction); }
+function companyLines() { return lines.filter(item => item.companyId === company); }
+function lineFleets(): FleetId[] { return line.fleets; }
+function companyLogo(): string { return companies.find(item => item.id === company)?.logo ?? companies[0].logo; }
 
 function currentPlatformSide(): "right" | "left" {
   return platformSideFor(line.id, currentRoute()[stationIndex]);
@@ -100,6 +104,7 @@ function shell(content: string, className = ""): void {
 
 function render(): void {
   if (screen === "home") return renderHome();
+  if (screen === "company") return renderCompany();
   if (screen === "line") return renderLineSelect();
   if (screen === "direction") return renderDirection();
   if (screen === "fleet") return renderFleet();
@@ -114,11 +119,16 @@ function renderHome(): void {
     `<button class="choice-card ${selection === 1 ? "selected" : ""}" data-home-action="new"><div class="choice-icon">🔵 🟢 🔴</div><h2>Nova viagem</h2><p>Escolher outra linha</p></button>`
   ];
   shell(`<header><span class="eyebrow">METRÔ AVENTURA</span><h1>Vamos viajar?</h1></header><section class="choice-grid two">${cards.join("")}</section><footer>${keyHint(["←","→"], "escolher")}${keyHint(["ESPAÇO"], "confirmar")}</footer>`);
-  if (!saved) { screen = "line"; render(); }
+  if (!saved) { screen = "company"; render(); }
+}
+
+function renderCompany(): void {
+  shell(`<header><span class="eyebrow">ESCOLHA A COMPANHIA</span><h1>Com qual trem vamos viajar?</h1></header><section class="company-grid">${companies.map((item, i) => `<button class="company-card ${selection === i ? "selected" : ""}" data-company-index="${i}" aria-label="Escolher ${item.name}"><img src="${item.logo}" alt="Logotipo ${item.name}"/><h2>${item.name}</h2></button>`).join("")}</section><footer>${keyHint(["←","→"], "escolher")}${keyHint(["ESPAÇO"], "confirmar")}</footer>`);
 }
 
 function renderLineSelect(): void {
-  shell(`<header><span class="eyebrow">ESCOLHA A LINHA</span><h1>Qual trem vamos pegar?</h1></header><section class="choice-grid three">${lines.map((item, i) => `<button class="choice-card line-card ${selection === i ? "selected" : ""}" data-line-index="${i}" style="--card-color:${item.color};--card-soft:${item.colorSoft}" aria-label="Escolher ${item.name}"><div class="line-number">${item.id}</div><h2>${item.name.replace(`Linha ${item.id} `, "")}</h2><div class="track-line"></div></button>`).join("")}</section><footer>${keyHint(["←","→"], "escolher")}${keyHint(["ESPAÇO"], "confirmar")}</footer>`);
+  const choices = companyLines();
+  shell(`<header><span class="eyebrow">ESCOLHA A LINHA</span><h1>Onde vamos viajar?</h1></header><section class="choice-grid ${choices.length > 2 ? "three" : "two"}">${choices.map((item, i) => `<button class="choice-card line-card ${selection === i ? "selected" : ""}" data-line-id="${item.id}" style="--card-color:${item.color};--card-soft:${item.colorSoft}" aria-label="Escolher ${item.name}"><div class="line-number">${item.id}</div><h2>${item.name.replace(`Linha ${item.id} `, "")}</h2><div class="track-line"></div></button>`).join("")}</section><footer>${keyHint(["←","→"], "escolher")}${keyHint(["ESPAÇO"], "confirmar")}</footer>`);
 }
 
 function renderDirection(): void {
@@ -127,15 +137,17 @@ function renderDirection(): void {
 }
 
 function renderFleet(): void {
-  shell(`<header><span class="eyebrow">ESCOLHA O TREM</span><h1>Qual frota você quer?</h1></header><section class="fleet-grid">${line.fleets.map((id, i) => `<button class="fleet-card ${selection === i ? "selected" : ""}" data-fleet-index="${i}" aria-label="Escolher frota ${id}"><img src="${fleetImages[id]}" alt="Frente do trem da frota ${id}"/><div><span>FROTA</span><strong>${id}</strong></div></button>`).join("")}</section><footer>${keyHint(["←","→"], "escolher")}${keyHint(["ESPAÇO"], "confirmar")}</footer>`);
+  const fleets = lineFleets();
+  shell(`<header><span class="eyebrow">ESCOLHA O TREM</span><h1>Qual frota você quer?</h1></header><section class="fleet-grid company-${company}">${fleets.map((id, i) => `<button class="fleet-card ${selection === i ? "selected" : ""}" data-fleet-id="${id}" aria-label="Escolher frota ${id}"><img src="${fleetImages[id]}" alt="Trem da frota ${id}"/><div><span>${company === "cptm" ? "SÉRIE" : "FROTA"}</span><strong>${id}</strong></div></button>`).join("")}</section><footer>${keyHint(["←","→"], "escolher")}${keyHint(["ESPAÇO"], "confirmar")}</footer>`);
 }
 
 function trainArt(): string {
   const next = currentRoute()[stationIndex + 1] ?? "Terminal";
-  if (view === "cab") return `<div class="photo-scene cab-photo" style="--photo:url('${prototypeViewMedia.cab}')"><div class="motion-lines" style="--speed:${speedKmh}"></div><div class="photo-vignette"></div><div class="cab-status"><span>PRÓXIMA ESTAÇÃO</span><strong>${currentRoute()[stationIndex]}</strong></div><div class="speed-panel ${speedTrend}" style="--speed-angle:${-120 + speedKmh * 3.42}deg"><div class="speed-dial"><i></i><div><strong data-speed>${speedKmh}</strong><span>km/h</span></div></div><div class="speed-trend"><b class="trend-arrow">${speedTrendIcon()}</b><span data-trend>${speedTrendText()}</span></div><div class="power-bars">${Array.from({length: 7}, (_, i) => `<i class="${i < Math.ceil(speedKmh / 10) ? "active" : ""}"></i>`).join("")}</div></div><div class="fleet-chip">FROTA ${fleet}</div></div>`;
-  if (view === "interior") return `<div class="photo-scene interior-photo" style="--photo:url('${prototypeViewMedia.interior}')"><div class="photo-vignette"></div><div class="interior-route"><span>AGORA</span><strong>${currentRoute()[stationIndex]}</strong><b>→</b><span>DEPOIS</span><strong>${next}</strong></div><div class="fleet-chip">FROTA ${fleet}</div></div>`;
+  const fleetLabel = company === "cptm" ? `SÉRIE ${fleet}` : `FROTA ${fleet}`;
+  if (view === "cab") return `<div class="photo-scene cab-photo" style="--photo:url('${prototypeViewMedia.cab}')"><div class="motion-lines" style="--speed:${speedKmh}"></div><div class="photo-vignette"></div><div class="cab-status"><span>PRÓXIMA ESTAÇÃO</span><strong>${currentRoute()[stationIndex]}</strong></div><div class="speed-panel ${speedTrend}" style="--speed-angle:${-120 + speedKmh * 3.42}deg"><div class="speed-dial"><i></i><div><strong data-speed>${speedKmh}</strong><span>km/h</span></div></div><div class="speed-trend"><b class="trend-arrow">${speedTrendIcon()}</b><span data-trend>${speedTrendText()}</span></div><div class="power-bars">${Array.from({length: 7}, (_, i) => `<i class="${i < Math.ceil(speedKmh / 10) ? "active" : ""}"></i>`).join("")}</div></div><div class="fleet-chip">${fleetLabel}</div></div>`;
+  if (view === "interior") return `<div class="photo-scene interior-photo" style="--photo:url('${prototypeViewMedia.interior}')"><div class="photo-vignette"></div><div class="interior-route"><span>AGORA</span><strong>${currentRoute()[stationIndex]}</strong><b>→</b><span>DEPOIS</span><strong>${next}</strong></div><div class="fleet-chip">${fleetLabel}</div></div>`;
   const theme = fleetThemes[fleet];
-  return `<div class="platform illustrated-platform"><div class="station-sign">${currentRoute()[stationIndex]}</div><div class="platform-side ${currentPlatformSide()}"><span>${currentPlatformSide() === "right" ? "→" : "←"}</span><b>DESEMBARQUE</b><small>${platformSideLabel()}</small></div><div class="train-side fleet-${fleet.toLowerCase()} front-${theme.front} ${phase === "travelling" || phase === "arriving" ? "moving" : ""}" style="--fleet-body:${theme.body};--fleet-stripe:${theme.stripe};--fleet-accent:${theme.accent}"><div class="train-nose"><div class="driver-window"></div><div class="headlight"></div></div><div class="window"></div><div class="train-doors ${doorsOpen ? "open" : ""}"><span></span><span></span></div><div class="window"></div><div class="train-doors second ${doorsOpen ? "open" : ""}"><span></span><span></span></div><div class="fleet-mark"><img src="${fleetImages[fleet]}" alt="Referência da frota ${fleet}"/><b>${fleet}</b></div></div>${doorsOpen && phase === "doors-open" ? `<div class="passenger-flow" aria-hidden="true"><div class="person exit person-one"><i></i><b></b></div><div class="person exit person-two"><i></i><b></b></div><div class="person enter person-three"><i></i><b></b></div><div class="person enter person-four"><i></i><b></b></div></div><div class="passenger-message"><span>↙</span> SAINDO <i></i> ENTRANDO <span>↗</span></div>` : ""}<div class="platform-edge"></div><div class="door-caption ${doorsOpen ? "open" : ""}">${doorsOpen ? "PORTAS ABERTAS" : "PORTAS FECHADAS"}</div></div>`;
+  return `<div class="platform illustrated-platform"><div class="station-sign">${currentRoute()[stationIndex]}</div><div class="platform-side ${currentPlatformSide()}"><span>${currentPlatformSide() === "right" ? "→" : "←"}</span><b>DESEMBARQUE</b><small>${platformSideLabel()}</small></div><div class="train-side fleet-${fleet.toLowerCase()} front-${theme.front} ${phase === "travelling" || phase === "arriving" ? "moving" : ""}" style="--fleet-body:${theme.body};--fleet-stripe:${theme.stripe};--fleet-accent:${theme.accent}"><div class="train-nose"><div class="driver-window"></div><div class="headlight"></div></div><div class="window"></div><div class="train-doors ${doorsOpen ? "open" : ""}"><span></span><span></span></div><div class="window"></div><div class="train-doors second ${doorsOpen ? "open" : ""}"><span></span><span></span></div><div class="fleet-mark company-${company}"><img src="${companyLogo()}" alt="Logotipo ${company === "cptm" ? "CPTM" : "Metrô"}"/><b>${fleet}</b></div></div>${doorsOpen && phase === "doors-open" ? `<div class="passenger-flow" aria-hidden="true"><div class="person exit person-one"><i></i><b></b></div><div class="person exit person-two"><i></i><b></b></div><div class="person enter person-three"><i></i><b></b></div><div class="person enter person-four"><i></i><b></b></div></div><div class="passenger-message"><span>↙</span> SAINDO <i></i> ENTRANDO <span>↗</span></div>` : ""}<div class="platform-edge"></div><div class="door-caption ${doorsOpen ? "open" : ""}">${doorsOpen ? "PORTAS ABERTAS" : "PORTAS FECHADAS"}</div></div>`;
 }
 
 function renderMap(): string {
@@ -178,21 +190,36 @@ function renderJourney(): void {
   const message = phaseMessage();
   const cameraLocked = phase !== "travelling";
   const drivePrompt = phase === "travelling" && driveStage === "await-accelerate" ? keyHint([accelerateKey], "acelerar") : phase === "travelling" && driveStage === "await-brake" ? keyHint([brakeKey], "parar") : `<div class="calm-wait">●　●　●</div>`;
-  shell(`<header class="journey-header"><div class="line-pill"><b>${line.id}</b>${line.name}</div><div class="station-copy"><span>${message.subtitle}</span><h1>${message.title}</h1></div><div class="header-actions"><button class="settings-button" aria-label="Abrir configurações">⚙️</button><button class="sound-button" aria-label="Ligar ou desligar voz">${speechEnabled ? "🔊" : "🔇"}</button></div></header><section class="game-stage view-${view}">${trainArt()}<div class="view-pill">${view === "side" ? "LATERAL" : view === "interior" ? "INTERIOR" : "CABINE"}</div>${renderActionPrompt()}</section>${renderMap()}<footer>${!cameraLocked ? keyHint(["↑","↓"], "mudar vista") : `<div class="camera-locked">👁️ Vista lateral na estação</div>`}${phase === "travelling" ? drivePrompt : (phase === "waiting-open" || phase === "waiting-close") && actionReady ? keyHint(["ESPAÇO"], phase === "waiting-open" ? "abrir portas" : "fechar portas") : `<div class="calm-wait">●　●　●</div>`}</footer>${renderSettings()}`, "journey-shell");
+  shell(`<header class="journey-header"><div class="line-pill"><b>${line.id}</b>${line.name}</div><div class="station-copy"><span>${message.subtitle}</span><h1>${message.title}</h1></div><div class="header-actions"><button class="home-button" aria-label="Voltar à tela inicial" title="Tela inicial">🏠</button><button class="settings-button" aria-label="Abrir configurações">⚙️</button><button class="sound-button" aria-label="Ligar ou desligar voz">${speechEnabled ? "🔊" : "🔇"}</button></div></header><section class="game-stage view-${view}">${trainArt()}<div class="view-pill">${view === "side" ? "LATERAL" : view === "interior" ? "INTERIOR" : "CABINE"}</div>${renderActionPrompt()}</section>${renderMap()}<footer>${!cameraLocked ? keyHint(["↑","↓"], "mudar vista") : `<div class="camera-locked">👁️ Vista lateral na estação</div>`}${phase === "travelling" ? drivePrompt : (phase === "waiting-open" || phase === "waiting-close") && actionReady ? keyHint(["ESPAÇO"], phase === "waiting-open" ? "abrir portas" : "fechar portas") : `<div class="calm-wait">●　●　●</div>`}</footer>${renderSettings()}`, "journey-shell");
+}
+
+function goToStart(): void {
+  window.clearTimeout(journeyTimer);
+  window.clearInterval(speedInterval);
+  trainAudio.stop();
+  speechSynthesis.cancel();
+  settingsOpen = false;
+  doorsOpen = false;
+  actionReady = false;
+  screen = "company";
+  selection = 0;
+  render();
+  announceSelection();
 }
 
 function renderFinished(): void {
-  shell(`<div class="finish"><div class="finish-train">🚇</div><span class="eyebrow">CHEGAMOS!</span><h1>${currentRoute().at(-1)}</h1><p>Viagem completa na ${line.name}</p><div class="finish-actions"><button class="finish-option ${selection === 0 ? "selected" : ""}" data-finish-action="repeat"><span>↻</span><b>Repetir viagem</b></button><button class="finish-option ${selection === 1 ? "selected" : ""}" data-finish-action="new"><span>🔵 🟢 🔴</span><b>Escolher linha</b></button></div></div><footer>${keyHint(["←","→"], "escolher")}${keyHint(["ESPAÇO"], "confirmar")}</footer>`);
+  shell(`<div class="finish"><div class="finish-train">🚇</div><span class="eyebrow">CHEGAMOS!</span><h1>${currentRoute().at(-1)}</h1><p>Viagem completa na ${line.name}</p><div class="finish-actions"><button class="finish-option ${selection === 0 ? "selected" : ""}" data-finish-action="repeat"><span>↻</span><b>Repetir viagem</b></button><button class="finish-option ${selection === 1 ? "selected" : ""}" data-finish-action="new"><span>🚇</span><b>Escolher companhia</b></button></div></div><footer>${keyHint(["←","→"], "escolher")}${keyHint(["ESPAÇO"], "confirmar")}</footer>`);
 }
 
 function announceSelection(): void {
-  if (screen === "line") speak(lines[selection].name);
+  if (screen === "company") speak(companies[selection].name);
+  if (screen === "fleet") speak(`${company === "cptm" ? "Série" : "Frota"} ${lineFleets()[selection]}`);
+  if (screen === "line") speak(companyLines()[selection].name);
   if (screen === "direction") speak(`Destino ${routeFor(line.stations, selection === 0 ? 1 : -1).at(-1)}`);
-  if (screen === "fleet") speak(`Frota ${line.fleets[selection]}`);
 }
 
-function startJourney(): void {
-  stationIndex = 0; view = "cab"; doorsOpen = false; phase = "travelling"; screen = "journey";
+function startJourney(startAt = 0): void {
+  stationIndex = startAt; view = "cab"; doorsOpen = false; phase = "travelling"; screen = "journey";
   beginTravel();
 }
 
@@ -276,8 +303,9 @@ function closeDoors(): void {
 }
 
 function resumeJourney(saved: SaveGame): void {
-  line = lines.find(item => item.id === saved.lineId) ?? lines[0]; fleet = saved.fleetId; direction = saved.direction;
-  stationIndex = Math.min(saved.stationIndex + 1, line.stations.length - 1); startJourney();
+  line = lines.find(item => item.id === saved.lineId) ?? lines[0]; fleet = line.fleets.includes(saved.fleetId) ? saved.fleetId : line.fleets[0]; direction = saved.direction;
+  company = line.companyId;
+  startJourney(Math.min(saved.stationIndex + 1, line.stations.length - 1));
 }
 
 document.addEventListener("keydown", event => {
@@ -294,31 +322,35 @@ document.addEventListener("keydown", event => {
   }
   if (screen === "finished") {
     if (event.code === "ArrowLeft" || event.code === "ArrowRight") { selection = selection === 0 ? 1 : 0; render(); }
-    if (event.code === "Space") { if (selection === 0) startJourney(); else { screen = "line"; selection = 0; render(); speak(lines[0].name); } }
+    if (event.code === "Space") { if (selection === 0) startJourney(); else { screen = "company"; selection = 0; render(); announceSelection(); } }
     return;
   }
-  const max = screen === "home" || screen === "direction" ? 2 : screen === "line" ? lines.length : line.fleets.length;
+  const max = screen === "home" || screen === "direction" ? 2 : screen === "company" ? companies.length : screen === "fleet" ? lineFleets().length : companyLines().length;
   if (event.code === "ArrowLeft") { selection = (selection - 1 + max) % max; render(); announceSelection(); }
   if (event.code === "ArrowRight") { selection = (selection + 1) % max; render(); announceSelection(); }
   if (event.code !== "Space") return;
-  if (screen === "home") { const saved = loadSave(); if (selection === 0 && saved) resumeJourney(saved); else { screen = "line"; selection = 0; render(); speak(lines[0].name); } }
-  else if (screen === "line") { line = lines[selection]; screen = "direction"; selection = 0; render(); announceSelection(); }
-  else if (screen === "direction") { direction = selection === 0 ? 1 : -1; screen = "fleet"; selection = 0; render(); announceSelection(); }
-  else if (screen === "fleet") { fleet = line.fleets[selection]; startJourney(); }
+  if (screen === "home") { const saved = loadSave(); if (selection === 0 && saved) resumeJourney(saved); else { screen = "company"; selection = 0; render(); announceSelection(); } }
+  else if (screen === "company") { company = companies[selection].id; screen = "line"; selection = 0; render(); announceSelection(); }
+  else if (screen === "line") { line = companyLines()[selection]; screen = "fleet"; selection = 0; render(); announceSelection(); }
+  else if (screen === "fleet") { fleet = lineFleets()[selection]; screen = "direction"; selection = 0; render(); announceSelection(); }
+  else if (screen === "direction") { direction = selection === 0 ? 1 : -1; startJourney(); }
 });
 
 app.addEventListener("click", event => {
   const target = event.target as HTMLElement;
   const homeAction = target.closest<HTMLButtonElement>("[data-home-action]");
-  if (homeAction) { const saved = loadSave(); if (homeAction.dataset.homeAction === "continue" && saved) resumeJourney(saved); else { screen = "line"; selection = 0; render(); speak(lines[0].name); } return; }
-  const lineCard = target.closest<HTMLButtonElement>("[data-line-index]");
-  if (lineCard) { selection = Number(lineCard.dataset.lineIndex); line = lines[selection]; screen = "direction"; selection = 0; render(); announceSelection(); return; }
+  if (homeAction) { const saved = loadSave(); if (homeAction.dataset.homeAction === "continue" && saved) resumeJourney(saved); else { screen = "company"; selection = 0; render(); announceSelection(); } return; }
+  const companyCard = target.closest<HTMLButtonElement>("[data-company-index]");
+  if (companyCard) { company = companies[Number(companyCard.dataset.companyIndex)].id; screen = "line"; selection = 0; render(); announceSelection(); return; }
+  const lineCard = target.closest<HTMLButtonElement>("[data-line-id]");
+  if (lineCard) { line = lines.find(item => item.id === lineCard.dataset.lineId) ?? lines[0]; screen = "fleet"; selection = 0; render(); announceSelection(); return; }
   const directionCard = target.closest<HTMLButtonElement>("[data-direction]");
-  if (directionCard) { direction = Number(directionCard.dataset.direction) as 1 | -1; screen = "fleet"; selection = 0; render(); announceSelection(); return; }
-  const fleetCard = target.closest<HTMLButtonElement>("[data-fleet-index]");
-  if (fleetCard) { selection = Number(fleetCard.dataset.fleetIndex); fleet = line.fleets[selection]; startJourney(); return; }
+  if (directionCard) { direction = Number(directionCard.dataset.direction) as 1 | -1; startJourney(); return; }
+  const fleetCard = target.closest<HTMLButtonElement>("[data-fleet-id]");
+  if (fleetCard) { fleet = fleetCard.dataset.fleetId as FleetId; screen = "direction"; selection = 0; render(); announceSelection(); return; }
   const finishAction = target.closest<HTMLButtonElement>("[data-finish-action]");
-  if (finishAction) { if (finishAction.dataset.finishAction === "repeat") startJourney(); else { screen = "line"; selection = 0; render(); speak(lines[0].name); } return; }
+  if (finishAction) { if (finishAction.dataset.finishAction === "repeat") startJourney(); else { screen = "company"; selection = 0; render(); announceSelection(); } return; }
+  if (target.closest(".home-button")) { goToStart(); return; }
   if (target.closest(".sound-button")) { speechEnabled = !speechEnabled; trainAudio.setEnabled(speechEnabled); speechSynthesis.cancel(); render(); return; }
   if (target.closest(".settings-button")) { settingsOpen = true; render(); return; }
   if (target.closest(".close-settings") || target.classList.contains("settings-backdrop")) { settingsOpen = false; render(); return; }

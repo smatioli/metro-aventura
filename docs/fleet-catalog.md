@@ -39,6 +39,22 @@ As três imagens são usadas diretamente como referências fotográficas no prot
 - Cada frota ilustrada recebe corpo, faixa, cor frontal, formato do nariz e identificação próprios, derivados das fotos frontais.
 - A foto frontal aparece apenas como uma pequena referência de identidade na composição lateral.
 
+## CPTM
+
+Matriz adotada como autoridade pelo projeto:
+
+| Linha | Séries |
+|---|---|
+| 7 | 9500 |
+| 8 | 8900, 7000 |
+| 9 | 8900, 7000 |
+| 10 | 8500, 7500, 2070 |
+| 11 | 8000, 8500 |
+| 12 | 7000, 8500, 9000 |
+| 13 | 2500 |
+
+Os cartões de seleção das séries CPTM usam as imagens correspondentes em `public/img`, nomeadas com o número de cada série (`2070.jpeg`, `2500.jpeg`, `7000.jpeg`, `7500.jpeg`, `8000.jpeg`, `8500.jpeg`, `8900.jpeg`, `9000.jpeg` e `9500.jpeg`).
+
 ## Matriz oficial do jogo
 
 | Linha | Frotas informadas |

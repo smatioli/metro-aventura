@@ -1,6 +1,6 @@
 import type { FleetId, LineId } from "./data";
 
-export type Screen = "home" | "line" | "direction" | "fleet" | "journey" | "finished";
+export type Screen = "home" | "company" | "fleet" | "line" | "direction" | "journey" | "finished";
 export type JourneyPhase = "travelling" | "arriving" | "waiting-open" | "doors-open" | "waiting-close";
 export type View = "side" | "interior" | "cab";
 

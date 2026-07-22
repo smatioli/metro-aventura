@@ -65,3 +65,132 @@ Fonte institucional consultada em 2026-07-21: página “Linhas e Estações” 
 16. Santa Cecília
 17. Marechal Deodoro
 18. Palmeiras–Barra Funda
+
+## Linha 10-Turquesa — CPTM
+
+1. Palmeiras–Barra Funda
+2. Luz
+3. Brás
+4. Juventus–Mooca
+5. Ipiranga
+6. Tamanduateí
+7. São Caetano do Sul
+8. Utinga
+9. Prefeito Saladino
+10. Prefeito Celso Daniel–Santo André
+11. Capuava
+12. Mauá
+13. Guapituba
+14. Ribeirão Pires
+15. Rio Grande da Serra
+
+## Linha 7-Rubi — CPTM
+
+1. Palmeiras–Barra Funda
+2. Água Branca
+3. Lapa
+4. Piqueri
+5. Pirituba
+6. Vila Clarice
+7. Jaraguá
+8. Vila Aurora
+9. Perus
+10. Caieiras
+11. Franco da Rocha
+12. Baltazar Fidélis
+13. Francisco Morato
+14. Botujuru
+15. Campo Limpo Paulista
+16. Várzea Paulista
+17. Jundiaí
+
+## Linha 8-Diamante — CPTM no jogo
+
+1. Júlio Prestes
+2. Palmeiras–Barra Funda
+3. Lapa
+4. Domingos de Moraes
+5. Imperatriz Leopoldina
+6. Presidente Altino
+7. Osasco
+8. Comandante Sampaio
+9. Quitaúna
+10. General Miguel Costa
+11. Carapicuíba
+12. Santa Terezinha
+13. Antônio João
+14. Barueri
+15. Jardim Belval
+16. Jardim Silveira
+17. Jandira
+18. Sagrado Coração
+19. Engenheiro Cardoso
+20. Itapevi
+21. Santa Rita
+22. Amador Bueno
+
+## Linha 9-Esmeralda — CPTM no jogo
+
+1. Osasco
+2. Presidente Altino
+3. Ceasa
+4. Villa-Lobos–Jaguaré
+5. Cidade Universitária
+6. Pinheiros
+7. Hebraica–Rebouças
+8. Cidade Jardim
+9. Vila Olímpia
+10. Berrini
+11. Morumbi–Claro
+12. Granja Julieta
+13. João Dias
+14. Santo Amaro
+15. Socorro
+16. Jurubatuba
+17. Autódromo
+18. Primavera–Interlagos
+19. Grajaú
+20. Bruno Covas–Mendes–Vila Natal
+21. Varginha
+
+## Linha 11-Coral — CPTM
+
+1. Palmeiras–Barra Funda
+2. Luz
+3. Brás
+4. Tatuapé
+5. Corinthians–Itaquera
+6. Dom Bosco
+7. José Bonifácio
+8. Guaianases
+9. Antônio Gianetti Neto
+10. Ferraz de Vasconcelos
+11. Poá
+12. Calmon Viana
+13. Suzano
+14. Jundiapeba
+15. Braz Cubas
+16. Mogi das Cruzes
+17. Estudantes
+
+## Linha 12-Safira — CPTM
+
+1. Brás
+2. Tatuapé
+3. Engenheiro Goulart
+4. USP Leste
+5. Comendador Ermelino
+6. São Miguel Paulista
+7. Jardim Helena–Vila Mara
+8. Itaim Paulista
+9. Jardim Romano
+10. Engenheiro Manoel Feio
+11. Itaquaquecetuba
+12. Aracaré
+13. Calmon Viana
+
+## Linha 13-Jade — CPTM
+
+1. Engenheiro Goulart
+2. Guarulhos–CECAP
+3. Aeroporto–Guarulhos
