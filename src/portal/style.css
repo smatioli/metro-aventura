@@ -18,7 +18,7 @@ h1 em { color: #f6d45a; font-style: normal; }
 .status { position: absolute; z-index: 3; top: 22px; right: 22px; padding: 8px 13px; border-radius: 999px; font: 900 11px Nunito; letter-spacing: .12em; }
 .available { color: #06291b; background: #70e0a5; }
 .soon { color: #362900; background: #f6d45a; }
-.metro-illustration, .news-illustration { position: relative; height: 205px; overflow: hidden; background: linear-gradient(145deg, #16709a, #0d425d); }
+.metro-illustration, .news-illustration, .syllables-illustration { position: relative; height: 205px; overflow: hidden; background: linear-gradient(145deg, #16709a, #0d425d); }
 .rail { position: absolute; left: -10%; right: -10%; height: 7px; background: #c9d9dd; transform: rotate(-10deg); }
 .rail-one { top: 135px; }.rail-two { top: 165px; }
 .train { position: absolute; left: 15%; top: 54px; width: 70%; height: 105px; padding: 20px; border-radius: 65px 18px 15px 12px; border-bottom: 10px solid #e23e43; background: #eef4f3; box-shadow: 0 15px 30px rgba(0,0,0,.35); display: flex; gap: 12px; }
@@ -29,6 +29,11 @@ h1 em { color: #f6d45a; font-style: normal; }
 .press-card span { font: 900 10px Nunito; letter-spacing: .16em; }.press-card b { display: grid; place-items: center; width: 82px; height: 82px; margin: 16px auto; border-radius: 50%; background: #68408b; color: white; font: 900 43px Nunito; }
 .microphone { position: absolute; left: 57%; top: 62px; width: 46px; height: 115px; border-radius: 30px; background: #172833; transform: rotate(20deg); box-shadow: inset 0 32px #d9e0e3; }
 .signal { position: absolute; left: 68%; top: 46px; color: #f4d35f; font: 900 31px Nunito; transform: rotate(-25deg); letter-spacing: -.2em; }
+.syllables-illustration { display: flex; align-items: center; justify-content: center; gap: 18px; background: linear-gradient(145deg, #f6d875, #f08e8e); }
+.syllable-block { display: grid; place-items: center; width: 92px; height: 92px; border: 4px solid #fff; border-bottom: 11px solid #168f83; border-radius: 22px; background: #d4fff5; color: #183d46; font: 900 39px Nunito; transform: rotate(-6deg); box-shadow: 0 13px 24px rgba(89,52,27,.2); }
+.syllable-block.second { border-bottom-color: #8a4eb4; background: #f1deff; transform: rotate(5deg); }
+.plus { color: #523d38; font: 900 34px Nunito; }
+.word-result { position: absolute; bottom: 16px; padding: 5px 12px; border-radius: 99px; background: #fff; color: #8a4053; font: 900 11px Nunito; letter-spacing: .15em; }
 .card-copy { padding: 26px 30px 30px; }
 .game-number { color: #79d8ec; font-weight: 900; font-size: 12px; letter-spacing: .17em; }
 .card-copy h2 { margin: 6px 0 8px; font-size: clamp(32px, 4vw, 48px); line-height: .9; }

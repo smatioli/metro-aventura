@@ -6,6 +6,9 @@ if (path === "/metro-aventura") {
 } else if (path === "/jornalistas") {
   document.title = "Jornalistas | Estação de Jogos";
   void import("./games/jornalistas/main");
+} else if (path === "/silabas") {
+  document.title = "Sílabas | Estação de Jogos";
+  void import("./games/silabas/main");
 } else {
   document.title = "Estação de Jogos";
   void import("./portal/main");

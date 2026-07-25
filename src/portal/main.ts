@@ -40,8 +40,24 @@ app.innerHTML = `
           <strong>JOGAR AGORA <span>→</span></strong>
         </div>
       </a>
+
+      <a class="game-card syllables-card" href="/silabas/">
+        <span class="status available">DISPONÍVEL</span>
+        <div class="syllables-illustration" aria-hidden="true">
+          <span class="syllable-block">SI</span>
+          <span class="plus">+</span>
+          <span class="syllable-block second">LA</span>
+          <span class="word-result">SÍLABA!</span>
+        </div>
+        <div class="card-copy">
+          <span class="game-number">JOGO 03</span>
+          <h2>Sílabas</h2>
+          <p>Escolha os sons certos, complete palavras e avance pelos conjuntos.</p>
+          <strong>JOGAR AGORA <span>→</span></strong>
+        </div>
+      </a>
     </section>
 
-    <footer>Dois mundos, muitas histórias.</footer>
+    <footer>Três mundos, muitas descobertas.</footer>
   </main>
 `;

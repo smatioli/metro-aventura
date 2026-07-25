@@ -12,6 +12,7 @@ let selected = 0;
 let feedback: "idle" | "try-again" | "correct" = "idle";
 let speechEnabled = true;
 let nextRoundTimer = 0;
+let speechTimer = 0;
 let writingPresenter: Presenter | null = null;
 let letterIndex = 0;
 
@@ -41,14 +42,29 @@ function questionText(): string {
     : `Quem apresenta o jornal ${current.show}?`;
 }
 
+function stopSpeech(): void {
+  window.clearTimeout(speechTimer);
+  speechTimer = 0;
+  if ("speechSynthesis" in window) speechSynthesis.cancel();
+}
+
 function speak(text: string): void {
+  stopSpeech();
   if (!speechEnabled || !("speechSynthesis" in window)) return;
-  speechSynthesis.cancel();
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.lang = "pt-BR";
   utterance.rate = 0.76;
   utterance.pitch = 1.04;
   speechSynthesis.speak(utterance);
+}
+
+function scheduleSpeak(text: string, delay = 0): void {
+  stopSpeech();
+  if (!speechEnabled) return;
+  speechTimer = window.setTimeout(() => {
+    speechTimer = 0;
+    speak(text);
+  }, delay);
 }
 
 function presenterArt(presenter: Presenter): string {
@@ -171,12 +187,13 @@ function render(): void {
 
 function startGame(): void {
   window.clearTimeout(nextRoundTimer);
+  stopSpeech();
   screen = "playing";
   round = 0;
   selected = 0;
   feedback = "idle";
   render();
-  window.setTimeout(() => speak(questionText()), 350);
+  scheduleSpeak(questionText(), 350);
 }
 
 function choose(index: number): void {
@@ -197,7 +214,7 @@ function choose(index: number): void {
     letterIndex = 0;
     screen = "writing";
     render();
-    window.setTimeout(() => speakWritingPrompt(true), 300);
+    scheduleWritingPrompt(true, 300);
   }, 1900);
 }
 
@@ -214,7 +231,7 @@ function advanceRound(): void {
   selected = 0;
   feedback = "idle";
   render();
-  window.setTimeout(() => speak(questionText()), 300);
+  scheduleSpeak(questionText(), 300);
 }
 
 function speakWritingPrompt(fullPrompt = false): void {
@@ -225,18 +242,26 @@ function speakWritingPrompt(fullPrompt = false): void {
     : `Aperte a letra ${letter}.`);
 }
 
+function scheduleWritingPrompt(fullPrompt = false, delay = 0): void {
+  if (!writingPresenter) return;
+  const letter = writingPresenter.shortName[letterIndex];
+  scheduleSpeak(fullPrompt
+    ? `Vamos escrever: ${writingPresenter.shortName}. Aperte a letra ${letter}.`
+    : `Aperte a letra ${letter}.`, delay);
+}
+
 function typeLetter(letter: string): void {
   if (screen !== "writing" || !writingPresenter) return;
   const expected = writingPresenter.shortName[letterIndex];
   if (letter.toUpperCase() !== expected) {
-    speakWritingPrompt();
+    scheduleWritingPrompt();
     return;
   }
-  speak(expected);
   letterIndex += 1;
   if (letterIndex < writingPresenter.shortName.length) {
     render();
-    window.setTimeout(() => speakWritingPrompt(), 250);
+    const nextLetter = writingPresenter.shortName[letterIndex];
+    speak(`${expected}. Agora, aperte a letra ${nextLetter}.`);
     return;
   }
   render();
@@ -279,7 +304,7 @@ app.addEventListener("click", event => {
   if (letterKey) { typeLetter(letterKey.dataset.letter ?? ""); return; }
   if (target.closest(".sound-toggle")) {
     speechEnabled = !speechEnabled;
-    speechSynthesis.cancel();
+    stopSpeech();
     render();
     if (speechEnabled && screen === "playing") speak(questionText());
     if (speechEnabled && screen === "writing") speakWritingPrompt(true);

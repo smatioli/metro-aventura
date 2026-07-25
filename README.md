@@ -6,6 +6,7 @@ Portal de jogos que reúne experiências simples, acessíveis e com poucos contr
 
 - **Metrô Aventura** — disponível em `/metro-aventura/`.
 - **Jornalistas** — jogo de adivinhação visual e falado em `/jornalistas/`.
+- **Sílabas** — oficina de palavras organizada em seis conjuntos em `/silabas/`.
 
 A raiz `/` apresenta todos os jogos disponíveis.
 
@@ -17,7 +18,8 @@ src/
 ├── portal/                 # tela inicial com o catálogo
 └── games/
     ├── metro-aventura/     # jogo completo do metrô
-    └── jornalistas/        # jogo de adivinhação e seu elenco
+    ├── jornalistas/        # jogo de adivinhação e seu elenco
+    └── silabas/            # jogo de leitura oral e conjuntos silábicos
 
 public/games/
 └── metro-aventura/img/     # imagens exclusivas do jogo
