@@ -1,6 +1,27 @@
-# Metrô Aventura
+# Estação de Jogos
 
-Jogo web simples sobre as linhas 1-Azul, 2-Verde e 3-Vermelha do Metrô de São Paulo. A experiência foi projetada para funcionar com poucos controles, ritmo tranquilo e instruções visuais.
+Portal de jogos que reúne experiências simples, acessíveis e com poucos controles.
+
+## Jogos
+
+- **Metrô Aventura** — disponível em `/metro-aventura/`.
+- **Jornalistas** — jogo de adivinhação visual e falado em `/jornalistas/`.
+
+A raiz `/` apresenta todos os jogos disponíveis.
+
+## Organização
+
+```text
+src/
+├── main.ts                 # direciona cada URL para seu jogo
+├── portal/                 # tela inicial com o catálogo
+└── games/
+    ├── metro-aventura/     # jogo completo do metrô
+    └── jornalistas/        # jogo de adivinhação e seu elenco
+
+public/games/
+└── metro-aventura/img/     # imagens exclusivas do jogo
+```
 
 ## Requisitos
 
@@ -14,7 +35,8 @@ npm install
 npm run dev
 ```
 
-Abra o endereço exibido pelo Vite, normalmente `http://localhost:5173`.
+Abra o endereço exibido pelo Vite, normalmente `http://localhost:5173`. O portal
+permite entrar em cada jogo; as URLs dedicadas também funcionam diretamente.
 
 ## Testes
 
@@ -45,7 +67,7 @@ Execute `npm run build` e arraste a pasta `dist/` para o Netlify Drop.
 
 ## Configurar lados de desembarque
 
-Edite `platformSides` em `src/data.ts`:
+Edite `platformSides` em `src/games/metro-aventura/data.ts`:
 
 ```ts
 "Sé": "right" // lado direito
@@ -56,7 +78,7 @@ Cada estação precisa usar `right` ou `left`.
 
 ## Conteúdo estático
 
-As imagens ficam em `public/img/`. Durante o build, o Vite as copia para `dist/img/`.
+As imagens do Metrô Aventura ficam em `public/games/metro-aventura/img/`.
+Durante o build, o Vite preserva essa estrutura dentro de `dist/`.
 
 Antes de uma publicação pública, confirme as permissões de uso das fotografias e demais materiais de referência.
-

@@ -11,7 +11,11 @@
     Cache-Control = "public, max-age=31536000, immutable"
 
 [[headers]]
-  for = "/img/*"
+  for = "/games/*/img/*"
   [headers.values]
     Cache-Control = "public, max-age=86400"
 
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

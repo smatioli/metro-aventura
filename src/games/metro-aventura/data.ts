@@ -20,8 +20,8 @@ export interface Company {
 }
 
 export const companies: Company[] = [
-  { id: "metro", name: "Metrô de São Paulo", logo: "/img/metro-sp-logo.png" },
-  { id: "cptm", name: "CPTM", logo: "/img/cptm-logo.webp" }
+  { id: "metro", name: "Metrô de São Paulo", logo: "/games/metro-aventura/img/metro-sp-logo.png" },
+  { id: "cptm", name: "CPTM", logo: "/games/metro-aventura/img/cptm-logo.webp" }
 ];
 
 export const cptmFleetMatrix = {
@@ -101,12 +101,12 @@ export const lines: MetroLine[] = [
 ];
 
 export const fleetImages: Record<FleetId, string> = {
-  E: "/img/frotaE_1.jpg", G: "/img/frotaG_1.jpg", H: "/img/frotaH_1.jpg",
-  I: "/img/frotaI_1.jpg", J: "/img/frotaJ_1.jpg", K: "/img/frotaK_1.jpg",
-  L: "/img/frotaL_1.jpg",
-  "2070": "/img/2070.jpeg", "2500": "/img/2500.jpeg", "7000": "/img/7000.jpeg",
-  "7500": "/img/7500.jpeg", "8000": "/img/8000.jpeg", "8500": "/img/8500.jpeg",
-  "8900": "/img/8900.jpeg", "9000": "/img/9000.jpeg", "9500": "/img/9500.jpeg"
+  E: "/games/metro-aventura/img/frotaE_1.jpg", G: "/games/metro-aventura/img/frotaG_1.jpg", H: "/games/metro-aventura/img/frotaH_1.jpg",
+  I: "/games/metro-aventura/img/frotaI_1.jpg", J: "/games/metro-aventura/img/frotaJ_1.jpg", K: "/games/metro-aventura/img/frotaK_1.jpg",
+  L: "/games/metro-aventura/img/frotaL_1.jpg",
+  "2070": "/games/metro-aventura/img/2070.jpeg", "2500": "/games/metro-aventura/img/2500.jpeg", "7000": "/games/metro-aventura/img/7000.jpeg",
+  "7500": "/games/metro-aventura/img/7500.jpeg", "8000": "/games/metro-aventura/img/8000.jpeg", "8500": "/games/metro-aventura/img/8500.jpeg",
+  "8900": "/games/metro-aventura/img/8900.jpeg", "9000": "/games/metro-aventura/img/9000.jpeg", "9500": "/games/metro-aventura/img/9500.jpeg"
 };
 
 export const fleetThemes: Record<FleetId, FleetTheme> = {
@@ -129,9 +129,9 @@ export const fleetThemes: Record<FleetId, FleetTheme> = {
 };
 
 export const prototypeViewMedia: ViewMedia = {
-  side: "/img/side_view.jpeg",
-  interior: "/img/interno.jpeg",
-  cab: "/img/cabin.jpg"
+  side: "/games/metro-aventura/img/side_view.jpeg",
+  interior: "/games/metro-aventura/img/interno.jpeg",
+  cab: "/games/metro-aventura/img/cabin.jpg"
 };
 
 // Altere somente "right" para "left" nas estações com desembarque à esquerda.
