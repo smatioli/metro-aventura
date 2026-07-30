@@ -104,13 +104,14 @@ function shell(content: string, className = ""): void {
 }
 
 function render(): void {
-  if (screen === "home") return renderHome();
-  if (screen === "company") return renderCompany();
-  if (screen === "line") return renderLineSelect();
-  if (screen === "direction") return renderDirection();
-  if (screen === "fleet") return renderFleet();
-  if (screen === "journey") return renderJourney();
-  renderFinished();
+  if (screen === "home") renderHome();
+  else if (screen === "company") renderCompany();
+  else if (screen === "line") renderLineSelect();
+  else if (screen === "direction") renderDirection();
+  else if (screen === "fleet") renderFleet();
+  else if (screen === "journey") renderJourney();
+  else renderFinished();
+  app.querySelector(".selected")?.scrollIntoView({ block: "nearest", inline: "nearest", behavior: "smooth" });
 }
 
 function renderHome(): void {
@@ -129,7 +130,9 @@ function renderCompany(): void {
 
 function renderLineSelect(): void {
   const choices = companyLines();
-  shell(`<header><span class="eyebrow">ESCOLHA A LINHA</span><h1>Onde vamos viajar?</h1></header><section class="choice-grid ${choices.length > 2 ? "three" : "two"}">${choices.map((item, i) => `<button class="choice-card line-card ${selection === i ? "selected" : ""}" data-line-id="${item.id}" style="--card-color:${item.color};--card-soft:${item.colorSoft}" aria-label="Escolher ${item.name}"><div class="line-number">${item.id}</div><h2>${item.name.replace(`Linha ${item.id} `, "")}</h2><div class="track-line"></div></button>`).join("")}</section><footer>${keyHint(["←","→"], "escolher")}${keyHint(["ESPAÇO"], "confirmar")}</footer>`);
+  const gridClass = choices.length > 2 ? "multi" : "two";
+  const gridStyle = choices.length > 2 ? ` style="--cols:${Math.min(choices.length, 4)}"` : "";
+  shell(`<header><span class="eyebrow">ESCOLHA A LINHA</span><h1>Onde vamos viajar?</h1></header><section class="choice-grid ${gridClass}"${gridStyle}>${choices.map((item, i) => `<button class="choice-card line-card ${selection === i ? "selected" : ""}" data-line-id="${item.id}" style="--card-color:${item.color};--card-soft:${item.colorSoft}" aria-label="Escolher ${item.name}"><div class="line-number">${item.id}</div><h2>${item.name.replace(`Linha ${item.id} `, "")}</h2><div class="track-line"></div></button>`).join("")}</section><footer>${keyHint(["←","→"], "escolher")}${keyHint(["ESPAÇO"], "confirmar")}</footer>`);
 }
 
 function renderDirection(): void {
