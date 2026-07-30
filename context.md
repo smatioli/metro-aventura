@@ -53,6 +53,7 @@ O mapa da rota mostra todas as estações e diferencia as já percorridas, a atu
 - Linha 1-Azul: frotas E, I, J, K e L.
 - Linha 2-Verde: frotas I e J.
 - Linha 3-Vermelha: frotas G, H e K.
+- Linha 15-Prata (monotrilho): frota M.
 
 ### Grupo CPTM no jogo
 
@@ -64,7 +65,12 @@ O mapa da rota mostra todas as estações e diferencia as já percorridas, a atu
 - Linha 12-Safira: séries 7000, 8500 e 9000.
 - Linha 13-Jade: série 2500.
 
-A matriz acima foi definida pelo responsável do projeto e é a autoridade para o jogo. As linhas 8 e 9 ficam agrupadas na opção CPTM dentro da experiência, independentemente da operação comercial atual.
+### Grupo ViaMobilidade no jogo
+
+- Linha 4-Amarela: frota 400.
+- Linha 5-Lilás: frota 500.
+
+A matriz acima foi definida pelo responsável do projeto e é a autoridade para o jogo. As linhas 8 e 9 ficam agrupadas na opção CPTM dentro da experiência, independentemente da operação comercial atual. Da mesma forma, as linhas 4 e 5 ficam agrupadas na opção ViaMobilidade, ainda que sejam operadas por concessionárias distintas na vida real (ADR 0017).
 
 As estações, cores, compatibilidades e lados de desembarque ficam em `src/data.ts`. Todas as estações novas da CPTM foram inicialmente configuradas com desembarque à direita; os casos à esquerda devem ser alterados manualmente em `platformSides`.
 

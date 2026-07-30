@@ -66,6 +66,60 @@ Fonte institucional consultada em 2026-07-21: página “Linhas e Estações” 
 17. Marechal Deodoro
 18. Palmeiras–Barra Funda
 
+## Linha 15-Prata
+
+Fonte institucional consultada em 2026-07-30: página “Linha 15-Prata” do Metrô de São Paulo. Estações atualmente em operação (a linha está em expansão, com previsão de chegar a 18 estações).
+
+1. Vila Prudente
+2. Oratório
+3. São Lucas
+4. Camilo Haddad
+5. Vila Tolstói
+6. Vila União
+7. Jardim Planalto
+8. Sapopemba
+9. Fazenda da Juta
+10. São Mateus
+11. Jardim Colonial
+
+## Linha 4-Amarela — ViaMobilidade
+
+Fonte institucional consultada em 2026-07-30.
+
+1. Luz
+2. República
+3. Higienópolis–Mackenzie
+4. Paulista
+5. Oscar Freire
+6. Fradique Coutinho
+7. Faria Lima
+8. Pinheiros
+9. Butantã
+10. São Paulo–Morumbi
+11. Vila Sônia
+
+## Linha 5-Lilás — ViaMobilidade
+
+Fonte institucional consultada em 2026-07-30.
+
+1. Capão Redondo
+2. Campo Limpo
+3. Vila das Belezas
+4. Giovanni Gronchi
+5. Santo Amaro
+6. Largo Treze
+7. Adolfo Pinheiro
+8. Alto da Boa Vista
+9. Borba Gato
+10. Brooklin
+11. Campo Belo
+12. Eucaliptos
+13. Moema
+14. AACD-Servidor
+15. Hospital São Paulo
+16. Santa Cruz
+17. Chácara Klabin
+
 ## Linha 10-Turquesa — CPTM
 
 1. Palmeiras–Barra Funda

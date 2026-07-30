@@ -16,8 +16,10 @@ Este catálogo usa como autoridade a relação fornecida para o projeto. A diver
 | J | `img/frotaJ_1.jpg` | sim | lateral disponível; interior e cabine provisórios |
 | K | `img/frotaK_1.jpg` | sim | ausentes |
 | L | `img/frotaL_1.jpg` | sim | ausentes |
-| M | `img/frotaM_1.jpg` | não; Linha 15-Prata | ausentes |
-| S | ausente | não; Linha 15-Prata | ausentes |
+| M | `img/frotaM_1.jpg` | não; Linha 15-Prata (jogável desde ADR 0016) | ausentes |
+| S | ausente | não; Linha 15-Prata (ainda não jogável, sem referência) | ausentes |
+| 400 | `img/frota_400.jpeg` | não; Linha 4-Amarela (ViaMobilidade, ADR 0017) | ausentes |
+| 500 | `img/frota_500.jpeg` | não; Linha 5-Lilás (ViaMobilidade, ADR 0017) | ausentes |
 
 As imagens existentes são adequadas para cartões provisórios de seleção. Não são suficientes, por si sós, para desenhar com fidelidade as vistas lateral, interna e da cabine.
 
@@ -62,6 +64,9 @@ Os cartões de seleção das séries CPTM usam as imagens correspondentes em `pu
 | 1-Azul | E, I, J, K, L |
 | 2-Verde | I, J |
 | 3-Vermelha | G, H, K |
+| 15-Prata | M |
+| 4-Amarela (ViaMobilidade) | 400 |
+| 5-Lilás (ViaMobilidade) | 500 |
 
 ## Matriz publicada na página institucional consultada
 

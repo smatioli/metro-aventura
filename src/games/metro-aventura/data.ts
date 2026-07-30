@@ -1,6 +1,6 @@
-export type CompanyId = "metro" | "cptm";
-export type LineId = "1" | "2" | "3" | "7" | "8" | "9" | "10" | "11" | "12" | "13";
-export type FleetId = "E" | "G" | "H" | "I" | "J" | "K" | "L" | "2070" | "2500" | "7000" | "7500" | "8000" | "8500" | "8900" | "9000" | "9500";
+export type CompanyId = "metro" | "cptm" | "viamobilidade";
+export type LineId = "1" | "2" | "3" | "4" | "5" | "7" | "8" | "9" | "10" | "11" | "12" | "13" | "15";
+export type FleetId = "E" | "G" | "H" | "I" | "J" | "K" | "L" | "M" | "400" | "500" | "2070" | "2500" | "7000" | "7500" | "8000" | "8500" | "8900" | "9000" | "9500";
 export type PlatformSide = "right" | "left";
 
 export interface MetroLine {
@@ -21,7 +21,8 @@ export interface Company {
 
 export const companies: Company[] = [
   { id: "metro", name: "Metrô de São Paulo", logo: "/games/metro-aventura/img/metro-sp-logo.png" },
-  { id: "cptm", name: "CPTM", logo: "/games/metro-aventura/img/cptm-logo.webp" }
+  { id: "cptm", name: "CPTM", logo: "/games/metro-aventura/img/cptm-logo.webp" },
+  { id: "viamobilidade", name: "ViaMobilidade", logo: "/games/metro-aventura/img/via_mobilidade_logo.jpeg" }
 ];
 
 export const cptmFleetMatrix = {
@@ -64,6 +65,16 @@ export const lines: MetroLine[] = [
     fleets: ["G", "H", "K"]
   },
   {
+    id: "4", companyId: "viamobilidade", name: "Linha 4 Amarela", color: "#f5c518", colorSoft: "#fff6d6",
+    stations: ["Luz", "República", "Higienópolis-Mackenzie", "Paulista", "Oscar Freire", "Fradique Coutinho", "Faria Lima", "Pinheiros", "Butantã", "São Paulo-Morumbi", "Vila Sônia"],
+    fleets: ["400"]
+  },
+  {
+    id: "5", companyId: "viamobilidade", name: "Linha 5 Lilás", color: "#7d5aa6", colorSoft: "#f1e7f7",
+    stations: ["Capão Redondo", "Campo Limpo", "Vila das Belezas", "Giovanni Gronchi", "Santo Amaro", "Largo Treze", "Adolfo Pinheiro", "Alto da Boa Vista", "Borba Gato", "Brooklin", "Campo Belo", "Eucaliptos", "Moema", "AACD-Servidor", "Hospital São Paulo", "Santa Cruz", "Chácara Klabin"],
+    fleets: ["500"]
+  },
+  {
     id: "7", companyId: "cptm", name: "Linha 7 Rubi", color: "#9b2743", colorSoft: "#f5dde4",
     stations: ["Palmeiras-Barra Funda", "Água Branca", "Lapa", "Piqueri", "Pirituba", "Vila Clarice", "Jaraguá", "Vila Aurora", "Perus", "Caieiras", "Franco da Rocha", "Baltazar Fidélis", "Francisco Morato", "Botujuru", "Campo Limpo Paulista", "Várzea Paulista", "Jundiaí"],
     fleets: [...cptmFleetMatrix["7"]]
@@ -97,13 +108,19 @@ export const lines: MetroLine[] = [
     id: "13", companyId: "cptm", name: "Linha 13 Jade", color: "#00a88f", colorSoft: "#d8f4ed",
     stations: ["Engenheiro Goulart", "Guarulhos-CECAP", "Aeroporto-Guarulhos"],
     fleets: [...cptmFleetMatrix["13"]]
+  },
+  {
+    id: "15", companyId: "metro", name: "Linha 15 Prata", color: "#8a8d90", colorSoft: "#e8e9ea",
+    stations: ["Vila Prudente", "Oratório", "São Lucas", "Camilo Haddad", "Vila Tolstói", "Vila União", "Jardim Planalto", "Sapopemba", "Fazenda da Juta", "São Mateus", "Jardim Colonial"],
+    fleets: ["M"]
   }
 ];
 
 export const fleetImages: Record<FleetId, string> = {
   E: "/games/metro-aventura/img/frotaE_1.jpg", G: "/games/metro-aventura/img/frotaG_1.jpg", H: "/games/metro-aventura/img/frotaH_1.jpg",
   I: "/games/metro-aventura/img/frotaI_1.jpg", J: "/games/metro-aventura/img/frotaJ_1.jpg", K: "/games/metro-aventura/img/frotaK_1.jpg",
-  L: "/games/metro-aventura/img/frotaL_1.jpg",
+  L: "/games/metro-aventura/img/frotaL_1.jpg", M: "/games/metro-aventura/img/frotaM_1.jpg",
+  "400": "/games/metro-aventura/img/frota_400.jpeg", "500": "/games/metro-aventura/img/frota_500.jpeg",
   "2070": "/games/metro-aventura/img/2070.jpeg", "2500": "/games/metro-aventura/img/2500.jpeg", "7000": "/games/metro-aventura/img/7000.jpeg",
   "7500": "/games/metro-aventura/img/7500.jpeg", "8000": "/games/metro-aventura/img/8000.jpeg", "8500": "/games/metro-aventura/img/8500.jpeg",
   "8900": "/games/metro-aventura/img/8900.jpeg", "9000": "/games/metro-aventura/img/9000.jpeg", "9500": "/games/metro-aventura/img/9500.jpeg"
@@ -117,6 +134,9 @@ export const fleetThemes: Record<FleetId, FleetTheme> = {
   J: { body: "#cbd0cf", stripe: "#116dbd", accent: "#0b2636", front: "sloped" },
   K: { body: "#c9cfce", stripe: "#1a77c5", accent: "#0c2737", front: "round" },
   L: { body: "#e3e7e6", stripe: "#176fc0", accent: "#101e2a", front: "sloped" },
+  M: { body: "#e7e9ea", stripe: "#1c3f94", accent: "#8a8d90", front: "round" },
+  "400": { body: "#2b2c2e", stripe: "#f6c116", accent: "#1a1a1c", front: "round" },
+  "500": { body: "#eef0f1", stripe: "#7d5aa6", accent: "#3f6fa5", front: "round" },
   "2070": { body: "#d8dedd", stripe: "#d92736", accent: "#26343b", front: "flat" },
   "2500": { body: "#e5e8e7", stripe: "#d92736", accent: "#202f37", front: "sloped" },
   "7000": { body: "#dce1e0", stripe: "#e12636", accent: "#26343b", front: "round" },
@@ -156,6 +176,18 @@ export const platformSides: Record<LineId, Record<string, PlatformSide>> = {
     "Tatuapé": "right", "Belém": "right", "Bresser-Mooca": "right", "Brás": "right",
     "Pedro II": "right", "Sé": "left", "Anhangabaú": "right", "República": "right",
     "Santa Cecília": "right", "Marechal Deodoro": "right", "Palmeiras-Barra Funda": "right"
+  },
+  "4": {
+    "Luz": "right", "República": "right", "Higienópolis-Mackenzie": "right", "Paulista": "right",
+    "Oscar Freire": "right", "Fradique Coutinho": "right", "Faria Lima": "right", "Pinheiros": "right",
+    "Butantã": "right", "São Paulo-Morumbi": "right", "Vila Sônia": "right"
+  },
+  "5": {
+    "Capão Redondo": "right", "Campo Limpo": "right", "Vila das Belezas": "right", "Giovanni Gronchi": "right",
+    "Santo Amaro": "right", "Largo Treze": "right", "Adolfo Pinheiro": "right", "Alto da Boa Vista": "right",
+    "Borba Gato": "right", "Brooklin": "right", "Campo Belo": "right", "Eucaliptos": "right",
+    "Moema": "right", "AACD-Servidor": "right", "Hospital São Paulo": "right", "Santa Cruz": "right",
+    "Chácara Klabin": "right"
   },
   "7": {
     "Palmeiras-Barra Funda": "right", "Água Branca": "right", "Lapa": "right", "Piqueri": "right",
@@ -201,6 +233,11 @@ export const platformSides: Record<LineId, Record<string, PlatformSide>> = {
   },
   "13": {
     "Engenheiro Goulart": "right", "Guarulhos-CECAP": "right", "Aeroporto-Guarulhos": "right"
+  },
+  "15": {
+    "Vila Prudente": "left", "Oratório": "left", "São Lucas": "left", "Camilo Haddad": "left",
+    "Vila Tolstói": "left", "Vila União": "left", "Jardim Planalto": "left", "Sapopemba": "left",
+    "Fazenda da Juta": "left", "São Mateus": "left", "Jardim Colonial": "left"
   }
 };
 
