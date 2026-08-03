@@ -18,7 +18,7 @@ h1 em { color: #f6d45a; font-style: normal; }
 .status { position: absolute; z-index: 3; top: 22px; right: 22px; padding: 8px 13px; border-radius: 999px; font: 900 11px Nunito; letter-spacing: .12em; }
 .available { color: #06291b; background: #70e0a5; }
 .soon { color: #362900; background: #f6d45a; }
-.metro-illustration, .news-illustration, .syllables-illustration { position: relative; height: 205px; overflow: hidden; background: linear-gradient(145deg, #16709a, #0d425d); }
+.metro-illustration, .news-illustration, .syllables-illustration, .explorador-illustration { position: relative; height: 205px; overflow: hidden; background: linear-gradient(145deg, #16709a, #0d425d); }
 .rail { position: absolute; left: -10%; right: -10%; height: 7px; background: #c9d9dd; transform: rotate(-10deg); }
 .rail-one { top: 135px; }.rail-two { top: 165px; }
 .train { position: absolute; left: 15%; top: 54px; width: 70%; height: 105px; padding: 20px; border-radius: 65px 18px 15px 12px; border-bottom: 10px solid #e23e43; background: #eef4f3; box-shadow: 0 15px 30px rgba(0,0,0,.35); display: flex; gap: 12px; }
@@ -34,6 +34,13 @@ h1 em { color: #f6d45a; font-style: normal; }
 .syllable-block.second { border-bottom-color: #8a4eb4; background: #f1deff; transform: rotate(5deg); }
 .plus { color: #523d38; font: 900 34px Nunito; }
 .word-result { position: absolute; bottom: 16px; padding: 5px 12px; border-radius: 99px; background: #fff; color: #8a4053; font: 900 11px Nunito; letter-spacing: .15em; }
+.explorador-illustration { background: linear-gradient(145deg, #1c8f6f, #0d4d3e); }
+.platform-strip-mini { position: absolute; left: 0; right: 0; bottom: 34px; height: 16px; background: repeating-linear-gradient(90deg, #f4cf23 0 12px, #191919 12px 24px); }
+.turnstile-mini { position: absolute; left: 20%; top: 60px; display: flex; gap: 14px; }
+.turnstile-mini span { width: 16px; height: 76px; border-radius: 6px; background: #d9e8ee; box-shadow: inset 0 0 0 2px rgba(0,0,0,.15); }
+.walker-mini { position: absolute; left: 55%; top: 70px; width: 30px; height: 68px; }
+.walker-mini i { position: absolute; top: 0; left: 6px; width: 18px; height: 18px; border-radius: 50%; background: #9b684c; border: 3px solid #35251e; }
+.walker-mini b { position: absolute; top: 18px; left: 2px; width: 26px; height: 40px; border-radius: 12px 12px 8px 8px; background: #f2b544; border: 3px solid #342d2a; }
 .card-copy { padding: 26px 30px 30px; }
 .game-number { color: #79d8ec; font-weight: 900; font-size: 12px; letter-spacing: .17em; }
 .card-copy h2 { margin: 6px 0 8px; font-size: clamp(32px, 4vw, 48px); line-height: .9; }

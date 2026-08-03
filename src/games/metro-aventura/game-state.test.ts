@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { distinctKeys, nextStation, nextView, routeFor, speedAtProgress } from "./game-state";
-import { cptmFleetMatrix, lines, platformSideFor, platformSides } from "./data";
+import { distinctKeys, driveChoices, nextStation, nextView, routeFor, speedAtProgress } from "./game-state";
+import { cptmFleetMatrix, firstSyllable, firstSyllableFor, lines, platformSideFor, platformSides } from "./data";
 
 describe("journey rules", () => {
   it("cycles through views in both directions", () => {
@@ -59,10 +59,39 @@ describe("journey rules", () => {
     expect(distinctKeys(["A", "S", "P"], 1, 2)).toEqual(["S", "P"]);
   });
 
+  it("builds a 3-option touch choice that always includes the correct key once", () => {
+    const pool = ["A", "S", "D", "F", "J", "K", "L", "P"];
+    for (let seed = 0; seed < pool.length; seed++) {
+      const options = driveChoices(pool, "A", seed);
+      expect(options).toHaveLength(3);
+      expect(options.filter(key => key === "A")).toHaveLength(1);
+      expect(new Set(options).size).toBe(3);
+    }
+  });
+
   it("configures a valid platform side for every station", () => {
     for (const line of lines) {
       expect(Object.keys(platformSides[line.id])).toHaveLength(line.stations.length);
       for (const station of line.stations) expect(["right", "left"]).toContain(platformSideFor(line.id, station));
+    }
+  });
+
+  it("guesses a reasonable first syllable for known station names", () => {
+    expect(firstSyllable("Sé")).toBe("Sé");
+    expect(firstSyllable("Luz")).toBe("Luz");
+    expect(firstSyllable("Tiradentes")).toBe("Ti");
+    expect(firstSyllable("Tucuruvi")).toBe("Tu");
+    expect(firstSyllable("Paulista")).toBe("Pau");
+    expect(firstSyllable("Higienópolis-Mackenzie")).toBe("Hi");
+    expect(firstSyllable("Palmeiras-Barra Funda")).toBe("Pal");
+    expect(firstSyllable("Fradique Coutinho")).toBe("Fra");
+    expect(firstSyllable("Quitaúna")).toBe("Qui");
+    expect(firstSyllable("Ana Rosa")).toBe("A");
+  });
+
+  it("produces a non-empty first syllable for every station in the game", () => {
+    for (const line of lines) {
+      for (const station of line.stations) expect(firstSyllableFor(station).length).toBeGreaterThan(0);
     }
   });
 });

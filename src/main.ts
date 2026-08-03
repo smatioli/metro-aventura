@@ -3,6 +3,9 @@ const path = window.location.pathname.replace(/\/+$/, "") || "/";
 if (path === "/metro-aventura") {
   document.title = "Metrô Aventura | Estação de Jogos";
   void import("./games/metro-aventura/main");
+} else if (path === "/metro-explorador") {
+  document.title = "Metrô Explorador | Estação de Jogos";
+  void import("./games/metro-explorador/main");
 } else if (path === "/jornalistas") {
   document.title = "Jornalistas | Estação de Jogos";
   void import("./games/jornalistas/main");

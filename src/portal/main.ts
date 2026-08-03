@@ -56,6 +56,21 @@ app.innerHTML = `
           <strong>JOGAR AGORA <span>→</span></strong>
         </div>
       </a>
+
+      <a class="game-card explorador-card" href="/metro-explorador/">
+        <span class="status available">DISPONÍVEL</span>
+        <div class="explorador-illustration" aria-hidden="true">
+          <div class="platform-strip-mini"></div>
+          <div class="turnstile-mini"><span></span><span></span></div>
+          <div class="walker-mini"><i></i><b></b></div>
+        </div>
+        <div class="card-copy">
+          <span class="game-number">JOGO 04</span>
+          <h2>Metrô<br>Explorador</h2>
+          <p>Ande pela estação, valide o bilhete e embarque no trem até o destino.</p>
+          <strong>JOGAR AGORA <span>→</span></strong>
+        </div>
+      </a>
     </section>
 
     <footer>Três mundos, muitas descobertas.</footer>

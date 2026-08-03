@@ -1,7 +1,7 @@
 import type { FleetId, LineId } from "./data";
 
 export type Screen = "home" | "company" | "fleet" | "line" | "direction" | "journey" | "finished";
-export type JourneyPhase = "travelling" | "arriving" | "waiting-open" | "doors-open" | "waiting-close";
+export type JourneyPhase = "travelling" | "arriving" | "waiting-open" | "doors-open" | "waiting-close" | "challenge";
 export type View = "side" | "interior" | "cab";
 
 export interface SaveGame {
@@ -40,4 +40,18 @@ export function distinctKeys(pool: string[], firstIndex: number, secondIndex: nu
   let second = pool[secondIndex % pool.length];
   if (second === first) second = pool[(secondIndex + 1) % pool.length];
   return [first, second];
+}
+
+/** Builds a shuffled 3-option touch choice (the correct key plus two decoys) for phones without a keyboard. */
+export function driveChoices(pool: string[], correct: string, seed: number): string[] {
+  const decoys: string[] = [];
+  let i = seed;
+  while (decoys.length < 2) {
+    const candidate = pool[i % pool.length];
+    if (candidate !== correct && !decoys.includes(candidate)) decoys.push(candidate);
+    i += 1;
+  }
+  const options = [correct, ...decoys];
+  const rotate = seed % 3;
+  return [...options.slice(rotate), ...options.slice(0, rotate)];
 }

@@ -244,3 +244,49 @@ export const platformSides: Record<LineId, Record<string, PlatformSide>> = {
 export function platformSideFor(lineId: LineId, station: string): PlatformSide {
   return platformSides[lineId][station] ?? "right";
 }
+
+const VOWELS = "AEIOUÁÉÍÓÚÂÊÔÃÕaeiouáéíóúâêôãõ";
+const SYLLABLE_DIGRAPHS = ["ch", "lh", "nh"];
+const SYLLABLE_CLUSTERS = ["bl", "br", "cl", "cr", "dr", "fl", "fr", "gl", "gr", "pl", "pr", "tl", "tr", "vr"];
+
+function isVowel(ch: string): boolean {
+  return VOWELS.includes(ch);
+}
+
+/**
+ * Best-effort Portuguese first-syllable heuristic (onset + vowel-nucleus; a single
+ * intervocalic consonant, or a known cluster/digraph, shifts to the next syllable;
+ * an unrecognized consonant pair splits between the two syllables). Not a full
+ * syllabifier — hiatus and other irregular cases can come out wrong. Correct those
+ * via `stationSyllableOverrides` as they're noticed, the same way `platformSides`
+ * defaults to "right" and is corrected per station.
+ */
+export function firstSyllable(name: string): string {
+  const word = name.match(/^\p{L}+/u)?.[0] ?? name;
+  const letters = [...word];
+  let i = 0;
+  while (i < letters.length && !isVowel(letters[i])) i += 1;
+  if (i >= letters.length) return word;
+  if (letters[i].toLowerCase() === "u" && i > 0 && "qg".includes(letters[i - 1].toLowerCase()) && i + 1 < letters.length && isVowel(letters[i + 1])) i += 1;
+  let j = i;
+  while (j < letters.length && isVowel(letters[j])) j += 1;
+  let syllableEnd = j;
+  let k = j;
+  let coda = "";
+  while (k < letters.length && !isVowel(letters[k])) { coda += letters[k]; k += 1; }
+  if (coda.length === 1 && k >= letters.length) syllableEnd = j + 1;
+  else if (coda.length >= 2) {
+    const pair = coda.slice(0, 2).toLowerCase();
+    if (!SYLLABLE_DIGRAPHS.includes(pair) && !SYLLABLE_CLUSTERS.includes(pair)) syllableEnd = j + 1;
+  }
+  return letters.slice(0, syllableEnd).join("");
+}
+
+// Correções manuais para estações onde a heurística de silabação erra (hiato, siglas etc.).
+export const stationSyllableOverrides: Partial<Record<string, string>> = {};
+
+export function firstSyllableFor(station: string): string {
+  return stationSyllableOverrides[station] ?? firstSyllable(station);
+}
+
+export const allFirstSyllables: string[] = Array.from(new Set(lines.flatMap(item => item.stations).map(firstSyllableFor)));

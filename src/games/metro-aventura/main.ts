@@ -1,6 +1,6 @@
 import "./style.css";
-import { companies, fleetImages, fleetThemes, lines, platformSideFor, prototypeViewMedia, type CompanyId, type FleetId } from "./data";
-import { SAVE_KEY, distinctKeys, nextView, routeFor, type JourneyPhase, type SaveGame, type Screen, type View } from "./game-state";
+import { allFirstSyllables, companies, firstSyllableFor, fleetImages, fleetThemes, lines, platformSideFor, prototypeViewMedia, type CompanyId, type FleetId } from "./data";
+import { SAVE_KEY, distinctKeys, driveChoices, nextView, routeFor, type JourneyPhase, type SaveGame, type Screen, type View } from "./game-state";
 import { trainAudio } from "./train-audio";
 
 const app = document.querySelector<HTMLDivElement>("#app")!;
@@ -20,6 +20,7 @@ let journeyTimer = 0;
 let speechEnabled = true;
 let travelSeconds = Number(localStorage.getItem("metro-aventura-travel-seconds")) || 8;
 let settingsOpen = false;
+let headerMenuOpen = false;
 let speedKmh = 0;
 let speedTrend: "idle" | "accelerating" | "cruising" | "braking" = "idle";
 let speedInterval = 0;
@@ -29,6 +30,16 @@ let randomDriveKeys = localStorage.getItem("metro-aventura-random-keys") === "tr
 let accelerateKey = "A";
 let brakeKey = "P";
 const driveKeyPool = ["A", "S", "D", "F", "J", "K", "L", "P"];
+let accelerateChoices: string[] = [];
+let brakeChoices: string[] = [];
+type ChallengeKind = "station" | "syllable" | "platform-side";
+let challengeKind: ChallengeKind | null = null;
+let challengeOptions: string[] = [];
+let challengeAnswer = "";
+let challengeStationName = "";
+let challengeStationEnabled = localStorage.getItem("metro-aventura-challenge-station") === "true";
+let challengeSyllableEnabled = localStorage.getItem("metro-aventura-challenge-syllable") === "true";
+let challengePlatformEnabled = localStorage.getItem("metro-aventura-challenge-platform") === "true";
 
 function loadSave(): SaveGame | null {
   try { return JSON.parse(localStorage.getItem(SAVE_KEY) || "null") as SaveGame | null; }
@@ -111,7 +122,7 @@ function render(): void {
   else if (screen === "fleet") renderFleet();
   else if (screen === "journey") renderJourney();
   else renderFinished();
-  app.querySelector(".selected")?.scrollIntoView({ block: "nearest", inline: "nearest", behavior: "smooth" });
+  [...app.querySelectorAll(".selected")].find(el => !el.closest(".settings-panel"))?.scrollIntoView({ block: "nearest", inline: "nearest", behavior: "smooth" });
 }
 
 function renderHome(): void {
@@ -160,7 +171,7 @@ function renderMap(): string {
 
 function renderSettings(): string {
   if (!settingsOpen) return "";
-  return `<div class="settings-backdrop"><section class="settings-panel" role="dialog" aria-modal="true" aria-label="Configurações"><button class="close-settings" aria-label="Fechar configurações">×</button><span class="eyebrow">PAINEL ADULTO</span><h2>Tempo em velocidade</h2><div class="time-options">${[6,8,12,16].map(seconds => `<button class="time-option ${travelSeconds === seconds ? "selected" : ""}" data-seconds="${seconds}"><b>${seconds}</b><span>segundos</span></button>`).join("")}</div><h2 class="control-title">Teclas de condução</h2><div class="control-options"><button class="control-option ${!randomDriveKeys ? "selected" : ""}" data-random="false"><kbd>A</kbd><kbd>P</kbd><span>Sempre iguais</span></button><button class="control-option ${randomDriveKeys ? "selected" : ""}" data-random="true"><div class="random-letters">A Z M</div><span>Letras sorteadas</span></button></div><p>A alteração das teclas vale a partir do próximo trecho.</p></section></div>`;
+  return `<div class="settings-backdrop"><section class="settings-panel" role="dialog" aria-modal="true" aria-label="Configurações"><button class="close-settings" aria-label="Fechar configurações">×</button><span class="eyebrow">PAINEL ADULTO</span><h2>Tempo em velocidade</h2><div class="time-options">${[6,8,12,16].map(seconds => `<button class="time-option ${travelSeconds === seconds ? "selected" : ""}" data-seconds="${seconds}"><b>${seconds}</b><span>segundos</span></button>`).join("")}</div><h2 class="control-title">Teclas de condução</h2><div class="control-options"><button class="control-option ${!randomDriveKeys ? "selected" : ""}" data-random="false"><kbd>A</kbd><kbd>P</kbd><span>Sempre iguais</span></button><button class="control-option ${randomDriveKeys ? "selected" : ""}" data-random="true"><div class="random-letters">A Z M</div><span>Letras sorteadas</span></button></div><p>A alteração das teclas vale a partir do próximo trecho.</p><h2 class="control-title">Desafios extras</h2><div class="control-options challenge-options"><button class="control-option ${challengeStationEnabled ? "selected" : ""}" data-challenge-toggle="station"><span class="challenge-icon">🚉</span><span>Estação</span></button><button class="control-option ${challengeSyllableEnabled ? "selected" : ""}" data-challenge-toggle="syllable"><span class="challenge-icon">🔤</span><span>Sílaba</span></button><button class="control-option ${challengePlatformEnabled ? "selected" : ""}" data-challenge-toggle="platform"><span class="challenge-icon">↔</span><span>Lado da porta</span></button></div><p>Um desafio sorteado entre os ativos aparece depois de fechar as portas.</p></section></div>`;
 }
 
 function renderActionPrompt(): string {
@@ -179,8 +190,52 @@ function renderActionPrompt(): string {
   return "";
 }
 
+function renderTouchActions(): string {
+  if (phase === "travelling" && driveStage === "await-accelerate") {
+    return `<div class="touch-actions drive" role="group" aria-label="Toque na tecla para acelerar">${accelerateChoices.map(key => `<button class="touch-key" data-drive-guess="${key}">${key}</button>`).join("")}</div>`;
+  }
+  if (phase === "travelling" && driveStage === "await-brake") {
+    return `<div class="touch-actions drive" role="group" aria-label="Toque na tecla para parar">${brakeChoices.map(key => `<button class="touch-key" data-drive-guess="${key}">${key}</button>`).join("")}</div>`;
+  }
+  if (phase === "waiting-open" && actionReady) {
+    return `<div class="touch-actions doors"><button class="touch-door-button" data-door-action="open">↔ Abrir portas</button></div>`;
+  }
+  if (phase === "waiting-close" && actionReady) {
+    return `<div class="touch-actions doors"><button class="touch-door-button" data-door-action="close">→← Fechar portas</button></div>`;
+  }
+  return "";
+}
+
+function challengeSpokenLabel(value: string): string {
+  if (challengeKind === "platform-side") return value === "right" ? "Direita" : "Esquerda";
+  return value;
+}
+
+function renderChallengeControls(): string {
+  return `<div class="challenge-controls"><button class="challenge-select-btn" data-challenge-confirm="true" aria-label="Selecionar esta opção"><span class="challenge-btn-icon">✓</span><span>Selecionar</span></button></div>`;
+}
+
+function renderChallenge(): string {
+  if (challengeKind === "station") {
+    const options = challengeOptions.map((option, index) => `<button class="station-option ${index === selection ? "selected" : ""}" data-challenge-highlight="${index}">${option}</button>`).join("");
+    return `<div class="challenge-panel"><div class="station-options" role="group" aria-label="Escolha a próxima estação">${options}</div>${renderChallengeControls()}</div>`;
+  }
+  if (challengeKind === "syllable") {
+    const options = challengeOptions.map((option, index) => `<button class="touch-key ${index === selection ? "selected" : ""}" data-challenge-highlight="${index}">${option}</button>`).join("");
+    return `<div class="challenge-panel"><div class="challenge-word">${challengeStationName}</div><div class="syllable-options" role="group" aria-label="Escolha a sílaba">${options}</div>${renderChallengeControls()}</div>`;
+  }
+  if (challengeKind === "platform-side") {
+    const options = challengeOptions.map((option, index) => `<button class="side-option ${index === selection ? "selected" : ""}" data-challenge-highlight="${index}"><span class="side-arrow">${option === "right" ? "→" : "←"}</span><span class="side-label">${option === "right" ? "Direita" : "Esquerda"}</span></button>`).join("");
+    return `<div class="challenge-panel"><div class="side-options" role="group" aria-label="Escolha o lado da porta">${options}</div>${renderChallengeControls()}</div>`;
+  }
+  return "";
+}
+
 function phaseMessage(): { title: string; subtitle: string } {
   const route = currentRoute();
+  if (phase === "challenge" && challengeKind === "station") return { title: "Qual é a próxima estação?", subtitle: "Toque na estação certa" };
+  if (phase === "challenge" && challengeKind === "syllable") return { title: "Qual sílaba começa o nome?", subtitle: "Toque na sílaba certa" };
+  if (phase === "challenge" && challengeKind === "platform-side") return { title: "De que lado abrem as portas?", subtitle: "Toque no lado certo" };
   if (phase === "travelling" && driveStage === "await-accelerate") return { title: `Próxima: ${route[stationIndex]}`, subtitle: `Aperte ${accelerateKey} para acelerar` };
   if (phase === "travelling" && driveStage === "await-brake") return { title: `Próxima: ${route[stationIndex]}`, subtitle: `Aperte ${brakeKey} para parar` };
   if (phase === "travelling") return { title: `Próxima: ${route[stationIndex]}`, subtitle: speedTrendText() };
@@ -194,7 +249,8 @@ function renderJourney(): void {
   const message = phaseMessage();
   const cameraLocked = phase !== "travelling";
   const drivePrompt = phase === "travelling" && driveStage === "await-accelerate" ? keyHint([accelerateKey], "acelerar") : phase === "travelling" && driveStage === "await-brake" ? keyHint([brakeKey], "parar") : `<div class="calm-wait">●　●　●</div>`;
-  shell(`<header class="journey-header"><div class="line-pill"><b>${line.id}</b>${line.name}</div><div class="station-copy"><span>${message.subtitle}</span><h1>${message.title}</h1></div><div class="header-actions"><button class="home-button" aria-label="Voltar à tela inicial" title="Tela inicial">🏠</button><button class="settings-button" aria-label="Abrir configurações">⚙️</button><button class="sound-button" aria-label="Ligar ou desligar voz">${speechEnabled ? "🔊" : "🔇"}</button></div></header><section class="game-stage view-${view}">${trainArt()}<div class="view-pill">${view === "side" ? "LATERAL" : view === "interior" ? "INTERIOR" : "CABINE"}</div>${renderActionPrompt()}</section>${renderMap()}<footer>${!cameraLocked ? keyHint(["↑","↓"], "mudar vista") : `<div class="camera-locked">👁️ Vista lateral na estação</div>`}${phase === "travelling" ? drivePrompt : (phase === "waiting-open" || phase === "waiting-close") && actionReady ? keyHint(["ESPAÇO"], phase === "waiting-open" ? "abrir portas" : "fechar portas") : `<div class="calm-wait">●　●　●</div>`}</footer>${renderSettings()}`, "journey-shell");
+  const stageBody = phase === "challenge" ? renderChallenge() : `${trainArt()}<div class="view-pill">${view === "side" ? "LATERAL" : view === "interior" ? "INTERIOR" : "CABINE"}</div>${renderActionPrompt()}`;
+  shell(`<header class="journey-header"><div class="line-pill"><b>${line.id}</b>${line.name}</div><div class="station-copy"><span>${message.subtitle}</span><h1>${message.title}</h1></div><div class="header-menu"><button class="menu-toggle" aria-label="${headerMenuOpen ? "Fechar menu" : "Abrir menu"}" aria-expanded="${headerMenuOpen}">${headerMenuOpen ? "✕" : "☰"}</button><div class="header-actions ${headerMenuOpen ? "open" : ""}"><button class="home-button" aria-label="Voltar à tela inicial" title="Tela inicial">🏠</button><button class="settings-button" aria-label="Abrir configurações">⚙️</button><button class="sound-button" aria-label="Ligar ou desligar voz">${speechEnabled ? "🔊" : "🔇"}</button></div></div></header><section class="game-stage view-${view} ${phase === "challenge" ? "challenge-active" : ""}">${stageBody}</section>${renderMap()}<footer>${!cameraLocked ? keyHint(["↑","↓"], "mudar vista") : `<div class="camera-locked">👁️ Vista lateral na estação</div>`}${phase === "challenge" ? keyHint(["←","→"], "escolher") + keyHint(["ESPAÇO"], "confirmar") : phase === "travelling" ? drivePrompt : (phase === "waiting-open" || phase === "waiting-close") && actionReady ? keyHint(["ESPAÇO"], phase === "waiting-open" ? "abrir portas" : "fechar portas") : `<div class="calm-wait">●　●　●</div>`}</footer>${renderTouchActions()}${renderSettings()}`, "journey-shell");
 }
 
 function goToStart(): void {
@@ -249,6 +305,8 @@ function beginTravel(): void {
   if (randomDriveKeys) {
     [accelerateKey, brakeKey] = distinctKeys(driveKeyPool, Math.floor(Math.random() * driveKeyPool.length), Math.floor(Math.random() * driveKeyPool.length));
   } else { accelerateKey = "A"; brakeKey = "P"; }
+  accelerateChoices = driveChoices(driveKeyPool, accelerateKey, Math.floor(Math.random() * driveKeyPool.length));
+  brakeChoices = driveChoices(driveKeyPool, brakeKey, Math.floor(Math.random() * driveKeyPool.length));
   speedKmh = 0;
   speedTrend = "idle";
   trainAudio.stop();
@@ -297,12 +355,60 @@ function openDoors(): void {
   journeyTimer = window.setTimeout(() => { phase = "waiting-close"; actionReady = true; render(); speak("Feche as portas"); }, 2800);
 }
 
+function enabledChallengeKinds(): ChallengeKind[] {
+  const kinds: ChallengeKind[] = [];
+  if (challengeStationEnabled) kinds.push("station");
+  if (challengeSyllableEnabled) kinds.push("syllable");
+  if (challengePlatformEnabled) kinds.push("platform-side");
+  return kinds;
+}
+
+function departNextStation(): void {
+  phase = "travelling"; view = "cab"; render(); speak(`Próxima estação, ${currentRoute()[stationIndex]}`);
+  beginTravel();
+}
+
+function beginChallenge(kind: ChallengeKind): void {
+  challengeKind = kind; phase = "challenge"; selection = 0; view = "side";
+  const correctStation = currentRoute()[stationIndex];
+  challengeStationName = correctStation;
+  if (kind === "station") {
+    challengeAnswer = correctStation;
+    challengeOptions = driveChoices(currentRoute(), correctStation, Math.floor(Math.random() * currentRoute().length));
+    render();
+    speak(`Próxima estação: ${correctStation}`);
+  } else if (kind === "syllable") {
+    challengeAnswer = firstSyllableFor(correctStation);
+    challengeOptions = driveChoices(allFirstSyllables, challengeAnswer, Math.floor(Math.random() * allFirstSyllables.length));
+    render();
+    speak(`Próxima estação: ${correctStation}`);
+  } else {
+    challengeAnswer = platformSideFor(line.id, correctStation);
+    challengeOptions = ["left", "right"];
+    render();
+    speak(`Em ${correctStation}, as portas abrem do lado ${challengeAnswer === "right" ? "direito" : "esquerdo"}.`);
+  }
+}
+
+function confirmChallenge(picked: string, buttonEl?: HTMLElement): void {
+  if (picked !== challengeAnswer) {
+    buttonEl?.classList.add("wrong");
+    window.setTimeout(() => buttonEl?.classList.remove("wrong"), 400);
+    speak("Não é essa. Tente de novo.");
+    return;
+  }
+  challengeKind = null;
+  departNextStation();
+}
+
 function closeDoors(): void {
   actionReady = false; doorsOpen = false; render(); save();
   journeyTimer = window.setTimeout(() => {
     if (stationIndex >= currentRoute().length - 1) { localStorage.removeItem(SAVE_KEY); screen = "finished"; selection = 0; render(); speak("Chegamos ao terminal"); return; }
-    stationIndex += 1; phase = "travelling"; view = "cab"; render(); speak(`Próxima estação, ${currentRoute()[stationIndex]}`);
-    beginTravel();
+    stationIndex += 1;
+    const kinds = enabledChallengeKinds();
+    if (kinds.length === 0) { departNextStation(); return; }
+    beginChallenge(kinds[Math.floor(Math.random() * kinds.length)]);
   }, 1400);
 }
 
@@ -316,6 +422,12 @@ document.addEventListener("keydown", event => {
   if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Space"].includes(event.code) || event.key.toUpperCase() === accelerateKey || event.key.toUpperCase() === brakeKey) event.preventDefault();
   if (screen === "journey") {
     if (settingsOpen) { if (event.code === "Escape") { settingsOpen = false; render(); } return; }
+    if (phase === "challenge") {
+      if (event.code === "ArrowLeft") { selection = (selection - 1 + challengeOptions.length) % challengeOptions.length; render(); speak(challengeSpokenLabel(challengeOptions[selection])); }
+      else if (event.code === "ArrowRight") { selection = (selection + 1) % challengeOptions.length; render(); speak(challengeSpokenLabel(challengeOptions[selection])); }
+      else if (event.code === "Space") confirmChallenge(challengeOptions[selection]);
+      return;
+    }
     if (phase === "travelling" && (event.code === "ArrowUp" || event.code === "ArrowDown")) { view = nextView(view, event.code === "ArrowDown" ? 1 : -1); render(); }
     const pressed = event.key.toUpperCase();
     if (phase === "travelling" && driveStage === "await-accelerate" && pressed === accelerateKey) accelerateTrain();
@@ -352,14 +464,45 @@ app.addEventListener("click", event => {
   if (directionCard) { direction = Number(directionCard.dataset.direction) as 1 | -1; startJourney(); return; }
   const fleetCard = target.closest<HTMLButtonElement>("[data-fleet-id]");
   if (fleetCard) { fleet = fleetCard.dataset.fleetId as FleetId; screen = "direction"; selection = 0; render(); announceSelection(); return; }
+  const challengeHighlight = target.closest<HTMLButtonElement>("[data-challenge-highlight]");
+  if (challengeHighlight) { selection = Number(challengeHighlight.dataset.challengeHighlight); render(); speak(challengeSpokenLabel(challengeOptions[selection])); return; }
+  if (target.closest("[data-challenge-confirm]")) {
+    const highlighted = app.querySelector<HTMLButtonElement>(`[data-challenge-highlight="${selection}"]`);
+    confirmChallenge(challengeOptions[selection], highlighted ?? undefined);
+    return;
+  }
+  const driveGuess = target.closest<HTMLButtonElement>("[data-drive-guess]");
+  if (driveGuess) {
+    const guess = driveGuess.dataset.driveGuess;
+    if (phase === "travelling" && driveStage === "await-accelerate" && guess === accelerateKey) accelerateTrain();
+    else if (phase === "travelling" && driveStage === "await-brake" && guess === brakeKey) brakeTrain();
+    else { driveGuess.classList.add("wrong"); window.setTimeout(() => driveGuess.classList.remove("wrong"), 400); }
+    return;
+  }
+  const doorAction = target.closest<HTMLButtonElement>("[data-door-action]");
+  if (doorAction) {
+    if (doorAction.dataset.doorAction === "open" && actionReady && phase === "waiting-open") openDoors();
+    else if (doorAction.dataset.doorAction === "close" && actionReady && phase === "waiting-close") closeDoors();
+    return;
+  }
   const finishAction = target.closest<HTMLButtonElement>("[data-finish-action]");
   if (finishAction) { if (finishAction.dataset.finishAction === "repeat") startJourney(); else { screen = "company"; selection = 0; render(); announceSelection(); } return; }
-  if (target.closest(".home-button")) { goToStart(); return; }
-  if (target.closest(".sound-button")) { speechEnabled = !speechEnabled; trainAudio.setEnabled(speechEnabled); speechSynthesis.cancel(); render(); return; }
-  if (target.closest(".settings-button")) { settingsOpen = true; render(); return; }
+  if (target.closest(".menu-toggle")) { headerMenuOpen = !headerMenuOpen; render(); return; }
+  if (target.closest(".home-button")) { headerMenuOpen = false; goToStart(); return; }
+  if (target.closest(".sound-button")) { headerMenuOpen = false; speechEnabled = !speechEnabled; trainAudio.setEnabled(speechEnabled); speechSynthesis.cancel(); render(); return; }
+  if (target.closest(".settings-button")) { headerMenuOpen = false; settingsOpen = true; render(); return; }
   if (target.closest(".close-settings") || target.classList.contains("settings-backdrop")) { settingsOpen = false; render(); return; }
   const timeOption = target.closest<HTMLButtonElement>(".time-option");
   if (timeOption) { travelSeconds = Number(timeOption.dataset.seconds); localStorage.setItem("metro-aventura-travel-seconds", String(travelSeconds)); render(); }
+  const challengeToggle = target.closest<HTMLButtonElement>("[data-challenge-toggle]");
+  if (challengeToggle) {
+    const kind = challengeToggle.dataset.challengeToggle;
+    if (kind === "station") { challengeStationEnabled = !challengeStationEnabled; localStorage.setItem("metro-aventura-challenge-station", String(challengeStationEnabled)); }
+    else if (kind === "syllable") { challengeSyllableEnabled = !challengeSyllableEnabled; localStorage.setItem("metro-aventura-challenge-syllable", String(challengeSyllableEnabled)); }
+    else { challengePlatformEnabled = !challengePlatformEnabled; localStorage.setItem("metro-aventura-challenge-platform", String(challengePlatformEnabled)); }
+    render();
+    return;
+  }
   const controlOption = target.closest<HTMLButtonElement>(".control-option");
   if (controlOption) { randomDriveKeys = controlOption.dataset.random === "true"; localStorage.setItem("metro-aventura-random-keys", String(randomDriveKeys)); render(); }
 });
