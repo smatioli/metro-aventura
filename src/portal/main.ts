@@ -71,6 +71,21 @@ app.innerHTML = `
           <strong>JOGAR AGORA <span>→</span></strong>
         </div>
       </a>
+
+      <a class="game-card memory-card-tile" href="/jogo-da-memoria/">
+        <span class="status available">DISPONÍVEL</span>
+        <div class="memory-illustration" aria-hidden="true">
+          <div class="mini-card flipped"><span>🚈</span></div>
+          <div class="mini-card"><span>?</span></div>
+          <div class="mini-card flipped"><span>🚈</span></div>
+        </div>
+        <div class="card-copy">
+          <span class="game-number">JOGO 05</span>
+          <h2>Jogo da<br>Memória</h2>
+          <p>Vire as cartas e encontre os pares de trens e companhias.</p>
+          <strong>JOGAR AGORA <span>→</span></strong>
+        </div>
+      </a>
     </section>
 
     <footer>Três mundos, muitas descobertas.</footer>

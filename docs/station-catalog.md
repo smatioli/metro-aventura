@@ -248,3 +248,15 @@ Fonte institucional consultada em 2026-07-30.
 1. Engenheiro Goulart
 2. Guarulhos–CECAP
 3. Aeroporto–Guarulhos
+
+## Linha 17-Ouro — ViaMobilidade
+
+Fonte institucional (Metrô de São Paulo) e Wikipédia, consultadas em 2026-08-10. Ramo até o Aeroporto de Congonhas; o ramo em Y até Washington Luís (aberto em 2026-06-30) fica de fora até que o jogo suporte linhas bifurcadas (ADR 0018).
+
+1. Morumbi
+2. Chucri Zaidan
+3. Vila Cordeiro
+4. Campo Belo
+5. Vereador José Diniz
+6. Brooklin Paulista
+7. Aeroporto de Congonhas

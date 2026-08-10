@@ -18,7 +18,7 @@ describe("journey rules", () => {
   });
 
   it("contains every station in the prototype routes", () => {
-    expect(lines.map(line => line.stations.length)).toEqual([23, 14, 18, 11, 17, 17, 22, 21, 15, 17, 13, 3, 11]);
+    expect(lines.map(line => line.stations.length)).toEqual([23, 14, 18, 11, 17, 17, 22, 21, 15, 17, 13, 3, 11, 7]);
   });
 
   it("uses the approved fleet matrix", () => {
@@ -35,7 +35,8 @@ describe("journey rules", () => {
       ["8000", "8500"],
       ["7000", "8500", "9000"],
       ["2500"],
-      ["M"]
+      ["M"],
+      ["N"]
     ]);
   });
 

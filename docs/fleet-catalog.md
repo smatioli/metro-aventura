@@ -18,6 +18,7 @@ Este catálogo usa como autoridade a relação fornecida para o projeto. A diver
 | L | `img/frotaL_1.jpg` | sim | ausentes |
 | M | `img/frotaM_1.jpg` | não; Linha 15-Prata (jogável desde ADR 0016) | ausentes |
 | S | ausente | não; Linha 15-Prata (ainda não jogável, sem referência) | ausentes |
+| N | `img/frota_N.jpg` | não; Linha 17-Ouro (ViaMobilidade, monotrilho BYD SkyRail, ADR 0018) | ausentes |
 | 400 | `img/frota_400.jpeg` | não; Linha 4-Amarela (ViaMobilidade, ADR 0017) | ausentes |
 | 500 | `img/frota_500.jpeg` | não; Linha 5-Lilás (ViaMobilidade, ADR 0017) | ausentes |
 
@@ -67,6 +68,7 @@ Os cartões de seleção das séries CPTM usam as imagens correspondentes em `pu
 | 15-Prata | M |
 | 4-Amarela (ViaMobilidade) | 400 |
 | 5-Lilás (ViaMobilidade) | 500 |
+| 17-Ouro (ViaMobilidade) | N |
 
 ## Matriz publicada na página institucional consultada
 

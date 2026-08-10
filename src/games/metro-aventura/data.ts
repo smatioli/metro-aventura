@@ -1,6 +1,6 @@
 export type CompanyId = "metro" | "cptm" | "viamobilidade";
-export type LineId = "1" | "2" | "3" | "4" | "5" | "7" | "8" | "9" | "10" | "11" | "12" | "13" | "15";
-export type FleetId = "E" | "G" | "H" | "I" | "J" | "K" | "L" | "M" | "400" | "500" | "2070" | "2500" | "7000" | "7500" | "8000" | "8500" | "8900" | "9000" | "9500";
+export type LineId = "1" | "2" | "3" | "4" | "5" | "7" | "8" | "9" | "10" | "11" | "12" | "13" | "15" | "17";
+export type FleetId = "E" | "G" | "H" | "I" | "J" | "K" | "L" | "M" | "N" | "400" | "500" | "2070" | "2500" | "7000" | "7500" | "8000" | "8500" | "8900" | "9000" | "9500";
 export type PlatformSide = "right" | "left";
 
 export interface MetroLine {
@@ -113,13 +113,18 @@ export const lines: MetroLine[] = [
     id: "15", companyId: "metro", name: "Linha 15 Prata", color: "#8a8d90", colorSoft: "#e8e9ea",
     stations: ["Vila Prudente", "Oratório", "São Lucas", "Camilo Haddad", "Vila Tolstói", "Vila União", "Jardim Planalto", "Sapopemba", "Fazenda da Juta", "São Mateus", "Jardim Colonial"],
     fleets: ["M"]
+  },
+  {
+    id: "17", companyId: "viamobilidade", name: "Linha 17 Ouro", color: "#c9962c", colorSoft: "#fbead0",
+    stations: ["Morumbi", "Chucri Zaidan", "Vila Cordeiro", "Campo Belo", "Vereador José Diniz", "Brooklin Paulista", "Aeroporto de Congonhas"],
+    fleets: ["N"]
   }
 ];
 
 export const fleetImages: Record<FleetId, string> = {
   E: "/games/metro-aventura/img/frotaE_1.jpg", G: "/games/metro-aventura/img/frotaG_1.jpg", H: "/games/metro-aventura/img/frotaH_1.jpg",
   I: "/games/metro-aventura/img/frotaI_1.jpg", J: "/games/metro-aventura/img/frotaJ_1.jpg", K: "/games/metro-aventura/img/frotaK_1.jpg",
-  L: "/games/metro-aventura/img/frotaL_1.jpg", M: "/games/metro-aventura/img/frotaM_1.jpg",
+  L: "/games/metro-aventura/img/frotaL_1.jpg", M: "/games/metro-aventura/img/frotaM_1.jpg", N: "/games/metro-aventura/img/frota_N.jpg",
   "400": "/games/metro-aventura/img/frota_400.jpeg", "500": "/games/metro-aventura/img/frota_500.jpeg",
   "2070": "/games/metro-aventura/img/2070.jpeg", "2500": "/games/metro-aventura/img/2500.jpeg", "7000": "/games/metro-aventura/img/7000.jpeg",
   "7500": "/games/metro-aventura/img/7500.jpeg", "8000": "/games/metro-aventura/img/8000.jpeg", "8500": "/games/metro-aventura/img/8500.jpeg",
@@ -135,6 +140,7 @@ export const fleetThemes: Record<FleetId, FleetTheme> = {
   K: { body: "#c9cfce", stripe: "#1a77c5", accent: "#0c2737", front: "round" },
   L: { body: "#e3e7e6", stripe: "#176fc0", accent: "#101e2a", front: "sloped" },
   M: { body: "#e7e9ea", stripe: "#1c3f94", accent: "#8a8d90", front: "round" },
+  N: { body: "#e9edf0", stripe: "#1d4f91", accent: "#1a1d22", front: "round" },
   "400": { body: "#2b2c2e", stripe: "#f6c116", accent: "#1a1a1c", front: "round" },
   "500": { body: "#eef0f1", stripe: "#7d5aa6", accent: "#3f6fa5", front: "round" },
   "2070": { body: "#d8dedd", stripe: "#d92736", accent: "#26343b", front: "flat" },
@@ -171,11 +177,11 @@ export const platformSides: Record<LineId, Record<string, PlatformSide>> = {
     "Sumaré": "right", "Vila Madalena": "right"
   },
   "3": {
-    "Corinthians-Itaquera": "right", "Artur Alvim": "right", "Patriarca-Vila Ré": "right",
-    "Guilhermina-Esperança": "right", "Vila Matilde": "right", "Penha": "right", "Carrão": "right",
-    "Tatuapé": "right", "Belém": "right", "Bresser-Mooca": "right", "Brás": "right",
-    "Pedro II": "right", "Sé": "left", "Anhangabaú": "right", "República": "right",
-    "Santa Cecília": "right", "Marechal Deodoro": "right", "Palmeiras-Barra Funda": "right"
+    "Corinthians-Itaquera": "right", "Artur Alvim": "left", "Patriarca-Vila Ré": "left",
+    "Guilhermina-Esperança": "left", "Vila Matilde": "left", "Penha": "left", "Carrão": "left",
+    "Tatuapé": "right", "Belém": "left", "Bresser-Mooca": "left", "Brás": "right",
+    "Pedro II": "right", "Sé": "left", "Anhangabaú": "left", "República": "right",
+    "Santa Cecília": "right", "Marechal Deodoro": "left", "Palmeiras-Barra Funda": "right"
   },
   "4": {
     "Luz": "right", "República": "right", "Higienópolis-Mackenzie": "right", "Paulista": "right",
@@ -238,6 +244,10 @@ export const platformSides: Record<LineId, Record<string, PlatformSide>> = {
     "Vila Prudente": "left", "Oratório": "left", "São Lucas": "left", "Camilo Haddad": "left",
     "Vila Tolstói": "left", "Vila União": "left", "Jardim Planalto": "left", "Sapopemba": "left",
     "Fazenda da Juta": "left", "São Mateus": "left", "Jardim Colonial": "left"
+  },
+  "17": {
+    "Morumbi": "left", "Chucri Zaidan": "left", "Vila Cordeiro": "left", "Campo Belo": "left",
+    "Vereador José Diniz": "left", "Brooklin Paulista": "left", "Aeroporto de Congonhas": "left"
   }
 };
 

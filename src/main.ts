@@ -12,6 +12,9 @@ if (path === "/metro-aventura") {
 } else if (path === "/silabas") {
   document.title = "Sílabas | Estação de Jogos";
   void import("./games/silabas/main");
+} else if (path === "/jogo-da-memoria") {
+  document.title = "Jogo da Memória | Estação de Jogos";
+  void import("./games/jogo-da-memoria/main");
 } else {
   document.title = "Estação de Jogos";
   void import("./portal/main");
