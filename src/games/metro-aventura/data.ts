@@ -225,9 +225,9 @@ export const platformSides: Record<LineId, Record<string, PlatformSide>> = {
     "Mauá": "left", "Guapituba": "right", "Ribeirão Pires": "right", "Rio Grande da Serra": "right"
   },
   "11": {
-    "Palmeiras-Barra Funda": "right", "Luz": "right", "Brás": "right", "Tatuapé": "right",
-    "Corinthians-Itaquera": "right", "Dom Bosco": "right", "José Bonifácio": "right", "Guaianases": "right",
-    "Antônio Gianetti Neto": "right", "Ferraz de Vasconcelos": "right", "Poá": "right", "Calmon Viana": "right",
+    "Palmeiras-Barra Funda": "right", "Luz": "left", "Brás": "left", "Tatuapé": "right",
+    "Corinthians-Itaquera": "right", "Dom Bosco": "left", "José Bonifácio": "left", "Guaianases": "right",
+    "Antônio Gianetti Neto": "right", "Ferraz de Vasconcelos": "right", "Poá": "right", "Calmon Viana": "left",
     "Suzano": "right", "Jundiapeba": "right", "Braz Cubas": "right", "Mogi das Cruzes": "right",
     "Estudantes": "right"
   },

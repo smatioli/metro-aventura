@@ -22,6 +22,7 @@ h1,h2 { font-family:Nunito,system-ui,sans-serif }
 .group-card { position:relative; min-height:190px; display:grid; align-content:center; justify-items:start; gap:8px; padding:22px; border:3px solid transparent; border-radius:24px; background:var(--soft); text-align:left; cursor:pointer; box-shadow:0 12px 0 color-mix(in srgb,var(--group) 30%,#b9aa94),0 20px 35px rgba(77,60,35,.12); transition:.2s }
 .group-card:hover,.group-card:focus-visible { transform:translateY(-5px); border-color:var(--group); outline:0 }
 .group-icon { font-size:42px }
+.group-icon img { display:block; width:52px; height:52px; object-fit:contain; border-radius:10px; background:#fff }
 .group-card h2 { margin:0; color:#2c3545; font-size:26px }
 .group-card small { color:color-mix(in srgb,var(--group) 80%,#263044); font:900 11px Nunito; letter-spacing:.12em }
 .play-label { margin-top:4px; color:color-mix(in srgb,var(--group) 78%,#222); font:900 12px Nunito; letter-spacing:.12em }.play-label b { font-size:20px }
@@ -37,6 +38,7 @@ h1,h2 { font-family:Nunito,system-ui,sans-serif }
 .memory-card:disabled { cursor:default }
 .card-back,.card-front { position:absolute; inset:0; border-radius:18px; backface-visibility:hidden; transition:transform .4s ease; box-shadow:0 8px 0 color-mix(in srgb,var(--group) 30%,#b9aa94),0 14px 24px rgba(0,0,0,.14) }
 .card-back { display:grid; place-items:center; background:var(--group); font-size:clamp(28px,5vw,44px); transform:rotateY(0deg) }
+.card-back img { width:55%; max-width:80px; object-fit:contain; border-radius:12px; background:#fff; padding:8% }
 .card-front { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6%; background:#fff; padding:8% 8% 10%; transform:rotateY(-180deg) }
 .card-front img { width:100%; flex:1 1 auto; min-height:0; object-fit:contain; object-position:center; border-radius:10px }
 .card-label { flex:0 0 auto; color:#2c3545; font:900 clamp(10px,1.6vw,13px) Nunito; letter-spacing:.03em; text-align:center }

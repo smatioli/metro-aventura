@@ -47,6 +47,21 @@ export const memoryGroups: MemoryGroup[] = [
       { id: "cptm", src: "/games/metro-aventura/img/cptm-logo.webp", alt: "Logo da CPTM", label: "CPTM" },
       { id: "via-mobilidade", src: "/games/metro-aventura/img/via_mobilidade_logo.jpeg", alt: "Logo da Via Mobilidade", label: "Via Mobilidade" }
     ]
+  },
+  {
+    id: "painel",
+    label: "Painel do Carro",
+    icon: `<img src="/games/logo_volks.jpg" alt="Logo Volkswagen">`,
+    color: "#0b4ea2",
+    softColor: "#cfe0f7",
+    images: [
+      { id: "d1", src: "/games/painel/D1.png", alt: "Painel do carro D1", label: "D1" },
+      { id: "d2", src: "/games/painel/D2.png", alt: "Painel do carro D2", label: "D2" },
+      { id: "d3", src: "/games/painel/D3.png", alt: "Painel do carro D3", label: "D3" },
+      { id: "d4", src: "/games/painel/D4.png", alt: "Painel do carro D4", label: "D4" },
+      { id: "d5", src: "/games/painel/D5.png", alt: "Painel do carro D5", label: "D5" },
+      { id: "d6", src: "/games/painel/D6.png", alt: "Painel do carro D6", label: "D6" }
+    ]
   }
 ];
 
