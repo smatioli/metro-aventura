@@ -15,6 +15,9 @@ let nextRoundTimer = 0;
 let speechTimer = 0;
 let writingPresenter: Presenter | null = null;
 let letterIndex = 0;
+let writingChoices: string[] = [];
+let writingWrongLetter: string | null = null;
+let writingWrongTimer = 0;
 
 function mode(): Mode {
   return round % 2 === 0 ? "presenter-to-show" : "show-to-presenter";
@@ -65,6 +68,12 @@ function scheduleSpeak(text: string, delay = 0): void {
     speechTimer = 0;
     speak(text);
   }, delay);
+}
+
+function letterChoicesFor(expected: string): string[] {
+  const pool = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").filter(letter => letter !== expected);
+  const decoys = [...pool].sort(() => Math.random() - 0.5).slice(0, 2);
+  return [expected, ...decoys].sort(() => Math.random() - 0.5);
 }
 
 function presenterArt(presenter: Presenter): string {
@@ -173,7 +182,11 @@ function renderWriting(): void {
       ${complete ? `<div class="word-complete" aria-hidden="true">★</div><p>MUITO BEM!</p>` : `<div class="next-letter">
         <span aria-hidden="true">👇</span>
         <button class="letter-key" data-letter="${currentLetter}" aria-label="Letra ${currentLetter}">${currentLetter}</button>
-      </div><p>APERTE A LETRA</p>`}
+      </div>
+      <div class="letter-choices" role="group" aria-label="Toque na letra ${currentLetter}">
+        ${writingChoices.map(letter => `<button class="letter-choice ${letter === writingWrongLetter ? "wrong" : ""}" data-letter="${letter}" aria-label="Letra ${letter}">${letter}</button>`).join("")}
+      </div>
+      <p>APERTE A LETRA</p>`}
     </section>
   </main>`;
 }
@@ -212,6 +225,8 @@ function choose(index: number): void {
   nextRoundTimer = window.setTimeout(() => {
     writingPresenter = mode() === "show-to-presenter" ? chosen : answer();
     letterIndex = 0;
+    writingWrongLetter = null;
+    writingChoices = letterChoicesFor(writingPresenter.shortName[0]);
     screen = "writing";
     render();
     scheduleWritingPrompt(true, 300);
@@ -254,11 +269,21 @@ function typeLetter(letter: string): void {
   if (screen !== "writing" || !writingPresenter) return;
   const expected = writingPresenter.shortName[letterIndex];
   if (letter.toUpperCase() !== expected) {
+    writingWrongLetter = letter.toUpperCase();
+    render();
+    window.clearTimeout(writingWrongTimer);
+    writingWrongTimer = window.setTimeout(() => {
+      writingWrongLetter = null;
+      render();
+    }, 700);
     scheduleWritingPrompt();
     return;
   }
+  window.clearTimeout(writingWrongTimer);
+  writingWrongLetter = null;
   letterIndex += 1;
   if (letterIndex < writingPresenter.shortName.length) {
+    writingChoices = letterChoicesFor(writingPresenter.shortName[letterIndex]);
     render();
     const nextLetter = writingPresenter.shortName[letterIndex];
     speak(`${expected}. Agora, aperte a letra ${nextLetter}.`);

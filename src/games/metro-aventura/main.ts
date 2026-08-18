@@ -1,5 +1,5 @@
 import "./style.css";
-import { allFirstSyllables, companies, firstSyllableFor, fleetImages, fleetThemes, lines, platformSideFor, prototypeViewMedia, type CompanyId, type FleetId } from "./data";
+import { allFirstSyllables, companies, connectingLines, firstSyllableFor, fleetImages, fleetThemes, lines, platformSideFor, prototypeViewMedia, type CompanyId, type FleetId } from "./data";
 import { SAVE_KEY, distinctKeys, driveChoices, nextView, routeFor, type JourneyPhase, type SaveGame, type Screen, type View } from "./game-state";
 import { trainAudio } from "./train-audio";
 
@@ -60,10 +60,18 @@ function speak(text: string): void {
   speechSynthesis.speak(utterance);
 }
 
+function connectionAnnouncement(): string {
+  const connections = connectingLines(currentRoute()[stationIndex], line.id);
+  if (connections.length === 0) return "";
+  const names = connections.map(item => `${item.name}, ${companies.find(c => c.id === item.companyId)?.name ?? ""}`);
+  const joined = names.length === 1 ? names[0] : `${names.slice(0, -1).join(", ")} e ${names.at(-1)}`;
+  return ` Acesso à ${joined}.`;
+}
+
 function speakPlatformArrival(): void {
   if (!speechEnabled || !("speechSynthesis" in window)) return;
   speechSynthesis.cancel();
-  const portuguese = new SpeechSynthesisUtterance(`Estação ${currentRoute()[stationIndex]}. Desembarque pelo ${platformSideLabel()}.`);
+  const portuguese = new SpeechSynthesisUtterance(`Estação ${currentRoute()[stationIndex]}. Desembarque pelo ${platformSideLabel()}.${connectionAnnouncement()}`);
   portuguese.lang = "pt-BR";
   portuguese.rate = 0.78;
   const englishSide = currentPlatformSide() === "right" ? "right" : "left";

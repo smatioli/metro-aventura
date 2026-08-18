@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { distinctKeys, driveChoices, nextStation, nextView, routeFor, speedAtProgress } from "./game-state";
-import { cptmFleetMatrix, firstSyllable, firstSyllableFor, lines, platformSideFor, platformSides } from "./data";
+import { connectingLines, cptmFleetMatrix, firstSyllable, firstSyllableFor, lines, platformSideFor, platformSides } from "./data";
 
 describe("journey rules", () => {
   it("cycles through views in both directions", () => {
@@ -94,5 +94,17 @@ describe("journey rules", () => {
     for (const line of lines) {
       for (const station of line.stations) expect(firstSyllableFor(station).length).toBeGreaterThan(0);
     }
+  });
+
+  it("finds the other lines that stop at a shared station", () => {
+    const tamanduatei = connectingLines("Tamanduateí", "2");
+    expect(tamanduatei.map(item => item.id)).toEqual(["10"]);
+
+    const luz = connectingLines("Luz", "1");
+    expect(luz.map(item => item.id).sort()).toEqual(["10", "11", "4"]);
+  });
+
+  it("returns no connections for a station served by only one line", () => {
+    expect(connectingLines("Jabaquara", "1")).toEqual([]);
   });
 });

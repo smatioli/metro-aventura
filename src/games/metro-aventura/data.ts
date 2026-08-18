@@ -255,6 +255,11 @@ export function platformSideFor(lineId: LineId, station: string): PlatformSide {
   return platformSides[lineId][station] ?? "right";
 }
 
+/** Other lines that also stop at `station`, excluding `currentLineId` — used to announce transfer connections. */
+export function connectingLines(station: string, currentLineId: LineId): MetroLine[] {
+  return lines.filter(item => item.id !== currentLineId && item.stations.includes(station));
+}
+
 const VOWELS = "AEIOUÁÉÍÓÚÂÊÔÃÕaeiouáéíóúâêôãõ";
 const SYLLABLE_DIGRAPHS = ["ch", "lh", "nh"];
 const SYLLABLE_CLUSTERS = ["bl", "br", "cl", "cr", "dr", "fl", "fr", "gl", "gr", "pl", "pr", "tl", "tr", "vr"];
