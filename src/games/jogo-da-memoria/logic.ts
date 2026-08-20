@@ -20,7 +20,7 @@ export function shuffled<T>(items: T[], rng: () => number = Math.random): T[] {
 }
 
 export function buildBoard(group: MemoryGroup, rng: () => number = Math.random): MemoryCard[] {
-  const images: MemoryImage[] = group.images.slice(0, pairsForGroup(group));
+  const images: MemoryImage[] = shuffled(group.images, rng).slice(0, pairsForGroup(group));
   const pairs = images.flatMap(image => [image, image]);
   return shuffled(pairs, rng).map((image, index) => ({
     cardId: index,

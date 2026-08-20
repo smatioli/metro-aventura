@@ -1,48 +1,79 @@
 import "./style.css";
-import { presenters, type Presenter } from "./presenters";
+import type { Person, Topic } from "./types";
+import { topics } from "./topics";
 
-type Mode = "presenter-to-show" | "show-to-presenter";
-type Screen = "welcome" | "playing" | "writing" | "finished";
+type Mode = "person-to-group" | "group-to-person";
+type Screen = "select" | "welcome" | "playing" | "writing" | "finished";
+
+interface RoundPlan {
+  person: Person;
+  mode: Mode;
+  options: Person[];
+}
 
 const app = document.querySelector<HTMLDivElement>("#app")!;
-const totalRounds = presenters.length;
-let screen: Screen = "welcome";
+
+let screen: Screen = "select";
+let currentTopic: Topic | null = null;
+let selectedTopicIndex = 0;
+let rounds: RoundPlan[] = [];
 let round = 0;
 let selected = 0;
 let feedback: "idle" | "try-again" | "correct" = "idle";
 let speechEnabled = true;
 let nextRoundTimer = 0;
 let speechTimer = 0;
-let writingPresenter: Presenter | null = null;
+let writingPerson: Person | null = null;
 let letterIndex = 0;
 let writingChoices: string[] = [];
 let writingWrongLetter: string | null = null;
 let writingWrongTimer = 0;
 
-function mode(): Mode {
-  return round % 2 === 0 ? "presenter-to-show" : "show-to-presenter";
+function topic(): Topic {
+  return currentTopic!;
 }
 
-function answer(): Presenter {
-  return presenters[round % presenters.length];
-}
-
-function options(): Presenter[] {
-  const correct = answer();
-  let offset = 1;
-  let other = presenters[(round + offset) % presenters.length];
-  while (other.show === correct.show && offset < presenters.length) {
-    offset += 1;
-    other = presenters[(round + offset) % presenters.length];
+function shuffled<T>(items: T[]): T[] {
+  const result = [...items];
+  for (let i = result.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
   }
-  return round % 4 < 2 ? [correct, other] : [other, correct];
+  return result;
+}
+
+function buildRounds(): RoundPlan[] {
+  const people = topic().people;
+  return shuffled(people).map(person => {
+    const mode: Mode = Math.random() < 0.5 ? "person-to-group" : "group-to-person";
+    const distractors = people.filter(candidate => candidate.group !== person.group);
+    const other = distractors[Math.floor(Math.random() * distractors.length)];
+    const options = Math.random() < 0.5 ? [person, other] : [other, person];
+    return { person, mode, options };
+  });
+}
+
+function currentRound(): RoundPlan {
+  return rounds[round];
+}
+
+function mode(): Mode {
+  return currentRound().mode;
+}
+
+function answer(): Person {
+  return currentRound().person;
+}
+
+function options(): Person[] {
+  return currentRound().options;
 }
 
 function questionText(): string {
   const current = answer();
-  return mode() === "presenter-to-show"
-    ? `Qual jornal ${current.article} ${current.name} apresenta?`
-    : `Quem apresenta o jornal ${current.show}?`;
+  return mode() === "person-to-group"
+    ? topic().questionPersonToGroup(current)
+    : topic().questionGroupToPerson(current);
 }
 
 function stopSpeech(): void {
@@ -76,51 +107,90 @@ function letterChoicesFor(expected: string): string[] {
   return [expected, ...decoys].sort(() => Math.random() - 0.5);
 }
 
-function presenterArt(presenter: Presenter): string {
-  return `<div class="person-art photo" style="--shirt:${presenter.color}">
-    <img src="${presenter.photo}" alt="Foto de ${presenter.name}">
-    <span aria-hidden="true">🎤</span>
+function personArt(person: Person): string {
+  return `<div class="person-art photo" style="--shirt:${person.color}">
+    <img src="${person.photo}" alt="Foto de ${person.name}">
+    <span aria-hidden="true">${topic().personIcon}</span>
   </div>`;
 }
 
-function showArt(presenter: Presenter): string {
-  return `<div class="show-art" style="--show:${presenter.color};--show-soft:${presenter.soft}">
-    <img src="${presenter.logo}" alt="Logo do ${presenter.show}">
+function groupArt(person: Person): string {
+  if (person.groupLogo) {
+    return `<div class="show-art" style="--show:${person.color};--show-soft:${person.soft}">
+      <img src="${person.groupLogo}" alt="Logo do ${person.group}">
+    </div>`;
+  }
+  return `<div class="show-art" style="--show:${person.color};--show-soft:${person.soft}">
+    <div class="studio-lines" aria-hidden="true"></div>
+    <strong>${person.group}</strong>
   </div>`;
 }
 
 function subjectCard(): string {
   const current = answer();
-  return `<section class="question-subject" aria-label="${mode() === "presenter-to-show" ? current.name : current.show}">
-    ${mode() === "presenter-to-show" ? presenterArt(current) : showArt(current)}
-    <h2>${mode() === "presenter-to-show" ? current.name : current.show}</h2>
+  return `<section class="question-subject" aria-label="${mode() === "person-to-group" ? current.name : current.group}">
+    ${mode() === "person-to-group" ? personArt(current) : groupArt(current)}
+    <h2>${mode() === "person-to-group" ? current.name : current.group}</h2>
   </section>`;
 }
 
-function choiceCard(item: Presenter, index: number): string {
-  const label = mode() === "presenter-to-show" ? item.show : item.name;
+function choiceCard(item: Person, index: number): string {
+  const label = mode() === "person-to-group" ? item.group : item.name;
   return `<button class="answer-card ${selected === index ? "selected" : ""}" data-answer="${index}" aria-label="${label}">
     <span class="choice-key">${index === 0 ? "1 / A" : "2 / B"}</span>
-    ${mode() === "presenter-to-show" ? showArt(item) : presenterArt(item)}
+    ${mode() === "person-to-group" ? groupArt(item) : personArt(item)}
     <strong>${label}</strong>
     <span class="choose-mark" aria-hidden="true">✓</span>
   </button>`;
 }
 
 function progress(): string {
+  const totalRounds = rounds.length;
   return `<div class="round-progress" aria-label="Rodada ${round + 1} de ${totalRounds}">
     ${Array.from({ length: totalRounds }, (_, index) => `<i class="${index < round ? "done" : index === round ? "current" : ""}"></i>`).join("")}
   </div>`;
 }
 
-function renderWelcome(): void {
-  app.innerHTML = `<main class="journalists-shell welcome">
-    <nav><a href="/" aria-label="Voltar para todos os jogos">‹ <span>JOGOS</span></a><button class="sound-toggle" aria-label="Ligar ou desligar voz">🔊</button></nav>
-    <section class="welcome-card">
-      <div class="welcome-studio" aria-hidden="true"><span>🎤</span><b>?</b><span>📺</span></div>
+function navHtml(): string {
+  const back = screen === "select"
+    ? `<a href="/" aria-label="Voltar para todos os jogos">‹ <span>JOGOS</span></a>`
+    : `<button class="back-button" aria-label="Voltar para escolher o jogo">‹ <span>JOGOS</span></button>`;
+  return `${back}<button class="sound-toggle" aria-label="Ligar ou desligar voz">${speechEnabled ? "🔊" : "🔇"}</button>`;
+}
+
+function topicCard(item: Topic, index: number): string {
+  return `<button class="topic-card ${selectedTopicIndex === index ? "selected" : ""}" data-topic-index="${index}" style="--accent:${item.accent}" aria-label="${item.gameTitle}">
+    <span class="choice-key">${index === 0 ? "1 / A" : "2 / B"}</span>
+    <span class="topic-icons" aria-hidden="true">${item.welcomeIcons[0]} ${item.welcomeIcons[1]}</span>
+    <h2>${item.gameTitle}</h2>
+    <p>${item.selectDescription}</p>
+    <strong class="topic-cta">JOGAR <span aria-hidden="true">→</span></strong>
+  </button>`;
+}
+
+function renderSelect(): void {
+  app.innerHTML = `<main class="whoiswho-shell select">
+    <nav>${navHtml()}</nav>
+    <section class="select-hero">
       <p class="eyebrow">JOGO DE ADIVINHAÇÃO</p>
-      <h1>Jornalistas</h1>
-      <p>Olhe, escute e escolha.</p>
+      <h1>Quem é quem?</h1>
+      <p>Escolha o que você quer jogar.</p>
+    </section>
+    <section class="topic-grid" role="group" aria-label="Escolha um jogo">
+      ${topics.map((item, index) => topicCard(item, index)).join("")}
+    </section>
+  </main>`;
+}
+
+function renderWelcome(): void {
+  const current = topic();
+  app.innerHTML = `<main class="whoiswho-shell welcome">
+    <nav>${navHtml()}</nav>
+    <section class="welcome-card">
+      <div class="welcome-studio" aria-hidden="true"><span>${current.welcomeIcons[0]}</span><b>?</b><span>${current.welcomeIcons[1]}</span></div>
+      <p class="eyebrow">JOGO DE ADIVINHAÇÃO</p>
+      <h1>${current.gameTitle}</h1>
+      <p>${current.playDescription}</p>
       <div class="how-to" aria-label="Como jogar"><span>👀</span><b>→</b><span>👂</span><b>→</b><span>1️⃣ 2️⃣</span></div>
       <button class="start-button"><span>▶</span><strong>JOGAR</strong><kbd>ESPAÇO</kbd></button>
     </section>
@@ -129,8 +199,8 @@ function renderWelcome(): void {
 
 function renderGame(): void {
   const message = feedback === "correct" ? "ISSO! MUITO BEM!" : feedback === "try-again" ? "VAMOS TENTAR DE NOVO" : "ESCOLHA UMA RESPOSTA";
-  app.innerHTML = `<main class="journalists-shell game">
-    <nav><a href="/" aria-label="Voltar para todos os jogos">‹ <span>JOGOS</span></a><button class="sound-toggle" aria-label="Ligar ou desligar voz">${speechEnabled ? "🔊" : "🔇"}</button></nav>
+  app.innerHTML = `<main class="whoiswho-shell game">
+    <nav>${navHtml()}</nav>
     <header>
       ${progress()}
       <button class="listen-button" aria-label="Ouvir pergunta novamente"><span>🔊</span><b>OUVIR</b></button>
@@ -150,33 +220,37 @@ function renderGame(): void {
 }
 
 function renderFinished(): void {
-  app.innerHTML = `<main class="journalists-shell finished">
-    <nav><a href="/" aria-label="Voltar para todos os jogos">‹ <span>JOGOS</span></a><button class="sound-toggle" aria-label="Ligar ou desligar voz">${speechEnabled ? "🔊" : "🔇"}</button></nav>
+  const current = topic();
+  app.innerHTML = `<main class="whoiswho-shell finished">
+    <nav>${navHtml()}</nav>
     <section class="finish-card">
       <div class="stars" aria-hidden="true">★ ★ ★</div>
       <p class="eyebrow">MUITO BEM!</p>
-      <h1>Você conhece<br>os jornais!</h1>
-      <div class="finish-friends" aria-hidden="true">${presenters.map(presenterArt).join("")}</div>
-      <button class="start-button replay-button"><span>↻</span><strong>JOGAR DE NOVO</strong><kbd>ESPAÇO</kbd></button>
+      <h1>${current.finishedHeading}</h1>
+      <div class="finish-friends" aria-hidden="true">${current.people.map(personArt).join("")}</div>
+      <div class="finish-actions">
+        <button class="start-button replay-button"><span>↻</span><strong>JOGAR DE NOVO</strong><kbd>ESPAÇO</kbd></button>
+        <button class="switch-button"><span aria-hidden="true">🔀</span><strong>TROCAR DE JOGO</strong></button>
+      </div>
     </section>
   </main>`;
 }
 
 function renderWriting(): void {
-  if (!writingPresenter) return;
-  const letters = [...writingPresenter.shortName];
+  if (!writingPerson) return;
+  const letters = [...writingPerson.shortName];
   const currentLetter = letters[letterIndex];
   const complete = letterIndex >= letters.length;
-  app.innerHTML = `<main class="journalists-shell writing">
-    <nav><a href="/" aria-label="Voltar para todos os jogos">‹ <span>JOGOS</span></a><button class="sound-toggle" aria-label="Ligar ou desligar voz">${speechEnabled ? "🔊" : "🔇"}</button></nav>
+  app.innerHTML = `<main class="whoiswho-shell writing">
+    <nav>${navHtml()}</nav>
     <header>
       <p class="eyebrow">VAMOS ESCREVER</p>
       <button class="listen-button writing-listen" aria-label="Ouvir instrução novamente"><span>🔊</span><b>OUVIR</b></button>
     </header>
-    <section class="writing-card" style="--accent:${writingPresenter.color}">
-      ${presenterArt(writingPresenter)}
-      <h1>${writingPresenter.shortName}</h1>
-      <div class="letter-slots" aria-label="Escrevendo ${writingPresenter.shortName}">
+    <section class="writing-card" style="--accent:${writingPerson.color}">
+      ${personArt(writingPerson)}
+      <h1>${writingPerson.shortName}</h1>
+      <div class="letter-slots" aria-label="Escrevendo ${writingPerson.shortName}">
         ${letters.map((letter, index) => `<span class="${index < letterIndex ? "done" : index === letterIndex ? "current" : ""}">${index < letterIndex ? letter : index === letterIndex ? letter : "•"}</span>`).join("")}
       </div>
       ${complete ? `<div class="word-complete" aria-hidden="true">★</div><p>MUITO BEM!</p>` : `<div class="next-letter">
@@ -192,15 +266,37 @@ function renderWriting(): void {
 }
 
 function render(): void {
-  if (screen === "welcome") renderWelcome();
+  if (screen === "select") renderSelect();
+  else if (screen === "welcome") renderWelcome();
   else if (screen === "playing") renderGame();
   else if (screen === "writing") renderWriting();
   else renderFinished();
 }
 
+function chooseTopic(index: number): void {
+  const selectedTopic = topics[index];
+  if (!selectedTopic) return;
+  selectedTopicIndex = index;
+  currentTopic = selectedTopic;
+  screen = "welcome";
+  render();
+}
+
+function backToSelect(): void {
+  window.clearTimeout(nextRoundTimer);
+  window.clearTimeout(writingWrongTimer);
+  stopSpeech();
+  screen = "select";
+  currentTopic = null;
+  rounds = [];
+  writingPerson = null;
+  render();
+}
+
 function startGame(): void {
   window.clearTimeout(nextRoundTimer);
   stopSpeech();
+  rounds = buildRounds();
   screen = "playing";
   round = 0;
   selected = 0;
@@ -213,7 +309,7 @@ function choose(index: number): void {
   if (screen !== "playing" || feedback === "correct") return;
   selected = index;
   const chosen = options()[index];
-  if (chosen.show !== answer().show) {
+  if (chosen.group !== answer().group) {
     feedback = "try-again";
     render();
     speak("Quase. Vamos tentar de novo.");
@@ -223,10 +319,10 @@ function choose(index: number): void {
   render();
   speak("Isso! Muito bem!");
   nextRoundTimer = window.setTimeout(() => {
-    writingPresenter = mode() === "show-to-presenter" ? chosen : answer();
+    writingPerson = mode() === "group-to-person" ? chosen : answer();
     letterIndex = 0;
     writingWrongLetter = null;
-    writingChoices = letterChoicesFor(writingPresenter.shortName[0]);
+    writingChoices = letterChoicesFor(writingPerson.shortName[0]);
     screen = "writing";
     render();
     scheduleWritingPrompt(true, 300);
@@ -235,11 +331,11 @@ function choose(index: number): void {
 
 function advanceRound(): void {
   round += 1;
-  writingPresenter = null;
-  if (round >= totalRounds) {
+  writingPerson = null;
+  if (round >= rounds.length) {
     screen = "finished";
     render();
-    speak("Muito bem! Você conhece os jornais!");
+    speak(topic().finishedSpeech);
     return;
   }
   screen = "playing";
@@ -250,24 +346,24 @@ function advanceRound(): void {
 }
 
 function speakWritingPrompt(fullPrompt = false): void {
-  if (!writingPresenter) return;
-  const letter = writingPresenter.shortName[letterIndex];
+  if (!writingPerson) return;
+  const letter = writingPerson.shortName[letterIndex];
   speak(fullPrompt
-    ? `Vamos escrever: ${writingPresenter.shortName}. Aperte a letra ${letter}.`
+    ? `Vamos escrever: ${writingPerson.shortName}. Aperte a letra ${letter}.`
     : `Aperte a letra ${letter}.`);
 }
 
 function scheduleWritingPrompt(fullPrompt = false, delay = 0): void {
-  if (!writingPresenter) return;
-  const letter = writingPresenter.shortName[letterIndex];
+  if (!writingPerson) return;
+  const letter = writingPerson.shortName[letterIndex];
   scheduleSpeak(fullPrompt
-    ? `Vamos escrever: ${writingPresenter.shortName}. Aperte a letra ${letter}.`
+    ? `Vamos escrever: ${writingPerson.shortName}. Aperte a letra ${letter}.`
     : `Aperte a letra ${letter}.`, delay);
 }
 
 function typeLetter(letter: string): void {
-  if (screen !== "writing" || !writingPresenter) return;
-  const expected = writingPresenter.shortName[letterIndex];
+  if (screen !== "writing" || !writingPerson) return;
+  const expected = writingPerson.shortName[letterIndex];
   if (letter.toUpperCase() !== expected) {
     writingWrongLetter = letter.toUpperCase();
     render();
@@ -282,20 +378,28 @@ function typeLetter(letter: string): void {
   window.clearTimeout(writingWrongTimer);
   writingWrongLetter = null;
   letterIndex += 1;
-  if (letterIndex < writingPresenter.shortName.length) {
-    writingChoices = letterChoicesFor(writingPresenter.shortName[letterIndex]);
+  if (letterIndex < writingPerson.shortName.length) {
+    writingChoices = letterChoicesFor(writingPerson.shortName[letterIndex]);
     render();
-    const nextLetter = writingPresenter.shortName[letterIndex];
+    const nextLetter = writingPerson.shortName[letterIndex];
     speak(`${expected}. Agora, aperte a letra ${nextLetter}.`);
     return;
   }
   render();
-  speak(`Muito bem! ${writingPresenter.shortName}.`);
+  speak(`Muito bem! ${writingPerson.shortName}.`);
   nextRoundTimer = window.setTimeout(advanceRound, 1500);
 }
 
 document.addEventListener("keydown", event => {
   if (["ArrowLeft", "ArrowRight", "Space"].includes(event.code)) event.preventDefault();
+  if (screen === "select") {
+    if (event.code === "ArrowLeft") { selectedTopicIndex = 0; render(); return; }
+    if (event.code === "ArrowRight") { selectedTopicIndex = 1; render(); return; }
+    if (event.code === "Space" || event.code === "Enter") { chooseTopic(selectedTopicIndex); return; }
+    if (event.key === "1" || event.key.toLowerCase() === "a") { chooseTopic(0); return; }
+    if (event.key === "2" || event.key.toLowerCase() === "b") { chooseTopic(1); return; }
+    return;
+  }
   if (screen === "welcome" || screen === "finished") {
     if (event.code === "Space" || event.code === "Enter") startGame();
     return;
@@ -317,6 +421,9 @@ document.addEventListener("keydown", event => {
 
 app.addEventListener("click", event => {
   const target = event.target as HTMLElement;
+  if (target.closest(".back-button, .switch-button")) { backToSelect(); return; }
+  const topicCardEl = target.closest<HTMLButtonElement>("[data-topic-index]");
+  if (topicCardEl) { chooseTopic(Number(topicCardEl.dataset.topicIndex)); return; }
   if (target.closest(".start-button")) { startGame(); return; }
   const answerCard = target.closest<HTMLButtonElement>("[data-answer]");
   if (answerCard) { choose(Number(answerCard.dataset.answer)); return; }

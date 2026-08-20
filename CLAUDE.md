@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Estação de Jogos** ("Games Station") is a portal of simple, accessible browser games in Portuguese (pt-BR). It's a static TypeScript/Vite site with no backend, no framework (no React/Vue), and no database — just DOM manipulation via `innerHTML` templates.
 
-The flagship game, **Metrô Aventura**, was built for a 7-year-old autistic child who cannot yet read but can use a mouse, arrow keys, space, letters and numbers. This origin drives real design constraints documented in `docs/adr/` and `context.md` — read those before changing gameplay, controls, or pacing in that game. Two more games (**Jornalistas**, **Sílabas**) share the same low-stimulation, non-punitive philosophy but are simpler quiz-style experiences.
+The flagship game, **Metrô Aventura**, was built for a 7-year-old autistic child who cannot yet read but can use a mouse, arrow keys, space, letters and numbers. This origin drives real design constraints documented in `docs/adr/` and `context.md` — read those before changing gameplay, controls, or pacing in that game. Two more games (**Quem é Quem**, **Sílabas**) share the same low-stimulation, non-punitive philosophy but are simpler quiz-style experiences.
 
 ## Commands
 
@@ -25,7 +25,7 @@ npm run build     # tsc typecheck + vite build -> dist/
 
 ### Routing: one entry point, path-based dynamic import
 
-`src/main.ts` is the single script loaded by `index.html`. It inspects `window.location.pathname` and dynamically imports exactly one game module (or the portal) based on an exact path match (`/metro-aventura`, `/jornalistas`, `/silabas`, else the portal at `/`). There is no router library and no shared layout — each game/portal module owns its entire `#app` subtree and injects its own `<style>` via a colocated `style.css` import.
+`src/main.ts` is the single script loaded by `index.html`. It inspects `window.location.pathname` and dynamically imports exactly one game module (or the portal) based on an exact path match (`/metro-aventura`, `/quem-e-quem`, `/silabas`, else the portal at `/`). There is no router library and no shared layout — each game/portal module owns its entire `#app` subtree and injects its own `<style>` via a colocated `style.css` import.
 
 Because routing is exact-string matching (not prefix matching), a new game needs a new `else if` branch in `src/main.ts` plus a card in `src/portal/main.ts`, and Netlify's catch-all redirect (`/* -> /index.html`) is what makes deep links like `/silabas/` resolve to this same entry point.
 
@@ -54,9 +54,11 @@ This is the most complex game and has the most invariants to preserve:
 - `docs/adr/*.md` are numbered, dated decision records — check for an existing ADR before changing core rules (route direction, controls, camera behavior, save format), and add a new one for comparable decisions rather than editing history.
 - `docs/station-catalog.md` and `docs/fleet-catalog.md` are human-readable catalogs that should stay in sync when stations or fleets change.
 
-### Jornalistas and Sílabas
+### Quem é Quem and Sílabas
 
-Simpler quiz loops (module-level state machine, no persistence): pick a prompt, render options, speak the question via `speechSynthesis`, check the answer, advance after a delay. `jornalistas/presenters.ts` and `silabas/data.ts` hold their respective content data. `jornais_e_jornalistas.md` in that folder is reference/content notes, not code.
+Simpler quiz loops (module-level state machine, no persistence): pick a prompt, render options, speak the question via `speechSynthesis`, check the answer, advance after a delay. `silabas/data.ts` holds its content data.
+
+`quem-e-quem/` is a small hub: a topic-select screen lets the player pick between two datasets that share one generic engine (`main.ts`) — **Jornalistas** (presenter ↔ show) and **Jogadores e Times** (player ↔ team). `types.ts` defines the shared `Person`/`Topic` shapes, `jornalistas-data.ts` and `jogadores-data.ts` hold each topic's content, and `topics.ts` wires them into the `Topic` configs (question templates, copy, accent color) the engine renders generically. Player photos live under `public/games/jogadores/fotos/`; a person's `group` with no `groupLogo` renders as a text badge instead of an image. `jornais_e_jornalistas.md` in that folder is reference/content notes, not code.
 
 ## Conventions to follow
 

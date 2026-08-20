@@ -26,17 +26,17 @@ app.innerHTML = `
         </div>
       </a>
 
-      <a class="game-card news-card" href="/jornalistas/">
+      <a class="game-card news-card" href="/quem-e-quem/">
         <span class="status available">DISPONÍVEL</span>
         <div class="news-illustration" aria-hidden="true">
-          <div class="press-card"><span>IMPRENSA</span><b>J</b></div>
+          <div class="press-card"><span>ADIVINHE</span><b>?</b></div>
           <div class="microphone"></div>
           <div class="signal">)))</div>
         </div>
         <div class="card-copy">
           <span class="game-number">JOGO 02</span>
-          <h2>Jornalistas</h2>
-          <p>Escute a pergunta e encontre quem apresenta cada jornal.</p>
+          <h2>Quem é Quem</h2>
+          <p>Escute a pergunta e descubra: jornalistas ou jogadores e times.</p>
           <strong>JOGAR AGORA <span>→</span></strong>
         </div>
       </a>
