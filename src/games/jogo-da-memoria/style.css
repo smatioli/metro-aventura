@@ -32,6 +32,7 @@ h1,h2 { font-family:Nunito,system-ui,sans-serif }
 .progress { display:flex; justify-content:center; gap:7px }
 .progress i { width:22px; height:9px; border-radius:99px; background:#d2cbbb }
 .progress i.done { background:var(--group) }
+.score { margin:12px 0 0; color:var(--group); font:900 15px Nunito; letter-spacing:.1em }
 
 .memory-board { display:grid; grid-template-columns:repeat(var(--cols),1fr); gap:clamp(10px,1.6vw,18px); justify-content:center }
 .memory-card { position:relative; aspect-ratio:4/5; border:0; border-radius:18px; background:none; cursor:pointer; perspective:800px }
@@ -58,6 +59,8 @@ h1,h2 { font-family:Nunito,system-ui,sans-serif }
 .celebration { color:#f1b52c; font-size:42px; letter-spacing:.18em }
 .finish-card h1 { margin:8px 0; font:900 clamp(34px,6vw,52px)/.95 Nunito; letter-spacing:-.03em }
 .finish-card h1 em { color:var(--group); font-style:normal }
+.final-score { margin:10px 0 0; color:#6a7280; font:900 17px Nunito; letter-spacing:.06em }
+.final-score b { color:var(--group); font-size:1.2em }
 .finish-images { display:flex; flex-wrap:wrap; justify-content:center; gap:14px; margin:26px 0 }
 .finish-images span { display:grid; justify-items:center; gap:6px }
 .finish-images img { width:64px; height:64px; object-fit:contain; padding:8px; border-radius:14px; background:var(--soft) }

@@ -12,6 +12,7 @@ let firstPick: number | null = null;
 let busy = false;
 let focusIndex = 0;
 let matches = 0;
+let score = 0;
 let speechEnabled = true;
 let resolveTimer = 0;
 let advanceTimer = 0;
@@ -89,6 +90,8 @@ function updateBoardDom(): void {
     progressEl.setAttribute("aria-label", `Pares encontrados: ${matches} de ${total}`);
     progressEl.querySelectorAll("i").forEach((dot, index) => dot.classList.toggle("done", index < matches));
   }
+  const scoreEl = document.querySelector(".score");
+  if (scoreEl) scoreEl.textContent = `PONTOS: ${score}`;
 }
 
 function renderGame(): void {
@@ -101,6 +104,7 @@ function renderGame(): void {
       <div class="progress" aria-label="Pares encontrados: ${matches} de ${total}">
         ${Array.from({ length: total }, (_, index) => `<i class="${index < matches ? "done" : ""}"></i>`).join("")}
       </div>
+      <p class="score" aria-live="polite">PONTOS: ${score}</p>
     </header>
     <section class="memory-board" style="--cols:${columnsForCount(board.length)}" aria-label="Tabuleiro do jogo da memória">
       ${board.map((card, index) => cardFace(card, index)).join("")}
@@ -116,6 +120,7 @@ function renderFinished(): void {
       <div class="celebration">★ ✦ ★</div>
       <p class="eyebrow">${group.label.toUpperCase()} COMPLETO</p>
       <h1>Todos os pares<br><em>encontrados!</em></h1>
+      <p class="final-score">PONTUAÇÃO FINAL: <b>${score}</b></p>
       <div class="finish-images">${board.filter(card => card.matched).filter((card, index, arr) => arr.findIndex(other => other.imageId === card.imageId) === index).map(card => `<span><img src="${card.src}" alt="${card.alt}"><small>${card.label}</small></span>`).join("")}</div>
       <div class="finish-actions">
         <button data-action="replay">↻ JOGAR DE NOVO</button>
@@ -140,6 +145,7 @@ function startGroup(id: string): void {
   busy = false;
   focusIndex = 0;
   matches = 0;
+  score = 0;
   screen = "playing";
   render();
   speak(`${group.label}. Vire as cartas e encontre os pares.`);
@@ -163,6 +169,7 @@ function flip(index: number): void {
     previous.matched = true;
     card.matched = true;
     matches += 1;
+    score += 3;
     firstPick = null;
     updateBoardDom();
     speak("Isso! Você encontrou um par!");
@@ -177,6 +184,7 @@ function flip(index: number): void {
   }
 
   busy = true;
+  score -= 1;
   updateBoardDom();
   speak("Quase! Tente lembrar onde estão as cartas.");
   resolveTimer = window.setTimeout(() => {
