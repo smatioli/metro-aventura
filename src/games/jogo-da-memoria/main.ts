@@ -177,7 +177,7 @@ function flip(index: number): void {
       advanceTimer = window.setTimeout(() => {
         screen = "finished";
         render();
-        speak(`Muito bem! Você encontrou todos os pares de ${group.label.toLowerCase()}!`);
+        speak(`Muito bem! Você encontrou todos os pares de ${group.label.toLowerCase()}! Sua pontuação foi ${score} pontos.`);
       }, 900);
     }
     return;
