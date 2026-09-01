@@ -8,16 +8,17 @@ Este catálogo usa como autoridade a relação fornecida para o projeto. A diver
 
 | Frota | Arquivo frontal | Escopo das linhas 1–3 | Outras vistas |
 |---|---|---:|---|
-| A | `img/frotaA_1.jpg` | referência histórica; não oferecida separadamente | ausentes |
+| A | `img/frotaA_1.jpg` | sim; Linha 2-Verde | ausentes |
 | E | `img/frotaE_1.jpg` | sim | ausentes |
 | G | `img/frotaG_1.jpg` | sim | ausentes |
 | H | ausente | sim | ausentes |
 | I | `img/frotaI_1.jpg` | sim | ausentes |
 | J | `img/frotaJ_1.jpg` | sim | lateral disponível; interior e cabine provisórios |
 | K | `img/frotaK_1.jpg` | sim | ausentes |
-| L | `img/frotaL_1.jpg` | sim | ausentes |
+| L | `img/frotaL_1.jpg` | sim; também Linha 2-Verde | ausentes |
 | M | `img/frotaM_1.jpg` | não; Linha 15-Prata (jogável desde ADR 0016) | ausentes |
-| S | ausente | não; Linha 15-Prata (ainda não jogável, sem referência) | ausentes |
+| P | `img/frotaP_1.jpg` | não; Linha 9-Esmeralda (CPTM) | ausentes |
+| S | `img/frotaS_1.jpeg` | não; Linha 15-Prata | ausentes |
 | N | `img/frota_N.jpg` | não; Linha 17-Ouro (ViaMobilidade, monotrilho BYD SkyRail, ADR 0018) | ausentes |
 | 400 | `img/frota_400.jpeg` | não; Linha 4-Amarela (ViaMobilidade, ADR 0017) | ausentes |
 | 500 | `img/frota_500.jpeg` | não; Linha 5-Lilás (ViaMobilidade, ADR 0017) | ausentes |
@@ -50,7 +51,7 @@ Matriz adotada como autoridade pelo projeto:
 |---|---|
 | 7 | 9500 |
 | 8 | 8900, 7000 |
-| 9 | 8900, 7000 |
+| 9 | 8900, 7000, P |
 | 10 | 8500, 7500, 2070 |
 | 11 | 8000, 8500 |
 | 12 | 7000, 8500, 9000 |
@@ -63,9 +64,10 @@ Os cartões de seleção das séries CPTM usam as imagens correspondentes em `pu
 | Linha | Frotas informadas |
 |---|---|
 | 1-Azul | E, I, J, K, L |
-| 2-Verde | I, J |
+| 2-Verde | A, I, J, L |
 | 3-Vermelha | G, H, K |
-| 15-Prata | M |
+| 9-Esmeralda (CPTM) | 8900, 7000, P |
+| 15-Prata | M, S |
 | 4-Amarela (ViaMobilidade) | 400 |
 | 5-Lilás (ViaMobilidade) | 500 |
 | 17-Ouro (ViaMobilidade) | N |

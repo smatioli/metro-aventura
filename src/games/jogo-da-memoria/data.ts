@@ -37,7 +37,10 @@ export const memoryGroups: MemoryGroup[] = [
       { id: "frota-g", src: "/games/metro-aventura/img/frotaG_1.jpg", alt: "Trem da frota G", label: "Frota G" },
       { id: "frota-h", src: "/games/metro-aventura/img/frotaH_1.jpg", alt: "Trem da frota H", label: "Frota H" },
       { id: "frota-i", src: "/games/metro-aventura/img/frotaI_1.jpg", alt: "Trem da frota I", label: "Frota I" },
-      { id: "frota-j", src: "/games/metro-aventura/img/frotaJ_1.jpg", alt: "Trem da frota J", label: "Frota J" }
+      { id: "frota-j", src: "/games/metro-aventura/img/frotaJ_1.jpg", alt: "Trem da frota J", label: "Frota J" },
+      { id: "frota-l", src: "/games/metro-aventura/img/frotaL_1.jpg", alt: "Trem da frota L", label: "Frota L" },
+      { id: "frota-p", src: "/games/metro-aventura/img/frotaP_1.jpg", alt: "Trem da frota P", label: "Frota P" },
+      { id: "frota-s", src: "/games/metro-aventura/img/frotaS_1.jpeg", alt: "Trem da frota S", label: "Frota S" }
     ]
   },
   {

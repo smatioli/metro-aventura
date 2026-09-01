@@ -1,6 +1,6 @@
 export type CompanyId = "metro" | "cptm" | "viamobilidade";
 export type LineId = "1" | "2" | "3" | "4" | "5" | "7" | "8" | "9" | "10" | "11" | "12" | "13" | "15" | "17";
-export type FleetId = "E" | "G" | "H" | "I" | "J" | "K" | "L" | "M" | "N" | "400" | "500" | "2070" | "2500" | "7000" | "7500" | "8000" | "8500" | "8900" | "9000" | "9500";
+export type FleetId = "A" | "E" | "G" | "H" | "I" | "J" | "K" | "L" | "M" | "N" | "P" | "S" | "400" | "500" | "2070" | "2500" | "7000" | "7500" | "8000" | "8500" | "8900" | "9000" | "9500";
 export type PlatformSide = "right" | "left";
 
 export interface MetroLine {
@@ -28,7 +28,7 @@ export const companies: Company[] = [
 export const cptmFleetMatrix = {
   "7": ["9500"],
   "8": ["8900", "7000"],
-  "9": ["8900", "7000"],
+  "9": ["8900", "7000", "P"],
   "10": ["8500", "7500", "2070"],
   "11": ["8000", "8500"],
   "12": ["7000", "8500", "9000"],
@@ -57,7 +57,7 @@ export const lines: MetroLine[] = [
   {
     id: "2", companyId: "metro", name: "Linha 2 Verde", color: "#148958", colorSoft: "#dff8e9",
     stations: ["Vila Prudente", "Tamanduateí", "Sacomã", "Alto do Ipiranga", "Santos-Imigrantes", "Chácara Klabin", "Ana Rosa", "Paraíso", "Brigadeiro", "Trianon-Masp", "Consolação", "Clínicas", "Sumaré", "Vila Madalena"],
-    fleets: ["I", "J"]
+    fleets: ["A", "I", "J", "L"]
   },
   {
     id: "3", companyId: "metro", name: "Linha 3 Vermelha", color: "#d53a40", colorSoft: "#ffe3e3",
@@ -112,7 +112,7 @@ export const lines: MetroLine[] = [
   {
     id: "15", companyId: "metro", name: "Linha 15 Prata", color: "#8a8d90", colorSoft: "#e8e9ea",
     stations: ["Vila Prudente", "Oratório", "São Lucas", "Camilo Haddad", "Vila Tolstói", "Vila União", "Jardim Planalto", "Sapopemba", "Fazenda da Juta", "São Mateus", "Jardim Colonial"],
-    fleets: ["M"]
+    fleets: ["M", "S"]
   },
   {
     id: "17", companyId: "viamobilidade", name: "Linha 17 Ouro", color: "#c9962c", colorSoft: "#fbead0",
@@ -122,9 +122,10 @@ export const lines: MetroLine[] = [
 ];
 
 export const fleetImages: Record<FleetId, string> = {
-  E: "/games/metro-aventura/img/frotaE_1.jpg", G: "/games/metro-aventura/img/frotaG_1.jpg", H: "/games/metro-aventura/img/frotaH_1.jpg",
+  A: "/games/metro-aventura/img/frotaA_1.jpg", E: "/games/metro-aventura/img/frotaE_1.jpg", G: "/games/metro-aventura/img/frotaG_1.jpg", H: "/games/metro-aventura/img/frotaH_1.jpg",
   I: "/games/metro-aventura/img/frotaI_1.jpg", J: "/games/metro-aventura/img/frotaJ_1.jpg", K: "/games/metro-aventura/img/frotaK_1.jpg",
   L: "/games/metro-aventura/img/frotaL_1.jpg", M: "/games/metro-aventura/img/frotaM_1.jpg", N: "/games/metro-aventura/img/frota_N.jpg",
+  P: "/games/metro-aventura/img/frotaP_1.jpg", S: "/games/metro-aventura/img/frotaS_1.jpeg",
   "400": "/games/metro-aventura/img/frota_400.jpeg", "500": "/games/metro-aventura/img/frota_500.jpeg",
   "2070": "/games/metro-aventura/img/2070.jpeg", "2500": "/games/metro-aventura/img/2500.jpeg", "7000": "/games/metro-aventura/img/7000.jpeg",
   "7500": "/games/metro-aventura/img/7500.jpeg", "8000": "/games/metro-aventura/img/8000.jpeg", "8500": "/games/metro-aventura/img/8500.jpeg",
@@ -132,6 +133,7 @@ export const fleetImages: Record<FleetId, string> = {
 };
 
 export const fleetThemes: Record<FleetId, FleetTheme> = {
+  A: { body: "#b0b3b4", stripe: "#1d4f91", accent: "#e33c39", front: "flat" },
   E: { body: "#a9b0b1", stripe: "#1d4f91", accent: "#e33c39", front: "flat" },
   G: { body: "#e7eceb", stripe: "#168f96", accent: "#d84144", front: "round" },
   H: { body: "#e8ecec", stripe: "#d43d43", accent: "#152f3c", front: "round" },
@@ -141,6 +143,8 @@ export const fleetThemes: Record<FleetId, FleetTheme> = {
   L: { body: "#e3e7e6", stripe: "#176fc0", accent: "#101e2a", front: "sloped" },
   M: { body: "#e7e9ea", stripe: "#1c3f94", accent: "#8a8d90", front: "round" },
   N: { body: "#e9edf0", stripe: "#1d4f91", accent: "#1a1d22", front: "round" },
+  P: { body: "#e3e6e7", stripe: "#1c3f94", accent: "#12141a", front: "round" },
+  S: { body: "#e7e9ea", stripe: "#1c3f94", accent: "#14161b", front: "sloped" },
   "400": { body: "#2b2c2e", stripe: "#f6c116", accent: "#1a1a1c", front: "round" },
   "500": { body: "#eef0f1", stripe: "#7d5aa6", accent: "#3f6fa5", front: "round" },
   "2070": { body: "#d8dedd", stripe: "#d92736", accent: "#26343b", front: "flat" },
