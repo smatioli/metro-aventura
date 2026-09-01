@@ -97,6 +97,22 @@ export const memoryGroups: MemoryGroup[] = [
       { id: "bragantino", src: "/games/jogo-da-memoria/img/times/bragantino.png", alt: "Escudo do Red Bull Bragantino", label: "Bragantino" },
       { id: "remo", src: "/games/jogo-da-memoria/img/times/remo.png", alt: "Escudo do Remo", label: "Remo" }
     ]
+  },
+  {
+    id: "amigos",
+    label: "Amigos da Escola",
+    icon: `<img src="/games/CAF.png" alt="Logo do Colégio Augusto Figueiredo">`,
+    color: "#5b6ee8",
+    softColor: "#dde3ff",
+    images: [
+      { id: "icaro", src: "/games/amigos/Icaro.png", alt: "Foto do Ícaro", label: "Ícaro" },
+      { id: "joao", src: "/games/amigos/Joao.png", alt: "Foto do João", label: "João" },
+      { id: "lucas", src: "/games/amigos/Lucas.png", alt: "Foto do Lucas", label: "Lucas" },
+      { id: "luiza", src: "/games/amigos/Luiza.png", alt: "Foto da Luiza", label: "Luiza" },
+      { id: "pietro", src: "/games/amigos/Pietro.png", alt: "Foto do Pietro", label: "Pietro" },
+      { id: "rafaela", src: "/games/amigos/Rafaela.png", alt: "Foto da Rafaela", label: "Rafaela" },
+      { id: "teo", src: "/games/amigos/Teo.png", alt: "Foto do Teo", label: "Teo" }
+    ]
   }
 ];
 

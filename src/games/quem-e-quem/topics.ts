@@ -1,6 +1,7 @@
 import type { Person, Topic } from "./types";
 import { jornalistas } from "./jornalistas-data";
 import { jogadores } from "./jogadores-data";
+import { amigos } from "./amigos-data";
 
 export const topics: Topic[] = [
   {
@@ -30,5 +31,19 @@ export const topics: Topic[] = [
     questionGroupToPerson: (person: Person) => `Quem joga no time ${person.group}?`,
     finishedHeading: "Você conhece<br>os jogadores!",
     finishedSpeech: "Muito bem! Você conhece os jogadores!"
+  },
+  {
+    id: "amigos",
+    gameTitle: "Amigos da Escola",
+    accent: "#5b6ee8",
+    welcomeIcons: ["🎒", "🏫"],
+    personIcon: "🎒",
+    selectDescription: "Escute e encontre os amigos do Colégio Augusto Figueiredo.",
+    playDescription: "Olhe, escute e escolha.",
+    people: amigos,
+    questionPersonToGroup: (person: Person) => `Encontre ${person.article === "a" ? "a" : "o"} ${person.name} de novo!`,
+    questionGroupToPerson: (person: Person) => `Quem é ${person.article === "a" ? "a" : "o"} ${person.name}?`,
+    finishedHeading: "Você conhece<br>seus amigos!",
+    finishedSpeech: "Muito bem! Você conhece seus amigos da escola!"
   }
 ];

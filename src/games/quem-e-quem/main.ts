@@ -159,8 +159,10 @@ function navHtml(): string {
 }
 
 function topicCard(item: Topic, index: number): string {
+  const digit = index + 1;
+  const letter = String.fromCharCode(65 + index);
   return `<button class="topic-card ${selectedTopicIndex === index ? "selected" : ""}" data-topic-index="${index}" style="--accent:${item.accent}" aria-label="${item.gameTitle}">
-    <span class="choice-key">${index === 0 ? "1 / A" : "2 / B"}</span>
+    <span class="choice-key">${digit} / ${letter}</span>
     <span class="topic-icons" aria-hidden="true">${item.welcomeIcons[0]} ${item.welcomeIcons[1]}</span>
     <h2>${item.gameTitle}</h2>
     <p>${item.selectDescription}</p>
@@ -393,11 +395,15 @@ function typeLetter(letter: string): void {
 document.addEventListener("keydown", event => {
   if (["ArrowLeft", "ArrowRight", "Space"].includes(event.code)) event.preventDefault();
   if (screen === "select") {
-    if (event.code === "ArrowLeft") { selectedTopicIndex = 0; render(); return; }
-    if (event.code === "ArrowRight") { selectedTopicIndex = 1; render(); return; }
+    if (event.code === "ArrowLeft") { selectedTopicIndex = Math.max(0, selectedTopicIndex - 1); render(); return; }
+    if (event.code === "ArrowRight") { selectedTopicIndex = Math.min(topics.length - 1, selectedTopicIndex + 1); render(); return; }
     if (event.code === "Space" || event.code === "Enter") { chooseTopic(selectedTopicIndex); return; }
-    if (event.key === "1" || event.key.toLowerCase() === "a") { chooseTopic(0); return; }
-    if (event.key === "2" || event.key.toLowerCase() === "b") { chooseTopic(1); return; }
+    const digitIndex = Number(event.key) - 1;
+    if (Number.isInteger(digitIndex) && digitIndex >= 0 && digitIndex < topics.length) { chooseTopic(digitIndex); return; }
+    if (/^[a-z]$/.test(event.key.toLowerCase())) {
+      const letterIndex = event.key.toLowerCase().charCodeAt(0) - 97;
+      if (letterIndex < topics.length) { chooseTopic(letterIndex); return; }
+    }
     return;
   }
   if (screen === "welcome" || screen === "finished") {

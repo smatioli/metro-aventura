@@ -16,7 +16,7 @@ h1, h2, strong { font-family: Nunito, system-ui, sans-serif; }
 .select-hero { text-align: center; }
 .select-hero h1 { margin: 4px 0 8px; font: 900 clamp(44px, 8vw, 76px)/1 Nunito; letter-spacing: -.04em; }
 .select-hero > p:not(.eyebrow) { margin: 0; color: #c5dae3; font-size: 20px; }
-.topic-grid { align-self: center; display: grid; grid-template-columns: repeat(2, 1fr); gap: 22px; width: min(920px, 100%); margin: 0 auto; }
+.topic-grid { align-self: center; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 22px; width: min(1100px, 100%); margin: 0 auto; }
 .topic-card { position: relative; display: grid; justify-items: center; gap: 10px; padding: clamp(24px, 4vw, 38px) 20px; border: 4px solid transparent; border-radius: 28px; background: rgba(255,255,255,.1); color: #fff; text-align: center; cursor: pointer; opacity: .82; transition: transform .22s, opacity .22s, border-color .22s; }
 .topic-card:hover { opacity: 1; transform: translateY(-3px); }
 .topic-card.selected { opacity: 1; transform: scale(1.02); border-color: var(--accent); box-shadow: 0 0 0 8px color-mix(in srgb, var(--accent) 20%, transparent); }
