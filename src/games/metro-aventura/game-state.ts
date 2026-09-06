@@ -55,3 +55,28 @@ export function driveChoices(pool: string[], correct: string, seed: number): str
   const rotate = seed % 3;
   return [...options.slice(rotate), ...options.slice(0, rotate)];
 }
+
+/** Deterministic Fisher-Yates shuffle (seeded Lehmer RNG) so results are reproducible and testable for a given seed. */
+export function shuffleSeeded<T>(items: T[], seed: number): T[] {
+  const array = [...items];
+  let state = Math.abs(Math.floor(seed)) % 2147483647;
+  if (state <= 0) state += 2147483646;
+  const next = () => {
+    state = (state * 16807) % 2147483647;
+    return (state - 1) / 2147483646;
+  };
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(next() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
+/** Shuffles `items`, guaranteeing the result is not in the original order whenever that's possible. */
+export function shuffleOutOfOrder<T>(items: T[], seed: number): T[] {
+  const shuffled = shuffleSeeded(items, seed);
+  if (items.length > 1 && shuffled.every((item, index) => item === items[index])) {
+    [shuffled[0], shuffled[1]] = [shuffled[1], shuffled[0]];
+  }
+  return shuffled;
+}

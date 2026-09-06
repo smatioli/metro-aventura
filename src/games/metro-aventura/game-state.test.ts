@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { distinctKeys, driveChoices, nextStation, nextView, routeFor, speedAtProgress } from "./game-state";
-import { connectingLines, cptmFleetMatrix, firstSyllable, firstSyllableFor, lines, platformSideFor, platformSides } from "./data";
+import { distinctKeys, driveChoices, nextStation, nextView, routeFor, shuffleOutOfOrder, shuffleSeeded, speedAtProgress } from "./game-state";
+import { connectingLines, cptmFleetMatrix, firstSyllable, firstSyllableFor, lines, platformSideFor, platformSides, syllabify, syllablesFor } from "./data";
 
 describe("journey rules", () => {
   it("cycles through views in both directions", () => {
@@ -106,5 +106,31 @@ describe("journey rules", () => {
 
   it("returns no connections for a station served by only one line", () => {
     expect(connectingLines("Jabaquara", "1")).toEqual([]);
+  });
+
+  it("splits a full station name into its syllables in order", () => {
+    expect(syllabify("Tamanduateí")).toEqual(["Ta", "man", "dua", "teí"]);
+    expect(syllabify("Sé")).toEqual(["Sé"]);
+  });
+
+  it("produces syllables for every station in the game", () => {
+    for (const line of lines) {
+      for (const station of line.stations) {
+        const syllables = syllablesFor(station);
+        expect(syllables.length).toBeGreaterThan(0);
+        expect(syllables.join("")).toBe(station.replace(/[^\p{L}]/gu, ""));
+      }
+    }
+  });
+
+  it("shuffles deterministically for a given seed", () => {
+    expect(shuffleSeeded(["a", "b", "c", "d"], 42)).toEqual(shuffleSeeded(["a", "b", "c", "d"], 42));
+    expect(new Set(shuffleSeeded(["a", "b", "c", "d"], 42))).toEqual(new Set(["a", "b", "c", "d"]));
+  });
+
+  it("never leaves a shuffled sequence in its original order when it could avoid it", () => {
+    for (let seed = 0; seed < 20; seed++) {
+      expect(shuffleOutOfOrder(["Ta", "man", "dua", "teí"], seed)).not.toEqual(["Ta", "man", "dua", "teí"]);
+    }
   });
 });

@@ -201,10 +201,10 @@ export const platformSides: Record<LineId, Record<string, PlatformSide>> = {
   },
   "7": {
     "Palmeiras-Barra Funda": "right", "Água Branca": "right", "Lapa": "right", "Piqueri": "right",
-    "Pirituba": "right", "Vila Clarice": "right", "Jaraguá": "right", "Vila Aurora": "right",
-    "Perus": "right", "Caieiras": "right", "Franco da Rocha": "right", "Baltazar Fidélis": "right",
-    "Francisco Morato": "right", "Botujuru": "right", "Campo Limpo Paulista": "right",
-    "Várzea Paulista": "right", "Jundiaí": "right"
+    "Pirituba": "right", "Vila Clarice": "left", "Jaraguá": "left", "Vila Aurora": "right",
+    "Perus": "left", "Caieiras": "left", "Franco da Rocha": "right", "Baltazar Fidélis": "left",
+    "Francisco Morato": "left", "Botujuru": "left", "Campo Limpo Paulista": "left",
+    "Várzea Paulista": "left", "Jundiaí": "left"
   },
   "8": {
     "Júlio Prestes": "right", "Palmeiras-Barra Funda": "right", "Lapa": "right", "Domingos de Moraes": "right",
@@ -223,7 +223,7 @@ export const platformSides: Record<LineId, Record<string, PlatformSide>> = {
     "Bruno Covas-Mendes-Vila Natal": "right", "Varginha": "right"
   },
   "10": {
-    "Palmeiras-Barra Funda": "right", "Luz": "left", "Brás": "left", "Juventus-Mooca": "right",
+    "Palmeiras-Barra Funda": "right", "Luz": "left", "Brás": "left", "Juventus-Mooca": "left",
     "Ipiranga": "right", "Tamanduateí": "right", "São Caetano do Sul": "right", "Utinga": "right",
     "Prefeito Saladino": "right", "Prefeito Celso Daniel-Santo André": "right", "Capuava": "right",
     "Mauá": "left", "Guapituba": "right", "Ribeirão Pires": "right", "Rio Grande da Serra": "right"
@@ -309,3 +309,25 @@ export function firstSyllableFor(station: string): string {
 }
 
 export const allFirstSyllables: string[] = Array.from(new Set(lines.flatMap(item => item.stations).map(firstSyllableFor)));
+
+/** Splits a full station name into all its syllables (word by word) by repeatedly peeling off `firstSyllable`. */
+export function syllabify(name: string): string[] {
+  const words = name.match(/\p{L}+/gu) ?? [name];
+  const syllables: string[] = [];
+  for (const word of words) {
+    let remaining = word;
+    while (remaining.length > 0) {
+      const syllable = firstSyllable(remaining);
+      syllables.push(syllable);
+      remaining = remaining.slice(syllable.length);
+    }
+  }
+  return syllables;
+}
+
+// Correções manuais para estações onde a silabação completa erra, na mesma linha de `stationSyllableOverrides`.
+export const stationSyllablesOverrides: Partial<Record<string, string[]>> = {};
+
+export function syllablesFor(station: string): string[] {
+  return stationSyllablesOverrides[station] ?? syllabify(station);
+}

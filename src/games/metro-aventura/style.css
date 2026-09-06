@@ -85,7 +85,12 @@ footer { min-height: 88px; display: flex; align-items: center; justify-content: 
 .station-option:active{transform:translateY(4px);border-bottom-width:3px}
 .station-option.selected{box-shadow:0 0 0 6px rgba(107,218,255,.4),0 10px 26px rgba(0,0,0,.35)}
 .challenge-word{text-align:center;font:900 clamp(22px,3vw,32px) Nunito;color:#092033}
-.syllable-options{display:flex;gap:16px;justify-content:center}
+.syllable-options{display:flex;flex-wrap:wrap;gap:16px;justify-content:center}
+.touch-key.used{opacity:.35;pointer-events:none}
+.spelling-progress{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.spelling-slot{min-width:44px;padding:6px 10px;border-radius:10px;background:rgba(9,32,51,.12);color:#092033;font:800 18px Nunito;text-align:center}
+.spelling-slot.filled{background:#1477c9;color:#fff}
+.challenge-success{text-align:center;font:900 clamp(20px,3vw,28px) Nunito;color:#092033}
 .side-options{display:flex;gap:24px;justify-content:center}
 .side-option{width:140px;height:130px;border:3px solid #fff;border-bottom-width:8px;border-radius:24px;background:#f7fdff;color:#092033;box-shadow:0 10px 26px rgba(0,0,0,.4);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px}
 .side-option .side-arrow{font-size:40px;line-height:1}
@@ -99,7 +104,7 @@ footer { min-height: 88px; display: flex; align-items: center; justify-content: 
 @media(max-width:760px){.game-stage.challenge-active{min-height:380px}}
 
 /* Alternância dos desafios extras no painel adulto */
-.challenge-options{grid-template-columns:repeat(3,1fr)}
+.challenge-options{grid-template-columns:repeat(2,1fr)}
 .challenge-icon{display:block;font-size:26px;margin-bottom:2px}
 @media(max-width:760px){.challenge-options{grid-template-columns:1fr}}
 
