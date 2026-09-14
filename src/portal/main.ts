@@ -86,6 +86,21 @@ app.innerHTML = `
           <strong>JOGAR AGORA <span>→</span></strong>
         </div>
       </a>
+
+      <a class="game-card uno-card-tile" href="/uno-metro/">
+        <span class="status available">DISPONÍVEL</span>
+        <div class="uno-illustration" aria-hidden="true">
+          <div class="mini-uno-card blue">5</div>
+          <div class="mini-uno-card green">5</div>
+          <div class="mini-uno-card wild">🔀</div>
+        </div>
+        <div class="card-copy">
+          <span class="game-number">JOGO 06</span>
+          <h2>Uno do<br>Metrô</h2>
+          <p>Jogue as cartas dos trens combinando a linha ou o número até esvaziar a mão.</p>
+          <strong>JOGAR AGORA <span>→</span></strong>
+        </div>
+      </a>
     </section>
 
     <footer>Três mundos, muitas descobertas.</footer>

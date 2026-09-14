@@ -44,6 +44,11 @@ h1 em { color: #f6d45a; font-style: normal; }
 .memory-illustration { display: flex; align-items: center; justify-content: center; gap: 16px; background: linear-gradient(145deg, #2f6fed, #17306e); }
 .mini-card { display: grid; place-items: center; width: 78px; height: 96px; border-radius: 14px; background: #16305f; box-shadow: 0 13px 24px rgba(0,0,0,.3); font-size: 34px; }
 .mini-card.flipped { background: #fff; transform: translateY(-6px); }
+.uno-illustration { display: flex; align-items: center; justify-content: center; gap: 14px; background: linear-gradient(145deg, #d53a40, #7a1f24); }
+.mini-uno-card { display: grid; place-items: center; width: 66px; height: 94px; border-radius: 12px; color: #fff; font: 900 30px Nunito, sans-serif; box-shadow: 0 10px 20px rgba(0,0,0,.3); }
+.mini-uno-card.blue { background: #1477c9; transform: rotate(-6deg); }
+.mini-uno-card.green { background: #148958; transform: translateY(-8px); }
+.mini-uno-card.wild { background: #2c2f45; font-size: 26px; transform: rotate(6deg); }
 .card-copy { padding: 26px 30px 30px; }
 .game-number { color: #79d8ec; font-weight: 900; font-size: 12px; letter-spacing: .17em; }
 .card-copy h2 { margin: 6px 0 8px; font-size: clamp(32px, 4vw, 48px); line-height: .9; }

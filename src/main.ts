@@ -15,6 +15,9 @@ if (path === "/metro-aventura") {
 } else if (path === "/jogo-da-memoria") {
   document.title = "Jogo da Memória | Estação de Jogos";
   void import("./games/jogo-da-memoria/main");
+} else if (path === "/uno-metro") {
+  document.title = "Uno do Metrô | Estação de Jogos";
+  void import("./games/uno-metro/main");
 } else {
   document.title = "Estação de Jogos";
   void import("./portal/main");
