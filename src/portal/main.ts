@@ -101,6 +101,20 @@ app.innerHTML = `
           <strong>JOGAR AGORA <span>→</span></strong>
         </div>
       </a>
+      <a class="game-card writing-card-tile" href="/escrever/">
+        <span class="status available">DISPONÍVEL</span>
+        <div class="writing-illustration" aria-hidden="true">
+          <span class="mini-letter done">T</span>
+          <span class="mini-letter done">E</span>
+          <span class="mini-letter current">O</span>
+        </div>
+        <div class="card-copy">
+          <span class="game-number">JOGO 07</span>
+          <h2>Vamos<br>Escrever</h2>
+          <p>Escolha uma foto de jogador, amigo, artista ou time e escreva o nome letra por letra.</p>
+          <strong>JOGAR AGORA <span>→</span></strong>
+        </div>
+      </a>
     </section>
 
     <footer>Três mundos, muitas descobertas.</footer>

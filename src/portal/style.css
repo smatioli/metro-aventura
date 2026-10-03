@@ -48,6 +48,10 @@ h1 em { color: #f6d45a; font-style: normal; }
 .mini-uno-card { display: grid; place-items: center; width: 66px; height: 94px; border-radius: 12px; color: #fff; font: 900 30px Nunito, sans-serif; box-shadow: 0 10px 20px rgba(0,0,0,.3); }
 .mini-uno-card.blue { background: #1477c9; transform: rotate(-6deg); }
 .mini-uno-card.green { background: #148958; transform: translateY(-8px); }
+.writing-illustration { display: flex; align-items: center; justify-content: center; gap: 12px; height: 205px; background: linear-gradient(145deg, #2ea043, #145a2a); }
+.mini-letter { display: grid; place-items: center; width: 62px; height: 76px; border: 3px solid #fff; border-bottom-width: 8px; border-radius: 12px; font: 900 38px Nunito, sans-serif; box-shadow: 0 10px 20px rgba(0,0,0,.3); }
+.mini-letter.done { background: #e9fff3; color: #173d2b; }
+.mini-letter.current { background: #f8d968; color: #22353d; transform: translateY(-8px); }
 .mini-uno-card.wild { background: #2c2f45; font-size: 26px; transform: rotate(6deg); }
 .card-copy { padding: 26px 30px 30px; }
 .game-number { color: #79d8ec; font-weight: 900; font-size: 12px; letter-spacing: .17em; }

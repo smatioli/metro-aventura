@@ -18,6 +18,9 @@ if (path === "/metro-aventura") {
 } else if (path === "/uno-metro") {
   document.title = "Uno do Metrô | Estação de Jogos";
   void import("./games/uno-metro/main");
+} else if (path === "/escrever") {
+  document.title = "Vamos Escrever | Estação de Jogos";
+  void import("./games/escrever/main");
 } else {
   document.title = "Estação de Jogos";
   void import("./portal/main");
