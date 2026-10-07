@@ -43,7 +43,9 @@ function fromPerson(category: CategoryId, person: Person): WritingItem {
 }
 
 const artistas: WritingItem[] = [
-  { id: "artistas-telo", category: "artistas", name: "Michel Teló", word: "TELO", spoken: "Teló", image: "/games/artistas/telo.png", color: "#d1487a" }
+  { id: "artistas-telo", category: "artistas", name: "Michel Teló", word: "TELO", spoken: "Teló", image: "/games/artistas/telo.png", color: "#d1487a" },
+  { id: "artistas-fabio", category: "artistas", name: "Fábio", word: "FABIO", spoken: "Fábio", image: "/games/artistas/Fabio.png", color: "#d1487a" },
+  { id: "artistas-joel", category: "artistas", name: "Joel", word: "JOEL", spoken: "Joel", image: "/games/artistas/Joel.png", color: "#d1487a" }
 ];
 
 const times = "/games/jogo-da-memoria/img/times";
