@@ -115,6 +115,16 @@ app.innerHTML = `
           <strong>JOGAR AGORA <span>→</span></strong>
         </div>
       </a>
+      <a class="game-card car-card-tile" href="/painel-do-carro/">
+        <span class="status available">DISPONÍVEL</span>
+        <div class="car-illustration" aria-hidden="true"><span>D6</span><b>80<small>km/h</small></b></div>
+        <div class="card-copy">
+          <span class="game-number">JOGO 08</span>
+          <h2>Painel do carro</h2>
+          <p>Escolha o VW Polo, acelere e veja as marchas mudarem no painel.</p>
+          <strong>JOGAR AGORA <span>→</span></strong>
+        </div>
+      </a>
     </section>
 
     <footer>Três mundos, muitas descobertas.</footer>

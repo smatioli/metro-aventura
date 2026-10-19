@@ -53,6 +53,9 @@ h1 em { color: #f6d45a; font-style: normal; }
 .mini-letter.done { background: #e9fff3; color: #173d2b; }
 .mini-letter.current { background: #f8d968; color: #22353d; transform: translateY(-8px); }
 .mini-uno-card.wild { background: #2c2f45; font-size: 26px; transform: rotate(6deg); }
+.car-illustration { height: 205px; display: flex; align-items: center; justify-content: center; gap: 26px; background: linear-gradient(145deg, #263a55, #090f18); }
+.car-illustration > span, .car-illustration > b { width: 120px; height: 120px; display: grid; place-content: center; border: 3px solid #5788ef; border-radius: 50%; text-align: center; color: #ffe2d8; font: 400 40px system-ui, sans-serif; box-shadow: 0 0 16px #396ee433; }
+.car-illustration small { display: block; font-size: 13px; }
 .card-copy { padding: 26px 30px 30px; }
 .game-number { color: #79d8ec; font-weight: 900; font-size: 12px; letter-spacing: .17em; }
 .card-copy h2 { margin: 6px 0 8px; font-size: clamp(32px, 4vw, 48px); line-height: .9; }

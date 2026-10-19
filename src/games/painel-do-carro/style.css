@@ -1,0 +1,50 @@
+:root { font-family: system-ui, sans-serif; color: #eef3fa; background: #0c1119; font-synthesis: none; }
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; min-height: 100vh; background: radial-gradient(ellipse at 50% 45%, #263342, #0c1119 75%); }
+button, a { -webkit-tap-highlight-color: transparent; }
+button { font: inherit; cursor: pointer; }
+button:focus-visible, a:focus-visible { outline: 3px solid #97c3ff; outline-offset: 6px; }
+.car-game { max-width: 1240px; margin: auto; padding: 30px clamp(16px, 4vw, 54px) 50px; }
+.car-back { color: #b8c7da; text-decoration: none; font-size: 15px; }
+.car-game header { margin: 50px 0 36px; text-align: center; }
+.car-eyebrow { color: #8fb7fa; font-size: 12px; letter-spacing: .23em; font-weight: 700; }
+.car-game h1 { margin: 12px 0; font-size: clamp(30px, 5vw, 52px); letter-spacing: -.045em; }
+.car-game header > p:last-child { color: #b6c3d3; }
+.car-choice { display: flex; align-items: center; gap: 25px; width: min(560px, 100%); margin: 55px auto; padding: 32px; text-align: left; color: white; background: linear-gradient(135deg, #25374d, #152234); border: 1px solid #5e7ca4; border-radius: 24px; box-shadow: 0 24px 60px #0004; }
+.car-choice:hover { border-color: #b6d1ff; background: #263e5c; }
+.vw-emblem { border: 3px solid #bcd0ea; border-radius: 50%; width: 76px; height: 76px; display: grid; place-items: center; font-size: 25px; font-weight: 800; flex-shrink: 0; }
+.car-choice > span:nth-child(2) { display: grid; gap: 7px; }
+.car-choice small, .car-choice span span { color: #b9c9de; font-size: 13px; }
+.car-choice strong { font-size: 30px; }
+.car-choice > b { margin-left: auto; font-size: 28px; }
+.driving nav { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+.change-car { border: 1px solid #56657a; border-radius: 12px; color: #d8e4f5; background: #ffffff08; padding: 10px 16px; }
+.driving header { margin: 30px 0; }
+.dashboard { padding: 22px 25px 18px; border: 3px solid #90979d; border-radius: 26% 26% 16% 16% / 20% 20% 14% 14%; background: radial-gradient(ellipse at center, #111922, #06090e); box-shadow: 0 0 0 7px #1b2026, 0 0 0 9px #464c53, 0 35px 65px #0008, inset 0 0 30px #000; }
+.cluster-top { display: flex; justify-content: space-between; margin: 0 25%; color: #e8d8d4; font-size: 13px; }
+.cluster { display: grid; grid-template-columns: 30px minmax(0, 1fr) minmax(120px, .65fr) minmax(0, 1fr) 30px; align-items: center; }
+.car-dial { position: relative; min-width: 0; }
+.car-dial svg { display: block; width: 100%; overflow: visible; }
+.dial-ring { stroke: #3367d3; stroke-width: 2; fill: #0a0e14; }
+.car-dial svg text { fill: #efded8; font-size: 16px; font-style: italic; }
+.dial-value { position: absolute; inset: 42% 0 auto; text-align: center; color: #ffe2d8; }
+.dial-value strong { display: block; font-size: clamp(26px, 5vw, 62px); line-height: 1; font-weight: 400; font-variant-numeric: tabular-nums; }
+.dial-value > span { display: block; margin-top: 8px; font-size: clamp(9px, 1.2vw, 14px); }
+.trip { color: #f1dcd5; text-align: center; font-size: clamp(11px, 1.6vw, 17px); }
+.trip p { line-height: 1.6; margin: 0 0 16px; }
+.trip small { font-size: .7em; }
+.trip > div { margin: 10px 0; font-variant-numeric: tabular-nums; }
+.trip .trip-road { font-size: 35px; color: #6c96e7; margin: 15px 0; }
+.trip > b { display: block; font-size: 25px; font-weight: 400; margin-top: 5px; }
+.side-meter { display: grid; justify-items: center; gap: 10px; color: #cfdbed; font-size: 10px; }
+.side-meter i { display: block; width: 5px; height: 90px; background: repeating-linear-gradient(to top, #a5bce6 0 7px, transparent 7px 12px); border-bottom: 35px solid #9fb8f7; }
+.fuel i { border-bottom-width: 65px; }
+.cluster-bottom { display: flex; justify-content: space-between; gap: 8px; border-top: 1px solid #3268d2; padding: 12px 8px 0; margin: 0 7%; color: #c4cddd; font-size: 12px; }
+.green-light { color: #8de8b8; }
+.car-controls { display: flex; align-items: center; justify-content: center; gap: 32px; margin-top: 45px; }
+.car-controls p { font-size: 14px; line-height: 1.7; color: #d2dbea; }
+.car-controls p span { color: #91a3bb; font-size: 12px; }
+.accelerator { display: flex; align-items: center; justify-content: center; gap: 20px; min-height: 100px; padding: 20px 32px; border-radius: 20px; border: 1px solid #9db899; border-bottom: 7px solid #46683c; color: #142513; background: #c6e7b8; font-size: 18px; font-weight: 800; touch-action: none; user-select: none; }
+.accelerator.pressed { background: #a9dc94; transform: translateY(4px); border-bottom-width: 3px; }
+.pedal-icon { font-size: 42px; }
+@media (max-width: 650px) { .dashboard { padding: 20px 8px 15px; border-radius: 30px; } .cluster { grid-template-columns: 12px minmax(0, 1fr) 80px minmax(0, 1fr) 12px; } .side-meter { font-size: 7px; } .side-meter i { height: 55px; width: 3px; } .trip { font-size: 10px; } .trip p { margin-bottom: 8px; } .trip .trip-road { margin: 5px 0; font-size: 20px; } .trip > b { font-size: 18px; } .cluster-top { font-size: 10px; } .cluster-bottom { margin: 8px 6%; font-size: 9px; } .car-controls { flex-wrap: wrap; gap: 10px 24px; margin-top: 30px; text-align: center; } .accelerator { order: -1; width: 100%; max-width: 360px; } .car-choice { padding: 22px; gap: 16px; } .vw-emblem { width: 60px; height: 60px; font-size: 21px; } }
