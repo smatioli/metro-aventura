@@ -125,6 +125,16 @@ app.innerHTML = `
           <strong>JOGAR AGORA <span>→</span></strong>
         </div>
       </a>
+      <a class="game-card placar-card-tile" href="/placar/">
+        <span class="status available">DISPONÍVEL</span>
+        <div class="placar-illustration" aria-hidden="true"><span>⚽</span><b>0 <i>×</i> 0</b></div>
+        <div class="card-copy">
+          <span class="game-number">JOGO 09</span>
+          <h2>Placar</h2>
+          <p>Escolha dois times, marque os gols e decida quem balança a rede.</p>
+          <strong>JOGAR AGORA <span>→</span></strong>
+        </div>
+      </a>
     </section>
 
     <footer>Três mundos, muitas descobertas.</footer>

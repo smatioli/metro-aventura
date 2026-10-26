@@ -56,6 +56,8 @@ h1 em { color: #f6d45a; font-style: normal; }
 .car-illustration { height: 205px; display: flex; align-items: center; justify-content: center; gap: 26px; background: linear-gradient(145deg, #263a55, #090f18); }
 .car-illustration > span, .car-illustration > b { width: 120px; height: 120px; display: grid; place-content: center; border: 3px solid #5788ef; border-radius: 50%; text-align: center; color: #ffe2d8; font: 400 40px system-ui, sans-serif; box-shadow: 0 0 16px #396ee433; }
 .car-illustration small { display: block; font-size: 13px; }
+.placar-illustration { height: 205px; display: flex; align-items: center; justify-content: center; gap: 24px; background: repeating-linear-gradient(90deg,#295d30 0 60px,#326b38 60px 120px); }
+.placar-illustration > span { font-size: 58px; }.placar-illustration b { font: 900 48px Nunito,sans-serif; background: #14251f; border: 2px solid #f4d35f; border-radius: 10px; padding: 10px 20px; }.placar-illustration i { font-style: normal; font-size: 24px; color: #f4d35f; }
 .card-copy { padding: 26px 30px 30px; }
 .game-number { color: #79d8ec; font-weight: 900; font-size: 12px; letter-spacing: .17em; }
 .card-copy h2 { margin: 6px 0 8px; font-size: clamp(32px, 4vw, 48px); line-height: .9; }

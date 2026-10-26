@@ -24,6 +24,9 @@ if (path === "/metro-aventura") {
 } else if (path === "/painel-do-carro") {
   document.title = "Painel do carro | Estação de Jogos";
   void import("./games/painel-do-carro/main");
+} else if (path === "/placar") {
+  document.title = "Placar | Estação de Jogos";
+  void import("./games/placar/main");
 } else {
   document.title = "Estação de Jogos";
   void import("./portal/main");
