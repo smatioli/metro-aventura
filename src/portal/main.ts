@@ -135,6 +135,16 @@ app.innerHTML = `
           <strong>JOGAR AGORA <span>→</span></strong>
         </div>
       </a>
+      <a class="game-card car-card-tile" href="/dirigindo-o-polo/">
+        <span class="status available">DISPONÍVEL</span>
+        <div class="car-illustration" aria-hidden="true"><span>↶</span><b>VW<small>POLO</small></b></div>
+        <div class="card-copy">
+          <span class="game-number">JOGO 10</span>
+          <h2>Dirigindo o Polo</h2>
+          <p>Escolha um passeio, acompanhe o mapa e vire o volante nas curvas.</p>
+          <strong>JOGAR AGORA <span>→</span></strong>
+        </div>
+      </a>
     </section>
 
     <footer>Três mundos, muitas descobertas.</footer>
