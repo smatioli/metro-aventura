@@ -4,14 +4,14 @@ Jogo independente em `/dirigindo-o-polo/`, sem alterações no Painel do carro.
 
 ## Passeios fixos
 
-O cadastro fica em `src/games/dirigindo-o-polo/data.ts`. Os GeoJSON originais são preservados, inclusive espaços e acentos nos nomes dos arquivos.
+O cadastro fica em `src/games/dirigindo-o-polo/data.ts`. O conteúdo dos GeoJSON é preservado. Os nomes dos arquivos usam apenas letras minúsculas ASCII, números e hífens, evitando diferenças de normalização Unicode entre macOS, Git e Linux/Netlify.
 
 | Destino | GeoJSON | Trechos com nome de rua |
 | --- | --- | --- |
-| Instituto TEA | `public/routes/instituro-tea.geojson` | 209/209 |
-| Casa da vó Antônia | `public/routes/casa da vó antonia.geojson` | 518/518 |
-| Casa da vó Fátima | `public/routes/casa da vó fatima.geojson` | 478/478 |
-| Estádio Morumbi | `public/routes/estadio morumbi.geojson` | 753/753 |
+| Instituto TEA | `public/routes/instituto-tea.geojson` | 209/209 |
+| Casa da vó Antônia | `public/routes/casa-vo-antonia.geojson` | 518/518 |
+| Casa da vó Fátima | `public/routes/casa-vo-fatima.geojson` | 478/478 |
+| Estádio Morumbi | `public/routes/estadio-morumbi.geojson` | 753/753 |
 
 Coordenadas são projetadas em metros locais; pontos repetidos são removidos para evitar trechos de comprimento zero. Cada passeio tem arquivos `<id>-streets.json` (mapa) e `<id>-navigation.json` (nome da via por trecho, fonte, licença, data e índices sem correspondência). Os nomes estão preenchidos em todos os trechos das quatro rotas, por associação automática, sem revisão manual de cada via.
 
@@ -20,9 +20,9 @@ O mapa e os nomes vêm de dados OpenStreetMap, consultados na Overpass API em 20
 Para preparar dados novamente:
 
 ```bash
-python3 scripts/prepare-polo-queries.py 'public/routes/estadio morumbi.geojson' /tmp/morumbi.query
+python3 scripts/prepare-polo-queries.py 'public/routes/estadio-morumbi.geojson' /tmp/morumbi.query
 curl -G --fail --data-urlencode data@/tmp/morumbi.query https://overpass-api.de/api/interpreter -o /tmp/morumbi-osm.json
-python3 scripts/prepare-polo-route.py estadio-morumbi 'public/routes/estadio morumbi.geojson' /tmp/morumbi-osm.json
+python3 scripts/prepare-polo-route.py estadio-morumbi 'public/routes/estadio-morumbi.geojson' /tmp/morumbi-osm.json
 ```
 
 O script de preparo associa nomes por distância (até 30 m) e alinhamento, favorecendo a via paralela ao trecho. Isso é uma aproximação, não map matching de um roteador; vias paralelas e cruzamentos podem causar associação incorreta. Não inventa nome quando não encontra correspondência: deixa vazio e registra o índice em `unmatchedSegments`.
