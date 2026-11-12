@@ -1,4 +1,4 @@
-export type CompanyId = "metro" | "cptm" | "viamobilidade";
+export type CompanyId = "metro" | "cptm" | "viamobilidade" | "tictrens";
 export type LineId = "1" | "2" | "3" | "4" | "5" | "7" | "8" | "9" | "10" | "11" | "12" | "13" | "15" | "17";
 export type FleetId = "A" | "E" | "G" | "H" | "I" | "J" | "K" | "L" | "M" | "N" | "P" | "S" | "400" | "500" | "2070" | "2500" | "7000" | "7500" | "8000" | "8500" | "8900" | "9000" | "9500";
 export type PlatformSide = "right" | "left";
@@ -22,9 +22,11 @@ export interface Company {
 export const companies: Company[] = [
   { id: "metro", name: "Metrô de São Paulo", logo: "/games/metro-aventura/img/metro-sp-logo.png" },
   { id: "cptm", name: "CPTM", logo: "/games/metro-aventura/img/cptm-logo.webp" },
+  { id: "tictrens", name: "TIC Trens", logo: "/games/metro-aventura/img/tic-trens-logo.png" },
   { id: "viamobilidade", name: "ViaMobilidade", logo: "/games/metro-aventura/img/via_mobilidade_logo.jpeg" }
 ];
 
+// Matriz histórica aprovada; a Linha 7 agora pertence à TIC Trens (ADR 0019).
 export const cptmFleetMatrix = {
   "7": ["9500"],
   "8": ["8900", "7000"],
@@ -75,7 +77,7 @@ export const lines: MetroLine[] = [
     fleets: ["500"]
   },
   {
-    id: "7", companyId: "cptm", name: "Linha 7 Rubi", color: "#9b2743", colorSoft: "#f5dde4",
+    id: "7", companyId: "tictrens", name: "Linha 7 Rubi", color: "#9b2743", colorSoft: "#f5dde4",
     stations: ["Palmeiras-Barra Funda", "Água Branca", "Lapa", "Piqueri", "Pirituba", "Vila Clarice", "Jaraguá", "Vila Aurora", "Perus", "Caieiras", "Franco da Rocha", "Baltazar Fidélis", "Francisco Morato", "Botujuru", "Campo Limpo Paulista", "Várzea Paulista", "Jundiaí"],
     fleets: [...cptmFleetMatrix["7"]]
   },

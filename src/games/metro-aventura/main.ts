@@ -165,12 +165,12 @@ function renderDirection(): void {
 
 function renderFleet(): void {
   const fleets = lineFleets();
-  shell(`<header><span class="eyebrow">ESCOLHA O TREM</span><h1>Qual frota você quer?</h1></header><section class="fleet-grid company-${company}">${fleets.map((id, i) => `<button class="fleet-card ${selection === i ? "selected" : ""}" data-fleet-id="${id}" aria-label="Escolher frota ${id}"><img src="${fleetImages[id]}" alt="Trem da frota ${id}"/><div><span>${company === "cptm" ? "SÉRIE" : "FROTA"}</span><strong>${id}</strong></div></button>`).join("")}</section><footer>${keyHint(["←","→"], "escolher")}${keyHint(["ESPAÇO"], "confirmar")}</footer>`);
+  shell(`<header><span class="eyebrow">ESCOLHA O TREM</span><h1>Qual frota você quer?</h1></header><section class="fleet-grid company-${company}">${fleets.map((id, i) => `<button class="fleet-card ${selection === i ? "selected" : ""}" data-fleet-id="${id}" aria-label="Escolher frota ${id}"><img src="${fleetImages[id]}" alt="Trem da frota ${id}"/><div><span>${(company === "cptm" || company === "tictrens") ? "SÉRIE" : "FROTA"}</span><strong>${id}</strong></div></button>`).join("")}</section><footer>${keyHint(["←","→"], "escolher")}${keyHint(["ESPAÇO"], "confirmar")}</footer>`);
 }
 
 function trainArt(): string {
   const next = currentRoute()[stationIndex + 1] ?? "Terminal";
-  const fleetLabel = company === "cptm" ? `SÉRIE ${fleet}` : `FROTA ${fleet}`;
+  const fleetLabel = (company === "cptm" || company === "tictrens") ? `SÉRIE ${fleet}` : `FROTA ${fleet}`;
   if (view === "cab") return `<div class="photo-scene cab-photo" style="--photo:url('${prototypeViewMedia.cab}')"><div class="motion-lines" style="--speed:${speedKmh}"></div><div class="photo-vignette"></div><div class="cab-status"><span>PRÓXIMA ESTAÇÃO</span><strong>${currentRoute()[stationIndex]}</strong></div><div class="speed-panel ${speedTrend}" style="--speed-angle:${-120 + speedKmh * 3.42}deg"><div class="speed-dial"><i></i><div><strong data-speed>${speedKmh}</strong><span>km/h</span></div></div><div class="speed-trend"><b class="trend-arrow">${speedTrendIcon()}</b><span data-trend>${speedTrendText()}</span></div><div class="power-bars">${Array.from({length: 7}, (_, i) => `<i class="${i < Math.ceil(speedKmh / 10) ? "active" : ""}"></i>`).join("")}</div></div><div class="fleet-chip">${fleetLabel}</div></div>`;
   if (view === "interior") return `<div class="photo-scene interior-photo" style="--photo:url('${prototypeViewMedia.interior}')"><div class="photo-vignette"></div><div class="interior-route"><span>AGORA</span><strong>${currentRoute()[stationIndex]}</strong><b>→</b><span>DEPOIS</span><strong>${next}</strong></div><div class="fleet-chip">${fleetLabel}</div></div>`;
   const theme = fleetThemes[fleet];
@@ -295,7 +295,7 @@ function renderFinished(): void {
 
 function announceSelection(): void {
   if (screen === "company") speak(companies[selection].name);
-  if (screen === "fleet") speak(`${company === "cptm" ? "Série" : "Frota"} ${lineFleets()[selection]}`);
+  if (screen === "fleet") speak(`${(company === "cptm" || company === "tictrens") ? "Série" : "Frota"} ${lineFleets()[selection]}`);
   if (screen === "line") speak(companyLines()[selection].name);
   if (screen === "direction") speak(`Destino ${routeFor(line.stations, selection === 0 ? 1 : -1).at(-1)}`);
 }
@@ -375,7 +375,7 @@ function arrive(): void {
 
 function openDoors(): void {
   actionReady = false; doorsOpen = true; phase = "doors-open"; render();
-  if (company === "cptm") speakMindTheGap();
+  if ((company === "cptm" || company === "tictrens")) speakMindTheGap();
   journeyTimer = window.setTimeout(() => { phase = "waiting-close"; actionReady = true; render(); queueSpeech("Feche as portas"); }, 2800);
 }
 
@@ -465,6 +465,7 @@ function confirmChallenge(picked: string, buttonEl?: HTMLElement): void {
 }
 
 function closeDoors(): void {
+  trainAudio.playDoorClose();
   actionReady = false; doorsOpen = false; render(); save();
   journeyTimer = window.setTimeout(() => {
     if (stationIndex >= currentRoute().length - 1) { localStorage.removeItem(SAVE_KEY); screen = "finished"; selection = 0; render(); queueSpeech("Chegamos ao terminal"); return; }

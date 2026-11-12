@@ -1,8 +1,16 @@
 import { describe, expect, it } from "vitest";
 import { distinctKeys, driveChoices, nextStation, nextView, routeFor, shuffleOutOfOrder, shuffleSeeded, speedAtProgress } from "./game-state";
-import { connectingLines, cptmFleetMatrix, firstSyllable, firstSyllableFor, lines, platformSideFor, platformSides, syllabify, syllablesFor } from "./data";
+import { companies, connectingLines, cptmFleetMatrix, firstSyllable, firstSyllableFor, lines, platformSideFor, platformSides, syllabify, syllablesFor } from "./data";
 
 describe("journey rules", () => {
+  it("offers TIC Trens with the Rubi line and Series 9500", () => {
+    expect(companies.find(company => company.id === "tictrens")?.name).toBe("TIC Trens");
+    const rubi = lines.filter(line => line.companyId === "tictrens");
+    expect(rubi.map(line => line.id)).toEqual(["7"]);
+    expect(rubi[0].fleets).toEqual(["9500"]);
+    expect(lines.filter(line => line.companyId === "cptm").map(line => line.id)).not.toContain("7");
+  });
+
   it("cycles through views in both directions", () => {
     expect(nextView("side", 1)).toBe("interior");
     expect(nextView("side", -1)).toBe("cab");

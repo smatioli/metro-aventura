@@ -8,9 +8,15 @@ class TrainAudio {
   private railGain?: GainNode;
   private railFilter?: BiquadFilterNode;
   private enabled = true;
+  private doorClose?: HTMLAudioElement;
+  private flange?: HTMLAudioElement;
+  private moving = false;
+  private flangePlaying = false;
 
   setEnabled(enabled: boolean): void {
     this.enabled = enabled;
+    this.syncFlange();
+    if (!enabled) this.doorClose?.pause();
     if (enabled) this.ensureAudio();
     if (!this.context || !this.master) return;
     if (enabled) void this.context.resume();
@@ -20,6 +26,8 @@ class TrainAudio {
   }
 
   setMotion(speedKmh: number, state: TrainSoundState): void {
+    this.moving = speedKmh > 0;
+    this.syncFlange();
     if (!this.enabled && !this.context) return;
     this.ensureAudio();
     if (!this.context || !this.motor || !this.motorGain || !this.railGain || !this.railFilter) return;
@@ -34,10 +42,42 @@ class TrainAudio {
   }
 
   stop(): void {
+    this.moving = false;
+    this.syncFlange();
+    this.doorClose?.pause();
     if (!this.context || !this.motorGain || !this.railGain) return;
     const now = this.context.currentTime;
     this.motorGain.gain.setTargetAtTime(0, now, 0.18);
     this.railGain.gain.setTargetAtTime(0, now, 0.18);
+  }
+
+  playDoorClose(): void {
+    if (!this.enabled) return;
+    this.doorClose ??= new Audio("/games/metro-aventura/audio/DoorCls.mp3");
+    this.doorClose.volume = 0.4;
+    this.doorClose.currentTime = 0;
+    void this.doorClose.play().catch(() => {
+      // A viagem continua mesmo se o navegador não conseguir reproduzir o áudio.
+    });
+  }
+
+  private syncFlange(): void {
+    if (!this.enabled || !this.moving) {
+      if (this.flange) {
+        this.flange.pause();
+        this.flange.currentTime = 0;
+      }
+      this.flangePlaying = false;
+      return;
+    }
+    if (this.flangePlaying) return;
+    this.flange ??= new Audio("/games/metro-aventura/audio/Flange0.mp3");
+    this.flange.loop = true;
+    this.flange.volume = 0.3;
+    this.flangePlaying = true;
+    void this.flange.play().catch(() => {
+      this.flangePlaying = false;
+    });
   }
 
   private ensureAudio(): void {

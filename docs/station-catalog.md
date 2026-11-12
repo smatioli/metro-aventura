@@ -138,7 +138,7 @@ Fonte institucional consultada em 2026-07-30.
 14. Ribeirão Pires
 15. Rio Grande da Serra
 
-## Linha 7-Rubi — CPTM
+## Linha 7-Rubi — TIC Trens (ADR 0019)
 
 1. Palmeiras–Barra Funda
 2. Água Branca

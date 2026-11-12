@@ -49,7 +49,7 @@ Matriz adotada como autoridade pelo projeto:
 
 | Linha | Séries |
 |---|---|
-| 7 | 9500 |
+| 7 (TIC Trens; ADR 0019) | 9500 |
 | 8 | 8900, 7000 |
 | 9 | 8900, 7000, P |
 | 10 | 8500, 7500, 2070 |
@@ -91,3 +91,9 @@ Por decisão do projeto, essas divergências não alteram a matriz oficial do jo
 ## Regra de produção de arte
 
 As fotos serão usadas como referência de identidade. Para cada frota jogável, o conjunto ideal contém frente, lateral, portas, interior e cabine. Características não comprovadas pelas referências não deverão ser inventadas como se fossem reais.
+
+## TIC Trens — atualização em 2026-11-12
+
+A Linha 7-Rubi passa à companhia selecionável TIC Trens, com a Série 9500. A matriz histórica e a foto local `public/games/metro-aventura/img/9500.jpeg` são preservadas; a foto e a ilustração ainda representam o visual anterior, sem reproduzir a nova pintura da concessionária. As vistas de cabine e interior continuam provisórias.
+
+Fonte oficial: https://www.tictrens.com.br/noticias/tic-trens-inicia-aplicacao-de-identidade-visual-nos-trens-da-linha-7-rubi-2578 (consulta em 2026-11-12). O logotipo foi obtido em https://www.tictrens.com.br/img/logos/logo-dark.png.
