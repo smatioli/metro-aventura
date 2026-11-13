@@ -14,16 +14,60 @@ let labels: SVGTextElement[]=[];
 const ui=new Map<string, Element>();
 function element(id:string): Element { return ui.get(id)!; }
 function textContent(id:string,value:string): void { const target=element(id); if(target.textContent!==value) target.textContent=value; }
-function speak(text: string): void {
-  if(!('speechSynthesis' in window)) return;
-  speechSynthesis.cancel(); const utterance=new SpeechSynthesisUtterance(text); utterance.lang='pt-BR'; utterance.rate=.8; speechSynthesis.speak(utterance);
+function speak(text: string, onComplete?: () => void): void {
+  if(!('speechSynthesis' in window)) {onComplete?.();return;}
+  speechSynthesis.cancel(); const utterance=new SpeechSynthesisUtterance(text); utterance.lang='pt-BR'; utterance.rate=.8;
+  let completed=false;
+  const complete=()=>{if(completed)return;completed=true;onComplete?.();};
+  utterance.onend=complete; utterance.onerror=complete;
+  speechSynthesis.speak(utterance);
 }
 function stop(): void { loadToken++; cancelAnimationFrame(frame); active=false; dragging=false; if('speechSynthesis' in window) speechSynthesis.cancel(); }
 function selection(): void {
   stop();
   app.innerHTML=`<main class="polo-trip"><a href="/">← Todos os jogos</a><header><p class="eyebrow">VAMOS PASSEAR · VW POLO</p><h1>Dirigindo o Polo</h1><p>Escolha um passeio. Você comanda o volante!</p></header><section class="route-choices" aria-label="Escolha uma rota">${routes.map((r,i)=>`<article><span class="destination-icon" aria-hidden="true">${r.icon}</span><h2>${r.name}</h2><p>${Object.keys(r.turns ?? {}).length} ${Object.keys(r.turns ?? {}).length===1?'conversão':'conversões'} · sem pressa</p><button data-route="${i}">▶ Iniciar passeio</button><button class="secondary" data-hear="${i}" aria-label="Ouvir ${r.name}">🔊 Ouvir</button></article>`).join('')}</section><p class="map-note">Trajetos reais · narração sempre ativa</p></main>`;
-  app.querySelectorAll<HTMLButtonElement>('[data-route]').forEach(b=>b.onclick=()=>void chooseRoute(routes[Number(b.dataset.route)]));
+  app.querySelectorAll<HTMLButtonElement>('[data-route]').forEach(b=>b.onclick=()=>securityCode(routes[Number(b.dataset.route)]));
   app.querySelectorAll<HTMLButtonElement>('[data-hear]').forEach(b=>b.onclick=()=>speak(routes[Number(b.dataset.hear)].name));
+}
+function securityCode(chosen: Route): void {
+  stop();
+  let code='', retry=false, accepted=false;
+  app.innerHTML=`<main class="polo-trip polo-security"><button id="code-back" class="secondary">← Rotas</button><section class="code-panel" aria-labelledby="code-title"><span class="code-icon" aria-hidden="true">🔒</span><p class="eyebrow">${escape(chosen.name)}</p><h1 id="code-title">Código de segurança</h1><p>Digite os 4 números para iniciar o passeio.</p><div class="code-digits" aria-hidden="true">${Array.from({length:4},()=>'<span>–</span>').join('')}</div><p id="code-status" class="code-status" role="status" aria-live="polite">0 de 4 números digitados</p><div class="code-keypad" role="group" aria-label="Teclado numérico">${['1','2','3','4','5','6','7','8','9','clear','0','delete'].map(key=>`<button type="button" data-code-key="${key}"${key==='clear' || key==='delete'?' class="secondary"':''} aria-label="${key==='clear'?'Limpar código':key==='delete'?'Apagar último número':key}">${key==='clear'?'Limpar':key==='delete'?'⌫':key}</button>`).join('')}</div><button id="code-hear" class="secondary">🔊 Ouvir instrução</button></section></main>`;
+  const screen=app.querySelector<HTMLElement>('.polo-security')!;
+  const slots=Array.from(screen.querySelectorAll<HTMLElement>('.code-digits span'));
+  const status=screen.querySelector<HTMLElement>('#code-status')!;
+  function enter(key: string): void {
+    if(accepted)return;
+    if(key==='clear') {code='';retry=false;}
+    else if(key==='delete') {code=code.slice(0,-1);retry=false;}
+    else if(/^\d$/.test(key)) {
+      if(retry){code='';retry=false;}
+      code+=key;
+    } else return;
+    slots.forEach((slot,i)=>{slot.textContent=code[i] ?? '–';slot.classList.toggle('filled',i<code.length);});
+    if(code.length===4) {
+      if(code==='3392'){
+        accepted=true;
+        status.textContent='Código aceito';
+        screen.querySelectorAll<HTMLButtonElement>('[data-code-key], #code-hear').forEach(button=>button.disabled=true);
+        speak('Código aceito',()=>{if(screen.isConnected)void chooseRoute(chosen);});
+        return;
+      }
+      retry=true;
+      status.textContent='Vamos tentar de novo. Digite os 4 números.';
+      speak(status.textContent);
+    } else status.textContent=`${code.length} de 4 números digitados`;
+  }
+  screen.querySelectorAll<HTMLButtonElement>('[data-code-key]').forEach(button=>button.onclick=()=>enter(button.dataset.codeKey!));
+  screen.onkeydown=e=>{
+    const key=e.key==='Backspace'?'delete':e.key==='Delete'?'clear':e.key;
+    if(/^\d$/.test(key) || key==='delete' || key==='clear'){e.preventDefault();enter(key);}
+  };
+  screen.querySelector<HTMLButtonElement>('#code-back')!.onclick=selection;
+  const instruction='Digite o código de segurança de quatro números para iniciar o passeio.';
+  screen.querySelector<HTMLButtonElement>('#code-hear')!.onclick=()=>speak(instruction);
+  screen.querySelector<HTMLButtonElement>('[data-code-key]')!.focus({preventScroll:true});
+  speak(instruction);
 }
 function instruction(): string {
   if(paused) return 'Passeio pausado';
