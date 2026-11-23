@@ -145,6 +145,16 @@ app.innerHTML = `
           <strong>JOGAR AGORA <span>→</span></strong>
         </div>
       </a>
+      <a class="game-card placar-card-tile" href="/escalacao/">
+        <span class="status available">DISPONÍVEL</span>
+        <div class="placar-illustration" aria-hidden="true"><img src="/games/jogo-da-memoria/img/times/sao-paulo.png" alt="" style="width:110px;height:110px;object-fit:contain"></div>
+        <div class="card-copy">
+          <span class="game-number">JOGO 11</span>
+          <h2>Escalação</h2>
+          <p>Escolha os jogadores do São Paulo e monte seu time no campinho.</p>
+          <strong>JOGAR AGORA <span>→</span></strong>
+        </div>
+      </a>
     </section>
 
     <footer>Três mundos, muitas descobertas.</footer>

@@ -27,6 +27,9 @@ if (path === "/metro-aventura") {
 } else if (path === "/dirigindo-o-polo") {
   document.title = "Dirigindo o Polo | Estação de Jogos";
   void import("./games/dirigindo-o-polo/main");
+} else if (path === "/escalacao") {
+  document.title = "Escalação | Estação de Jogos";
+  void import("./games/escalacao/main");
 } else if (path === "/placar") {
   document.title = "Placar | Estação de Jogos";
   void import("./games/placar/main");

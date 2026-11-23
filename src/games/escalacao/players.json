@@ -1,0 +1,381 @@
+[
+  {
+    "id": "rafael-toloi",
+    "name": "Rafael Toloi",
+    "number": 2,
+    "position": "Zagueiro",
+    "photo": "/games/escalacao/img/sao-paulo/2-rafael-toloi.png",
+    "source": "https://www.saopaulofc.net/atleta/rafael-toloi/",
+    "imageSource": "https://cdn.saopaulofc.net/2026/10/toloi.png",
+    "numberSource": "https://www.espn.com.br/futebol/jogador/_/id/196855/rafael-toloi"
+  },
+  {
+    "id": "arboleda",
+    "name": "Arboleda",
+    "number": 5,
+    "position": "Zagueiro",
+    "photo": "/games/escalacao/img/sao-paulo/5-arboleda.png",
+    "source": "https://www.saopaulofc.net/atleta/arboleda/",
+    "imageSource": "https://cdn.saopaulofc.net/2026/10/arboleda.png",
+    "numberSource": "https://www.espn.com.br/futebol/jogador/_/id/201531/robert-arboleda"
+  },
+  {
+    "id": "lucas",
+    "name": "Lucas",
+    "number": 7,
+    "position": "Atacante",
+    "photo": "/games/escalacao/img/sao-paulo/7-lucas.png",
+    "source": "https://www.saopaulofc.net/atleta/lucas/",
+    "imageSource": "https://cdn.saopaulofc.net/2026/10/lucas.png",
+    "numberSource": "https://www.espn.com.br/futebol/jogador/_/id/130711/lucas-moura"
+  },
+  {
+    "id": "marcos-antonio",
+    "name": "Marcos Antonio",
+    "number": 8,
+    "position": "Volante",
+    "photo": "/games/escalacao/img/sao-paulo/8-marcos-antonio.png",
+    "source": "https://www.saopaulofc.net/atleta/marcos-antonio/",
+    "imageSource": "https://cdn.saopaulofc.net/2026/10/marcos-antonio.png",
+    "numberSource": "https://www.espn.com.br/futebol/jogador/_/id/266282/marcos-antonio"
+  },
+  {
+    "id": "calleri",
+    "name": "Calleri",
+    "number": 9,
+    "position": "Centro-avante",
+    "photo": "/games/escalacao/img/sao-paulo/9-calleri.png",
+    "source": "https://www.saopaulofc.net/atleta/calleri/",
+    "imageSource": "https://cdn.saopaulofc.net/2026/10/calleri.png",
+    "numberSource": "https://www.espn.com.br/futebol/jogador/_/id/162558/jonathan-calleri"
+  },
+  {
+    "id": "luciano",
+    "name": "Luciano",
+    "number": 10,
+    "position": "Atacante",
+    "photo": "/games/escalacao/img/sao-paulo/10-luciano.png",
+    "source": "https://www.saopaulofc.net/atleta/luciano/",
+    "imageSource": "https://cdn.saopaulofc.net/2026/10/luciano.png",
+    "numberSource": "https://www.espn.com.br/futebol/jogador/_/id/190483/luciano"
+  },
+  {
+    "id": "ferreira",
+    "name": "Ferreira",
+    "number": 11,
+    "position": "Atacante",
+    "photo": "/games/escalacao/img/sao-paulo/11-ferreira.png",
+    "source": "https://www.saopaulofc.net/atleta/ferreira/",
+    "imageSource": "https://cdn.saopaulofc.net/2026/10/ferreira.png",
+    "numberSource": "https://www.espn.com.br/futebol/jogador/_/id/296573/ferreira"
+  },
+  {
+    "id": "iago",
+    "name": "Iago",
+    "number": 12,
+    "position": "Lateral-esquerda",
+    "photo": "/games/escalacao/img/sao-paulo/12-iago.png",
+    "source": "https://www.saopaulofc.net/atleta/iago/",
+    "imageSource": "https://cdn.saopaulofc.net/2026/10/iago-3x4-1.png",
+    "numberSource": "https://www.espn.com.br/futebol/jogador/_/id/252800/iago"
+  },
+  {
+    "id": "enzo",
+    "name": "Enzo",
+    "number": 13,
+    "position": "Lateral-esquerda",
+    "photo": "/games/escalacao/img/sao-paulo/13-enzo.png",
+    "source": "https://www.saopaulofc.net/atleta/enzo/",
+    "imageSource": "https://cdn.saopaulofc.net/2026/10/enzo.png",
+    "numberSource": "https://www.espn.com.br/futebol/jogador/_/id/264814/enzo-diaz"
+  },
+  {
+    "id": "bobadilla",
+    "name": "Bobadilla",
+    "number": 21,
+    "position": "Meia",
+    "photo": "/games/escalacao/img/sao-paulo/21-bobadilla.png",
+    "source": "https://www.saopaulofc.net/atleta/bobadilla/",
+    "imageSource": "https://cdn.saopaulofc.net/2024/01/bobadilla-capa.png",
+    "numberSource": "https://www.espn.com.br/futebol/jogador/_/id/301516/damian-bobadilla"
+  },
+  {
+    "id": "andre-silva",
+    "name": "André Silva",
+    "number": 17,
+    "position": "Atacante",
+    "photo": "/games/escalacao/img/sao-paulo/17-andre-silva.png",
+    "source": "https://www.saopaulofc.net/atleta/andre-silva/",
+    "imageSource": "https://cdn.saopaulofc.net/2026/10/andre-silva.png"
+  },
+  {
+    "id": "wendell",
+    "name": "Wendell",
+    "number": 18,
+    "position": "Lateral-esquerda",
+    "photo": "/games/escalacao/img/sao-paulo/18-wendell.png",
+    "source": "https://www.saopaulofc.net/atleta/wendell/",
+    "imageSource": "https://cdn.saopaulofc.net/2026/10/wendell.png",
+    "numberSource": "https://www.espn.com.br/futebol/jogador/_/id/199065/wendell"
+  },
+  {
+    "id": "lucas-ramon",
+    "name": "Lucas Ramon",
+    "number": 19,
+    "position": "Lateral-direita",
+    "photo": "/games/escalacao/img/sao-paulo/19-lucas-ramon.png",
+    "source": "https://www.saopaulofc.net/atleta/lucas-ramon/",
+    "imageSource": "https://cdn.saopaulofc.net/2026/10/lucas-ramon.png",
+    "numberSource": "https://www.espn.com.br/futebol/jogador/_/id/206953/lucas-ramon"
+  },
+  {
+    "id": "buta",
+    "name": "Buta",
+    "number": 20,
+    "position": "Lateral",
+    "photo": "/games/escalacao/img/sao-paulo/20-buta.png",
+    "source": "https://www.saopaulofc.net/atleta/buta/",
+    "imageSource": "https://cdn.saopaulofc.net/2026/10/buta_site-1.png",
+    "numberSource": "https://www.espn.com.br/futebol/jogador/_/id/238897/buta"
+  },
+  {
+    "id": "cedric",
+    "name": "Cédric",
+    "number": 6,
+    "position": "Lateral-direita",
+    "photo": "/games/escalacao/img/sao-paulo/6-cedric.png",
+    "source": "https://www.saopaulofc.net/atleta/cedric/",
+    "imageSource": "https://cdn.saopaulofc.net/2026/10/cedric.png",
+    "numberSource": "https://www.espn.com.br/futebol/jogador/_/id/129722/cedric"
+  },
+  {
+    "id": "domingos-duarte",
+    "name": "Domingos Duarte",
+    "number": 22,
+    "position": "Zagueiro",
+    "photo": "/games/escalacao/img/sao-paulo/22-domingos-duarte.png",
+    "source": "https://www.saopaulofc.net/atleta/domingos-duarte/",
+    "imageSource": "https://cdn.saopaulofc.net/2026/10/domingos_siet-1.png",
+    "numberSource": "https://www.espn.com.br/futebol/jogador/_/id/219234/domingos-duarte"
+  },
+  {
+    "id": "rafael",
+    "name": "Rafael",
+    "number": 23,
+    "position": "Goleiro",
+    "photo": "/games/escalacao/img/sao-paulo/23-rafael.png",
+    "source": "https://www.saopaulofc.net/atleta/rafael/",
+    "imageSource": "https://cdn.saopaulofc.net/2026/10/rafael.png",
+    "numberSource": "https://www.espn.com.br/futebol/jogador/_/id/199013/rafael"
+  },
+  {
+    "id": "victor-sa",
+    "name": "Victor Sá",
+    "number": 27,
+    "position": "Atacante",
+    "photo": "/games/escalacao/img/sao-paulo/27-victor-sa.png",
+    "source": "https://www.saopaulofc.net/atleta/victor-sa/",
+    "imageSource": "https://cdn.saopaulofc.net/2026/10/victorsa_site-1.png",
+    "numberSource": "https://www.espn.com.br/futebol/jogador/_/id/259879/joao-victor"
+  },
+  {
+    "id": "newton-jr",
+    "name": "Newton Jr.",
+    "number": 28,
+    "position": "Volante",
+    "photo": "/games/escalacao/img/sao-paulo/28-newton-jr.png",
+    "source": "https://www.saopaulofc.net/atleta/newton-jr/",
+    "imageSource": "https://cdn.saopaulofc.net/2026/10/newton_site-1.png",
+    "numberSource": "https://www.espn.com.br/futebol/jogador/_/id/357362/newton"
+  },
+  {
+    "id": "pablo-maia",
+    "name": "Pablo Maia",
+    "number": 29,
+    "position": "Meia",
+    "photo": "/games/escalacao/img/sao-paulo/29-pablo-maia.png",
+    "source": "https://www.saopaulofc.net/atleta/pablo-maia/",
+    "imageSource": "https://cdn.saopaulofc.net/2026/10/pablo-maia.png",
+    "numberSource": "https://www.espn.com.br/futebol/jogador/_/id/319168/pablo-maia"
+  },
+  {
+    "id": "coronel",
+    "name": "Coronel",
+    "number": 31,
+    "position": "Goleiro",
+    "photo": "/games/escalacao/img/sao-paulo/31-coronel.png",
+    "source": "https://www.saopaulofc.net/atleta/coronel/",
+    "imageSource": "https://cdn.saopaulofc.net/2026/10/coronel.png",
+    "numberSource": "https://www.espn.com.br/futebol/jogador/_/id/215961/carlos-coronel"
+  },
+  {
+    "id": "pedro-lima",
+    "name": "Pedro Lima",
+    "number": 32,
+    "position": "Lateral-direita",
+    "photo": "/games/escalacao/img/sao-paulo/32-pedro-lima.png",
+    "source": "https://www.saopaulofc.net/atleta/pedro-lima/",
+    "imageSource": "https://cdn.saopaulofc.net/2026/10/pedro_site.png",
+    "numberSource": "https://www.espn.com.br/futebol/jogador/_/id/376489/pedro-lima"
+  },
+  {
+    "id": "tete",
+    "name": "Tete",
+    "number": 34,
+    "position": "Atacante",
+    "photo": "/games/escalacao/img/sao-paulo/34-tete.png",
+    "source": "https://www.saopaulofc.net/atleta/tete/",
+    "imageSource": "https://cdn.saopaulofc.net/2026/10/tete-site.png",
+    "numberSource": "https://www.espn.com.br/futebol/jogador/_/id/402684/tete"
+  },
+  {
+    "id": "sabino",
+    "name": "Sabino",
+    "number": 35,
+    "position": "Zagueiro",
+    "photo": "/games/escalacao/img/sao-paulo/35-sabino.png",
+    "source": "https://www.saopaulofc.net/atleta/sabino/",
+    "imageSource": "https://cdn.saopaulofc.net/2026/10/sabino.png",
+    "numberSource": "https://www.espn.com.br/futebol/jogador/_/id/285010/sabino"
+  },
+  {
+    "id": "artur",
+    "name": "Artur",
+    "number": 37,
+    "position": "Atacante",
+    "photo": "/games/escalacao/img/sao-paulo/37-artur.png",
+    "source": "https://www.saopaulofc.net/atleta/artur/",
+    "imageSource": "https://cdn.saopaulofc.net/2026/10/artursite.png",
+    "numberSource": "https://www.espn.com.br/futebol/jogador/_/id/236596/artur"
+  },
+  {
+    "id": "joao-pedro-pantiga",
+    "name": "João Pedro Pantiga",
+    "number": 41,
+    "position": "Goleiro",
+    "photo": "/games/escalacao/img/sao-paulo/41-joao-pedro-pantiga.png",
+    "source": "https://www.saopaulofc.net/atleta/joao-pedro-pantiga/",
+    "imageSource": "https://cdn.saopaulofc.net/2026/10/jp_site-1.png",
+    "numberSource": "https://www.espn.com.br/futebol/jogador/_/id/383059/joao-pedro"
+  },
+  {
+    "id": "gustavo-santana",
+    "name": "Gustavo Santana",
+    "number": 43,
+    "position": "Atacante",
+    "photo": "/games/escalacao/img/sao-paulo/43-gustavo-santana.png",
+    "source": "https://www.saopaulofc.net/atleta/gustavo-santana/",
+    "imageSource": "https://cdn.saopaulofc.net/2026/10/g-santana-site.png",
+    "numberSource": "https://www.espn.com.br/futebol/jogador/_/id/402683/gustavo-santana"
+  },
+  {
+    "id": "lucca",
+    "name": "Lucca",
+    "number": 45,
+    "position": "Atacante",
+    "photo": "/games/escalacao/img/sao-paulo/45-lucca.png",
+    "source": "https://www.saopaulofc.net/atleta/lucca/",
+    "imageSource": "https://cdn.saopaulofc.net/2026/10/lucca.png",
+    "numberSource": "https://www.espn.com.br/futebol/jogador/_/id/399076/lucca-marques"
+  },
+  {
+    "id": "pedro-ferreira",
+    "name": "Pedro Ferreira",
+    "number": 46,
+    "position": "Meia",
+    "photo": "/games/escalacao/img/sao-paulo/46-pedro-ferreira.png",
+    "source": "https://www.saopaulofc.net/atleta/pedro-ferreira/",
+    "imageSource": "https://cdn.saopaulofc.net/2026/10/p-ferreira-site.png",
+    "numberSource": "https://www.espn.com.br/futebol/jogador/_/id/399075/pedro-ferreira"
+  },
+  {
+    "id": "djhordney",
+    "name": "Djhordney",
+    "number": 48,
+    "position": "Volante",
+    "photo": "/games/escalacao/img/sao-paulo/48-djhordney.png",
+    "source": "https://www.saopaulofc.net/atleta/djhordney/",
+    "imageSource": "https://cdn.saopaulofc.net/2026/10/dj-site.png",
+    "numberSource": "https://www.espn.com.br/futebol/jogador/_/id/402686/djhordney-ferreira"
+  },
+  {
+    "id": "ryan-francisco",
+    "name": "Ryan Francisco",
+    "number": 49,
+    "position": "Atacante",
+    "photo": "/games/escalacao/img/sao-paulo/49-ryan-francisco.png",
+    "source": "https://www.saopaulofc.net/atleta/ryan-francisco/",
+    "imageSource": "https://cdn.saopaulofc.net/2026/10/ryan.png",
+    "numberSource": "https://www.espn.com.br/futebol/jogador/_/id/383042/ryan-francisco"
+  },
+  {
+    "id": "young",
+    "name": "Young",
+    "number": 50,
+    "position": "Goleiro",
+    "photo": "/games/escalacao/img/sao-paulo/50-young.png",
+    "source": "https://www.saopaulofc.net/atleta/young/",
+    "imageSource": "https://cdn.saopaulofc.net/2026/10/young.png",
+    "numberSource": "https://www.espn.com.br/futebol/jogador/_/id/318176/young"
+  },
+  {
+    "id": "felipe-preis",
+    "name": "Felipe Preis",
+    "number": 52,
+    "position": "Goleiro",
+    "photo": "/games/escalacao/img/sao-paulo/52-felipe-preis.png",
+    "source": "https://www.saopaulofc.net/atleta/felipe-preis/",
+    "imageSource": "https://cdn.saopaulofc.net/2026/10/felipe-preis.png",
+    "numberSource": "https://www.espn.com.br/futebol/jogador/_/id/380459/felipe-preis"
+  },
+  {
+    "id": "isac",
+    "name": "Isac",
+    "number": 53,
+    "position": "Zagueiro",
+    "photo": "/games/escalacao/img/sao-paulo/53-isac.png",
+    "source": "https://www.saopaulofc.net/atleta/isac/",
+    "imageSource": "https://cdn.saopaulofc.net/2026/10/isac-site.png",
+    "numberSource": "https://www.espn.com.br/futebol/jogador/_/id/371525/isac"
+  },
+  {
+    "id": "osorio",
+    "name": "Osorio",
+    "number": 54,
+    "position": "Zagueiro",
+    "photo": "/games/escalacao/img/sao-paulo/54-osorio.png",
+    "source": "https://www.saopaulofc.net/atleta/osorio/",
+    "imageSource": "https://cdn.saopaulofc.net/2026/10/osorio-site.png",
+    "numberSource": "https://www.espn.com.br/futebol/jogador/_/id/383055/luis-osorio"
+  },
+  {
+    "id": "nicolas",
+    "name": "Nicolas",
+    "number": 56,
+    "position": "Lateral-esquerda",
+    "photo": "/games/escalacao/img/sao-paulo/56-nicolas.png",
+    "source": "https://www.saopaulofc.net/atleta/nicolas/",
+    "imageSource": "https://cdn.saopaulofc.net/2026/10/nicolas-site.png",
+    "numberSource": "https://www.espn.com.br/futebol/jogador/_/id/402685/nicolas"
+  },
+  {
+    "id": "cauly",
+    "name": "Cauly",
+    "number": 80,
+    "position": "Meia",
+    "photo": "/games/escalacao/img/sao-paulo/80-cauly.png",
+    "source": "https://www.saopaulofc.net/atleta/cauly/",
+    "imageSource": "https://cdn.saopaulofc.net/2026/10/cauly-2.png",
+    "numberSource": "https://www.espn.com.br/futebol/jogador/_/id/260392/cauly"
+  },
+  {
+    "id": "danielzinho",
+    "name": "Danielzinho",
+    "number": 94,
+    "position": "Meia",
+    "photo": "/games/escalacao/img/sao-paulo/94-danielzinho.png",
+    "source": "https://www.saopaulofc.net/atleta/danielzinho/",
+    "imageSource": "https://cdn.saopaulofc.net/2026/10/danielzinho.png",
+    "numberSource": "https://www.espn.com.br/futebol/jogador/_/id/196824/danielzinho"
+  }
+]
